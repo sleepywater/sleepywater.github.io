@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="首先搭建本地环境这个是根据这个博主的文章改的，弄两天，无数错误，看了太多的教程才搞完 安装 git  、Node  默认安装安装完成后 查看是否成功 1node -v   1npm  -v     改nmp的源然后将 nmp 的原改道 淘宝的源（官方源比较慢，特慢） 淘宝 npm 网址 修改 1npm config set registry http:&#x2F;&#x2F;registry.npm.taobao.o">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网站搭建">
+<meta property="og:url" content="http://example.com/2019/03/28/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/index.html">
+<meta property="og:site_name" content="Erlee">
+<meta property="og:description" content="首先搭建本地环境这个是根据这个博主的文章改的，弄两天，无数错误，看了太多的教程才搞完 安装 git  、Node  默认安装安装完成后 查看是否成功 1node -v   1npm  -v     改nmp的源然后将 nmp 的原改道 淘宝的源（官方源比较慢，特慢） 淘宝 npm 网址 修改 1npm config set registry http:&#x2F;&#x2F;registry.npm.taobao.o">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2019/03/28/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/1553759304995.png">
+<meta property="og:image" content="http://example.com/2019/03/28/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/1553759353888.png">
+<meta property="og:image" content="http://example.com/2019/03/28/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/1553764265772.png">
+<meta property="og:image" content="http://example.com/2019/03/28/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/1553764357084.png">
+<meta property="og:image" content="http://example.com/2019/03/28/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/1553764374804.png">
+<meta property="og:image" content="http://example.com/2019/03/28/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/1553761888592.png">
+<meta property="og:image" content="http://example.com/2019/03/28/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/1553761738477.png">
+<meta property="og:image" content="http://example.com/2019/03/28/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/1553764391193.png">
+<meta property="og:image" content="http://example.com/2019/03/28/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/1553761780454.png">
+<meta property="og:image" content="http://example.com/2019/03/28/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/1553762648409.png">
+<meta property="og:image" content="http://example.com/2019/03/28/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/1553762591826.png">
+<meta property="og:image" content="http://example.com/2019/03/28/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/1553762869327.png">
+<meta property="og:image" content="http://example.com/2019/03/28/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/1553763149554.png">
+<meta property="og:image" content="http://example.com/2019/03/28/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/1553761051965.png">
+<meta property="article:published_time" content="2019-03-29T03:29:00.000Z">
+<meta property="article:modified_time" content="2019-09-11T03:37:30.214Z">
+<meta property="article:author" content="Erlee">
+<meta property="article:tag" content="Hexo">
+<meta property="article:tag" content="博客搭建">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2019/03/28/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/1553759304995.png">
+
+<link rel="canonical" href="http://example.com/2019/03/28/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>网站搭建 | Erlee</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Erlee</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2019/03/28/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/erlee.png">
+      <meta itemprop="name" content="Erlee">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Erlee">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          网站搭建
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-03-28 23:29:00" itemprop="dateCreated datePublished" datetime="2019-03-28T23:29:00-04:00">2019-03-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-10 23:37:30" itemprop="dateModified" datetime="2019-09-10T23:37:30-04:00">2019-09-10</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Hexo/" itemprop="url" rel="index"><span itemprop="name">Hexo</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h5 id="首先搭建本地环境"><a href="#首先搭建本地环境" class="headerlink" title="首先搭建本地环境"></a>首先搭建本地环境</h5><p>这个是根据这个博主的<a target="_blank" rel="noopener" href="http://rosesnow.top/2018/12/13/%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2%E7%B3%BB%E5%88%971/">文章</a>改的，弄两天，无数错误，看了太多的教程才搞完</p>
+<h6 id="安装-git-、Node-默认安装"><a href="#安装-git-、Node-默认安装" class="headerlink" title="安装 git  、Node  默认安装"></a>安装 git  、Node  默认安装</h6><p>安装完成后 查看是否成功</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node -v</span><br></pre></td></tr></table></figure>
+
+<p><img src="1553759304995.png" alt="1553759304995"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm  -v</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="1553759353888.png" alt="1553759353888"></p>
+<h6 id="改nmp的源"><a href="#改nmp的源" class="headerlink" title="改nmp的源"></a>改nmp的源</h6><p>然后将 nmp 的原改道 淘宝的源（官方源比较慢，特慢）</p>
+<p><a target="_blank" rel="noopener" href="https://npm.taobao.org/">淘宝 npm 网址</a></p>
+<p>修改</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config set registry http://registry.npm.taobao.org/</span><br></pre></td></tr></table></figure>
+
+<p>还原</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config set registry https://registry.npmjs.org</span><br></pre></td></tr></table></figure>
+
+
+
+<h6 id="安装hexo-cli：进入终端，键入命令"><a href="#安装hexo-cli：进入终端，键入命令" class="headerlink" title="安装hexo-cli：进入终端，键入命令"></a>安装hexo-cli：进入终端，键入命令</h6><p><code>cnpm i hexo-cli -g</code></p>
+<p>其中 ‘cnpm’ 代替 npm，安装速度更快； ‘i’ 表示install， ‘-g’表示全局安装 (注意：如果安装失败，建议在管理者模式下安装)] </p>
+<p>初始化：在本地合适的位置创建一个文件夹用作Blog环境，比如，我这里在D盘根目录下创建了一个myblog文件夹，进入此目录，击鼠标右键打开gitbash终端，键入命令 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo init</span><br></pre></td></tr></table></figure>
+
+<p>进行初始化，进度可能很慢[蹲个厕所回来大概就OK了]，耐心等待安装即可。出现下图表示安装成功<img src="1553764265772.png" alt="1553764265772"></p>
+<p>完毕后发现空目录多出很多文件，如下图：<img src="1553764357084.png" alt="1553764357084">这里的node_modules是项目依赖，在初始化的时候已经下载下来了，不用再 <code>hexo i</code> 了(有的教程写的hexo i 就是安装依赖的作用)。</p>
+<h6 id="测试本地运行"><a href="#测试本地运行" class="headerlink" title="测试本地运行"></a>测试本地运行</h6><p>上述环境完成后，我们就可以在本地预览blog了。很简单，两行命令。</p>
+<ul>
+<li>键入命令 <code>hexo generate</code> 生成静态文件，可以简写为 <code>hexo g</code></li>
+<li>键入命令 <code>hexo server</code> 在本地运行， 可以简写为 <code>hexo s</code><br> 出现下图则表示成功<br> <img src="1553764374804.png" alt="1553764374804"></li>
+<li>打开浏览器，地址栏键入 <code>http://localhost:4000</code> 即可进行预览，效果如下</li>
+</ul>
+<p><img src="1553761888592.png" alt="1553761888592"></p>
+<h5 id="部署到GitHub"><a href="#部署到GitHub" class="headerlink" title="部署到GitHub"></a>部署到GitHub</h5><h6 id="添加ssh"><a href="#添加ssh" class="headerlink" title="添加ssh"></a>添加ssh</h6><ul>
+<li><p>创建一个 SSH key 。在命令行（即Git Bash）输入以下命令， 回车三下即可：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-keygen -t rsa -C &quot;邮箱地址&quot;</span><br></pre></td></tr></table></figure></li>
+<li><p>添加到 github。 复制密钥文件内容（路径形如<code>C:\Users\Administrator\.ssh\id_rsa.pub</code>），粘贴到[New SSH Key]<a target="_blank" rel="noopener" href="https://xxxx.github.com/settings/keys%E5%8D%B3%E5%8F%AF%E3%80%82">https://xxxx.github.com/settings/keys即可。</a></p>
+</li>
+<li><p>测试是否添加成功。在命令行（即Git Bash）依次输入以下命令，返回<code>“You’ve successfully authenticated”</code>即成功：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ssh -T git@github.com</span><br><span class="line">$ yes</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>在github上创建一个仓库注意此仓库的名称格式是： <code>你的github用户名.github.io</code> (其中用户名不区分大小写) 如下图  一定要如图操作 </p>
+<p><img src="1553761738477.png" alt="1553761738477"></p>
+<h6 id="修改hexo文件配置"><a href="#修改hexo文件配置" class="headerlink" title="修改hexo文件配置"></a>修改hexo文件配置</h6><ol>
+<li><p>要想部署到github，需要对本地myblog文件夹下的 <code>_config.yml</code> 文件进行配置 如图<br><img src="1553764391193.png" alt="1553764391193"></p>
+</li>
+<li><p>用你的编译器打开该文件，拉到最后，找到 <code>deploy</code> 选项，作如下配置:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: git@github.com:RoseSnow/RoseSnow.github.io.git</span><br><span class="line">  baranch: master</span><br></pre></td></tr></table></figure>
+
+<pre><code> `       repo` 填写你刚刚github创建的仓库的地址，点进你的仓库 选择  SSH  地址
+</code></pre>
+</li>
+</ol>
+<p><img src="1553761780454.png" alt="1553761780454"></p>
+<h4 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h4><p>部署之前，需要安装 git部署插件</p>
+<ol>
+<li><p>打开myblog文件夹，调出<code>&#39;gitbash</code>‘终端，键入 </p>
+<p><code>cnpm i hexo-deployer-git -S</code>   安装插件</p>
+</li>
+<li><p>安装完毕后，键入命令 <code>hexo g</code> 生成静态文件</p>
+</li>
+<li><p>键入命令 <code>hexo d</code> <img src="1553762648409.png" alt="1553762648409"></p>
+<p>找到此文件夹在 config  中添加</p>
+<p><img src="1553762591826.png" alt="1553762591826"></p>
+<p><img src="1553762869327.png" alt="1553762869327"></p>
+<p>[user]</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">email =123456789@qq.com  </span><br><span class="line">name = erlee</span><br><span class="line">//你的邮箱和上面的ssh一样 和你的账号的邮箱也要也要</span><br><span class="line">name 就是你的github用户名</span><br></pre></td></tr></table></figure></li>
+<li><p>再次</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo d</span><br></pre></td></tr></table></figure>
+
+<p>像这样就行 <img src="1553763149554.png" alt="1553763149554"></p>
+<p>再进入到github，进入io仓库，点击setting 进入设置，往下拉至 GitHub Pages 看到如图( 这是我解析到我的域名了   ) 正常应该是      您的网站发布于sleepywater/sleepywater.github.io</p>
+<p><img src="1553761051965.png" alt="1553761051965"></p>
+</li>
+</ol>
+<p>然后输入 你的GitHub名.github.io   就能访问</p>
+<p>文章发表：<a target="_blank" rel="noopener" href="https://blog.csdn.net/damienzhong/article/details/84335510">https://blog.csdn.net/damienzhong/article/details/84335510</a></p>
+<p>参考 </p>
+<p>美化等一系列优化：</p>
+<ol>
+<li> <a target="_blank" rel="noopener" href="https://www.simon96.online/2018/10/12/hexo-tutorial/">https://www.simon96.online/2018/10/12/hexo-tutorial/</a></li>
+<li><a target="_blank" rel="noopener" href="http://shenzekun.cn/hexo%E7%9A%84next%E4%B8%BB%E9%A2%98%E4%B8%AA%E6%80%A7%E5%8C%96%E9%85%8D%E7%BD%AE%E6%95%99%E7%A8%8B.html">http://shenzekun.cn/hexo%E7%9A%84next%E4%B8%BB%E9%A2%98%E4%B8%AA%E6%80%A7%E5%8C%96%E9%85%8D%E7%BD%AE%E6%95%99%E7%A8%8B.html</a></li>
+</ol>
+<p>去掉网站末尾的 印记：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/4fbc57269f1b">https://www.jianshu.com/p/4fbc57269f1b</a></p>
+<p>加阅读全文 <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/78c218f9d1e7">https://www.jianshu.com/p/78c218f9d1e7</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Hexo/" rel="tag"># Hexo</a>
+              <a href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" rel="tag"># 博客搭建</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2019/04/22/interview/" rel="next" title="interview">
+      interview <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%A6%96%E5%85%88%E6%90%AD%E5%BB%BA%E6%9C%AC%E5%9C%B0%E7%8E%AF%E5%A2%83"><span class="nav-number">1.</span> <span class="nav-text">首先搭建本地环境</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-git-%E3%80%81Node-%E9%BB%98%E8%AE%A4%E5%AE%89%E8%A3%85"><span class="nav-number">1.1.</span> <span class="nav-text">安装 git  、Node  默认安装</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%94%B9nmp%E7%9A%84%E6%BA%90"><span class="nav-number">1.2.</span> <span class="nav-text">改nmp的源</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%AE%89%E8%A3%85hexo-cli%EF%BC%9A%E8%BF%9B%E5%85%A5%E7%BB%88%E7%AB%AF%EF%BC%8C%E9%94%AE%E5%85%A5%E5%91%BD%E4%BB%A4"><span class="nav-number">1.3.</span> <span class="nav-text">安装hexo-cli：进入终端，键入命令</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E6%9C%AC%E5%9C%B0%E8%BF%90%E8%A1%8C"><span class="nav-number">1.4.</span> <span class="nav-text">测试本地运行</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E5%88%B0GitHub"><span class="nav-number">2.</span> <span class="nav-text">部署到GitHub</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0ssh"><span class="nav-number">2.1.</span> <span class="nav-text">添加ssh</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9hexo%E6%96%87%E4%BB%B6%E9%85%8D%E7%BD%AE"><span class="nav-number">2.2.</span> <span class="nav-text">修改hexo文件配置</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2"><span class="nav-number"></span> <span class="nav-text">部署</span></a></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Erlee"
+      src="/images/erlee.png">
+  <p class="site-author-name" itemprop="name">Erlee</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">豫ICP备 19040334号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Erlee</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='150' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
